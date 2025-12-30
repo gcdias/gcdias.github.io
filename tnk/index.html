@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#222222">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="style.css?v=251011b">
+  <!--<script src="https://unpkg.com/kosher-zmanim/dist/kosher-zmanim.min.js"></script>-->
+  <script src="kblh.js"></script>
+</head>
+<body>
+  <div id="bkg-blur"></div>
+  <!-- App Bar -->
+  <div id="web-stat">●</div>
+  <div class="app-bar">
+    <div class="icons"><span id="app-bar-menu-side" class="icon" onclick="openNav()">☰</span></div>
+    <div id="verse2" class="title">TN"K app</div>
+    <div class="icons"><span class="icon" id="app-bar-menu-button">&vellip;</span></div>
+    <div class="dropdown" id="app-bar-menu">
+      <div id="abmi-settings">Settings</div>
+      <div id="abmi-refresh" onclick="refreshEntry()">Refresh</div>
+    </div>
+  </div>
+  <!-- Side Nav -->
+  <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <a href="javascript:void(0)" id="parsha-hashavua">Parshat Hashavua</a>
+    <details class="nav-details">
+      <summary>Zmanim</summary>
+      <div id="nav-zmanim"></div>
+    </details>
+    <a href="https://www.unityzohar.com/unity-zohar">Unity Zohar</a>
+    <a href="https://www.sefaria.org/Genesis.1?lang=bi&with=Translations&lang2=en" id="href-sefaria">Sefaria.org</a>
+    <a href="javascript:void(0)" onclick="about()">About</a>
+  </div>
+  <!-- Navigation Bar -->
+  <div class="nav-bar">
+    <div class="a" id="nav-home">Home</div>
+    <div class="a" id="nav-search">Search</div>
+    <div class="a" id="nav-neq">אֱ</div>
+  </div>
+  <div id="container">
+    <div id="heb-row">
+      <div class="pasuk-nav" id="pasuk-next">&lt;</div>
+      <div id="heb-content" class='heb-text'></div>
+      <div class="pasuk-nav" id="pasuk-prev">&gt;</div>
+    </div>
+    <div id="pasuk-ref">reference</div>
+    <div id="eng-content"></div>
+    <div id="info-content"></div>
+    <div id="gem-content"></div>
+    <div id="matrix"></div>
+  </div>
+  <div id="nav-buttons">
+    <button class="button-nav" id="nav-next">next</button>
+    <button class="button-nav" id="nav-prev">prev</button>
+  </div>
+  <div id="pan-search" class="panel">
+    <fieldset class="fs-search"><legend>Parsha</legend><select id="sel-parsha" class="sel-search"></select></fieldset>
+    <fieldset class="fs-search"><legend>Sefer</legend><select id="sel-sefer" class="sel-search"></select></fieldset>
+    <div class="box-1">
+      <fieldset class="fs-search b1"><legend>Perek</legend><select id="sel-perek" class="sel-search"></select></fieldset>
+      <fieldset class="fs-search b1"><legend>Pasuk</legend><select id="sel-pasuk" class="sel-search"></select></fieldset>
+    </div>
+    <button id="pan-go" class="btn-center">go</button>
+  </div>
+  <div id="pan-matrix" class="panel">
+    <div id="pan-matrix-head"></div>
+    <div id="pan-matrix-body"></div>
+    <button class="pan-dismiss btn-center" onclick='closeDialog("pan-matrix");'>dismiss</button>
+  </div>
+  <div id="pan-about" class="panel">
+    
+    <div class="about-text">Powered by Sefaria.org and TorahCalc.com</div>
+    <button class="pan-dismiss btn-center" onclick='closeDialog("pan-about");'>dismiss</button>
+  </div>
+  <script type="text/javascript" src="main.js?v=251025a"></script>
+</body>
+</html>
