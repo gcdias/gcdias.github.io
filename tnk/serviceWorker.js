@@ -1,11 +1,11 @@
-const staticApp = "static-app"
+const staticApp = "static-app";
 const assetsApp = [
-  "/zc/tnk/",
-  "/zc/tnk/index.html",
-  "/zc/tnk/style.css",
-  "/zc/tnk/main.js",
-  "/zc/tnk/fonts/stmvelish.woff",
-  "/zc/tnk/kblh.js"
+  "/tnk/",
+  "/tnk/index.html",
+  "/tnk/style.css",
+  "/tnk/main.js",
+  "/tnk/fonts/stmvelish.woff",
+  "/tnk/kblh.js"
 ]
 
 self.addEventListener("install", installEvent => {
@@ -14,7 +14,7 @@ self.addEventListener("install", installEvent => {
       cache.addAll(assetsApp)
     })
   )
-})
+});
 
 self.addEventListener("fetch", fetchEvent => {
   fetchEvent.respondWith(
@@ -22,4 +22,4 @@ self.addEventListener("fetch", fetchEvent => {
       return res || fetch(fetchEvent.request)
     })
   )
-})
+});
