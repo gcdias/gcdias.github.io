@@ -11,10 +11,10 @@ const data = {
   password: null,
   filename: null,
   jdata: null,
-  addOpt: function(s, v){
+  addOpt: function(s, v, t = v){
     const option = document.createElement('option');
     option.value = v;
-    option.text = v;
+    option.text = t;
     s.appendChild(option);
   },
   load: function(obj){
@@ -48,12 +48,12 @@ const data = {
     const tag = ui.stag;
     sid.innerHTML = '';
     if (tag.innerText.trim() === ''){
-      Object.keys(data.jdata.data).forEach(i => data.addOpt(sid, i));
+      Object.keys(data.jdata.data).forEach(i => data.addOpt(sid, i, `${i} [${data.jdata.data[i]}]`));
     } else {
       const tags = tag.innerText.trim().split(' ');
       const fn = `include${ui.sflt.value}`;
       const filtered = Object.keys(data.jdata.data).filter(i => data[fn](i, tags));
-      filtered.forEach(i => data.addOpt(sid, i));
+      filtered.forEach(i => data.addOpt(sid, i, `${i} [${data.jdata.data[i]}]`));
     }
   }
 }
