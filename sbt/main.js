@@ -100,11 +100,15 @@ const ui = {
         const pw = ui.requestPassword();
         try {
           const decrypted = CryptoJS.AES.decrypt(encrypted, pw).toString(CryptoJS.enc.Utf8);
-          data.load(JSON.parse(decrypted));
-          ui.bload.style.display = 'none';
-          //alert('Loaded!');
+          try {
+            const j = JSON.parse(decrypted);
+            data.load(j);
+            ui.bload.style.display = 'none';
+          } catch (e0) {
+            alert('Invalid json file');  
+          }
         } catch (e) {
-          alert('Failed to decrypt. Check your password.');
+          alert('Something went wrong. Try again.');
         }
       }
       reader.readAsText(file);
