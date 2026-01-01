@@ -105,7 +105,7 @@ const ui = {
             data.load(j);
             ui.bload.style.display = 'none';
           } catch (e0) {
-            alert('Invalid json file');  
+            alert(`Invalid json file ${e0.message}`);  
           }
         } catch (e) {
           alert('Something went wrong. Try again.');
