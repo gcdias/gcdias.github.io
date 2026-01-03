@@ -50,10 +50,121 @@ const data = {
     if (tag.innerText.trim() === ''){
       Object.keys(data.jdata.data).forEach(i => data.addOpt(sid, i, `${i} [${data.jdata.data[i]}]`));
     } else {
-      const tags = tag.innerText.trim().split(' ');
+      const tags = tag.innerText.toLowerCase().trim().split(' ');
       const fn = `include${ui.sflt.value}`;
       const filtered = Object.keys(data.jdata.data).filter(i => data[fn](i, tags));
       filtered.forEach(i => data.addOpt(sid, i, `${i} [${data.jdata.data[i]}]`));
+    }
+  }
+}
+
+const auth = {
+  bio: null,
+  tag: "securepw",
+  ep: null,
+
+  init: function(){
+    auth.ep = localStorage.getItem(auth.tag);
+    if (!auth.ep){
+      const pw = ui.requestPassword();
+      auth.savePw(pw);
+      auth.ep = localStorage.getItem(auth.tag);
+    }
+    auth.loadPw();
+  },
+
+  arrayBufferToBase64: function(buffer) {
+    return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+  },
+
+  base64ToArrayBuffer: function(base64) {
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes.buffer;
+  },
+
+  getBiometricCredential: async function() {
+    try {
+      const publicKey = {
+        challenge: new Uint8Array(32), // Random challenge in production
+        rp: { name: "Secure App" },
+        user: {
+          id: new Uint8Array(16),
+          name: "user@example.com",
+          displayName: "User"
+        },
+        pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+        authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required" },
+        timeout: 60000,
+        attestation: "none"
+      };
+
+      // Create credential (first time)
+      const credential = await navigator.credentials.create({ publicKey });
+      return credential;
+    } catch (err) {
+      console.error("Biometric credential error:", err);
+      throw err;
+    }
+  },
+
+  // --- Encrypt password with AES-GCM ---
+  encryptPassword: async function(password, key) {
+    const enc = new TextEncoder();
+    const iv = crypto.getRandomValues(new Uint8Array(12)); // AES-GCM IV
+    const encrypted = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv },
+      key,
+      enc.encode(password)
+    );
+    return { iv: auth.arrayBufferToBase64(iv), data: auth.arrayBufferToBase64(encrypted) };
+  },
+
+  // --- Decrypt password ---
+  decryptPassword: async function(encryptedObj, key) {
+    const dec = new TextDecoder();
+    const iv = auth.base64ToArrayBuffer(encryptedObj.iv);
+    const data = auth.base64ToArrayBuffer(encryptedObj.data);
+    const decrypted = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: new Uint8Array(iv) },
+      key,
+      data
+    );
+    return dec.decode(decrypted);
+  },
+
+  // --- Generate AES key (in real use, derive from biometric credential) ---
+  generateAESKey: async function() {
+    return crypto.subtle.generateKey(
+      { name: "AES-GCM", length: 256 },
+      true,
+      ["encrypt", "decrypt"]
+    );
+  },
+  // --- Save password securely ---
+  savePw: async function(password){
+    try {
+      await getBiometricCredential(); // Trigger biometric auth
+      const key = await auth.generateAESKey();
+      const encrypted = await auth.encryptPassword(password, key);
+      localStorage.setItem(auth.tag, JSON.stringify(encrypted));
+      alert("Password saved securely!");
+    } catch (err) {
+      alert("Authentication failed or error occurred.");
+    }
+  },
+  // --- Load password securely ---
+  loadPw: async function(){
+    try {
+      await auth.getBiometricCredential(); // Trigger biometric auth
+      const key = await auth.generateAESKey(); // In real use, retrieve same key
+      const encrypted = JSON.parse(auth.ep);
+      if (!encrypted) return alert("No password stored.");
+      const password = await auth.decryptPassword(encrypted, key);
+      auth.pw = password;
+    } catch (err) {
+      alert("Authentication failed or error occurred.");
     }
   }
 }
@@ -96,8 +207,9 @@ const ui = {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = function(event) {
+        auth.init();
         const encrypted = event.target.result;
-        const pw = ui.requestPassword();
+        const pw = auth.pw || ui.requestPassword();
         try {
           const decrypted = CryptoJS.AES.decrypt(encrypted, pw).toString(CryptoJS.enc.Utf8);
           try {
@@ -105,7 +217,7 @@ const ui = {
             data.load(j);
             ui.bload.style.display = 'none';
           } catch (e0) {
-            alert(`Invalid json file ${e0.message}`);  
+            alert(`Invalid cfg file ${e0.message}`);  
           }
         } catch (e) {
           alert('Something went wrong. Try again.');
