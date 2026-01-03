@@ -149,6 +149,7 @@ const auth = {
       const key = await auth.generateAESKey();
       const encrypted = await auth.encryptPassword(password, key);
       localStorage.setItem(auth.tag, JSON.stringify(encrypted));
+      auth.ep = encrypted;
       alert("Password saved securely!");
     } catch (err) {
       alert("Authentication failed or error occurred.");
