@@ -80,7 +80,8 @@ const auth = {
   base64ToArrayBuffer: function(base64) {
     const binary = atob(base64);
     const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    for (let i = 0; i < binary.length; i++)
+      bytes[i] = binary.charCodeAt(i);
     return bytes.buffer;
   },
 
@@ -142,6 +143,7 @@ const auth = {
       ["encrypt", "decrypt"]
     );
   },
+
   // --- Save password securely ---
   savePw: async function(password){
     try {
@@ -155,13 +157,15 @@ const auth = {
       alert("Authentication failed or error occurred.");
     }
   },
+
   // --- Load password securely ---
   loadPw: async function(){
     try {
       await auth.getBiometricCredential(); // Trigger biometric auth
       const key = await auth.generateAESKey(); // In real use, retrieve same key
       const encrypted = JSON.parse(auth.ep);
-      if (!encrypted) return alert("No password stored.");
+      if (!encrypted)
+        return alert("No password stored.");
       const password = await auth.decryptPassword(encrypted, key);
       auth.pw = password;
     } catch (err) {
@@ -178,12 +182,14 @@ const ui = {
   sid:    document.getElementById('s-id'),
   stag:   document.getElementById('s-tag'),
   sflt:   document.getElementById('s-flt'),
+  
   inactivityTimer: null,
   panelTimeout: 5000,
+
   init: function(){
-    document.addEventListener('mousemove', ui.resetInactivityTimer);
-    document.addEventListener('keydown', ui.resetInactivityTimer);
-    document.addEventListener('click', ui.resetInactivityTimer);
+    document.addEventListener('mousemove',  ui.resetInactivityTimer);
+    document.addEventListener('keydown',    ui.resetInactivityTimer);
+    document.addEventListener('click',      ui.resetInactivityTimer);
     document.addEventListener('touchstart', ui.resetInactivityTimer);
     ui.sid.addEventListener('change', () => {
       let url = `https://${ui.ssrc.value}${data.jdata.src[ui.ssrc.value]}${ui.sid.value}`;
