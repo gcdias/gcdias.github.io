@@ -64,13 +64,7 @@ const auth = {
   ep: null,
 
   init: function(){
-    auth.ep = localStorage.getItem(auth.tag);
-    if (!auth.ep){
-      const pw = ui.requestPassword();
-      auth.savePw(pw);
-      auth.ep = localStorage.getItem(auth.tag);
-    }
-    auth.loadPw();
+    auth.pw = ui.requestPassword();
   },
 
   arrayBufferToBase64: function(buffer) {
