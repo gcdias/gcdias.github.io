@@ -59,6 +59,7 @@ const data = {
 }
 
 const auth = {
+
   bio: null,
   tag: "securepw",
   ep: null,
@@ -185,18 +186,22 @@ const ui = {
     document.addEventListener('keydown',    ui.resetInactivityTimer);
     document.addEventListener('click',      ui.resetInactivityTimer);
     document.addEventListener('touchstart', ui.resetInactivityTimer);
+
     ui.sid.addEventListener('change', () => {
       let url = `https://${ui.ssrc.value}${data.jdata.src[ui.ssrc.value]}${ui.sid.value}`;
       console.log(url);
       ui.iframe.src = url;
     });
+
     ui.stag.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
         data.upd();
       }
     });
+
     ui.resetInactivityTimer();
+    
     ui.bload.addEventListener('click', () => {
       ui.loadCat();
     });
