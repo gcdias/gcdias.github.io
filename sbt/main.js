@@ -68,6 +68,21 @@ const auth = {
     auth.pw = ui.requestPassword();
   },
 
+  dec: function(str,pw, callback){
+    try {
+      const decrypted = CryptoJS.AES.decrypt(str, pw).toString(CryptoJS.enc.Utf8);
+      try {
+        const j = JSON.parse(decrypted);
+        data.load(j);
+        ui.bload.style.display = 'none';
+      } catch (e0) {
+        alert(`Invalid cfg file ${e0.message}`);  
+      }
+    } catch (e) {
+      alert('Something went wrong. Try again.');
+    }
+  },
+
   arrayBufferToBase64: function(buffer) {
     return btoa(String.fromCharCode(...new Uint8Array(buffer)));
   },
