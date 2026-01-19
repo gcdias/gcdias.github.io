@@ -61,10 +61,15 @@ const data = {
 const auth = {
 
   bio: null,
-  tag: "securepw",
+  tag: "secpw",
   ep: null,
+  mobile: window.PublicKeyCredential !== undefined,
 
   init: function(){
+    if (auth.mobile){
+      PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(b => auth.mobile = b);
+    }
+    //auth.mobile = auth.mobile && await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()
     auth.pw = ui.requestPassword();
   },
 
