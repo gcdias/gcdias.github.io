@@ -33,10 +33,12 @@ const actions = {
   },
   saveas: async function(content, fileName, contentType) {
     try {
-      let t = {};
-      t[contentType || 'text/plain'] = [`.${fileName.split('.').pop()}`];
       const fileHandle = await window.showSaveFilePicker({
         suggestedName: fileName, // Suggested default name
+        types: [{
+          description: 'Text Files',
+          accept: { 'text/plain': ['.txt'] },
+        }],
       });
       const writable = await fileHandle.createWritable(); // Create a writable stream
       await writable.write(content); // Write the new content
@@ -55,7 +57,7 @@ const actions = {
     if (!actions.filename) {
       actions.filename = prompt('Enter filename to save note:') || 'cnote.txt';
     }
-    actions.saveas(encrypted, actions.filename, 'text/plain'),then(() => {
+    actions.saveas(encrypted,actions.filename, 'text/plain'),then(() => {
         alert('Note saved securely!');
     }).catch(err => {
         console.error('Error saving note:', err);
