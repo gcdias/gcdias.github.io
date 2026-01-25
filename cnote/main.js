@@ -36,16 +36,14 @@ const actions = {
       const fileHandle = await window.showSaveFilePicker({
         suggestedName: fileName, // Suggested default name
         types: [{
-          description: 'Text Files',
-          accept: { 'text/plain': ['.txt'] },
+          description: 'CNote Files'
         }],
       });
       const writable = await fileHandle.createWritable(); // Create a writable stream
       await writable.write(content); // Write the new content
       await writable.close(); // Close the file and save changes
-      console.log('File saved successfully!');
     } catch (err) {
-      console.error('Error saving file:', err);
+      alert(`${err.name}: ${err.message}`);
     }
   },
   saveNote: function() {
@@ -57,14 +55,11 @@ const actions = {
     if (!actions.filename) {
       actions.filename = prompt('Enter filename to save note:') || 'cnote.txt';
     }
-    actions.saveas(encrypted,actions.filename, 'text/plain'),then(() => {
+    actions.saveas(encrypted,actions.filename, 'text/plain').then(() => {
         alert('Note saved securely!');
     }).catch(err => {
         console.error('Error saving note:', err);
     });
-    //dowload(encrypted, actions.filename, 'text/plain');
-    //localStorage.setItem('cnote', encrypted);
-    //alert('Note saved securely!');
   },
   loadNote: function() {
     const input = document.createElement('input');
