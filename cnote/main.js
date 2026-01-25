@@ -32,63 +32,18 @@ const actions = {
     alert('Password set!');
   },
   saveas: async function(content, fileName, contentType) {
-        try {
-        // Show save dialog (user can pick an existing file to overwrite)
-        const fileHandle = await window.showSaveFilePicker({
-            suggestedName: fileName, // Suggested default name
-            types: [
-                {
-                    description: 'Text Files',
-                    accept: { 'text/plain': ['.txt'] }
-                }
-            ]
-        });
-
-        // Create a writable stream
-        const writable = await fileHandle.createWritable();
-
-        // Write the new content
-        await writable.write(content);
-
-        // Close the file and save changes
-        await writable.close();
-
-        console.log('File saved successfully!');
-    } catch (err) {
-        if (err.name === 'AbortError') {
-            console.log('File save canceled by user.');
-        } else {
-            console.error('Error saving file:', err);
-        }
-    }
     try {
-        // Show save dialog (user can pick an existing file to overwrite)
-        const fileHandle = await window.showSaveFilePicker({
-            suggestedName: 'example.txt', // Suggested default name
-            types: [
-                {
-                    description: 'Text Files',
-                    accept: { 'text/plain': ['.txt'] }
-                }
-            ]
-        });
-
-        // Create a writable stream
-        const writable = await fileHandle.createWritable();
-
-        // Write the new content
-        await writable.write(content);
-
-        // Close the file and save changes
-        await writable.close();
-
-        console.log('File saved successfully!');
+      let t = {};
+      t[contentType || 'text/plain'] = [`.${fileName.split('.').pop()}`];
+      const fileHandle = await window.showSaveFilePicker({
+        suggestedName: fileName, // Suggested default name
+      });
+      const writable = await fileHandle.createWritable(); // Create a writable stream
+      await writable.write(content); // Write the new content
+      await writable.close(); // Close the file and save changes
+      console.log('File saved successfully!');
     } catch (err) {
-        if (err.name === 'AbortError') {
-            console.log('File save canceled by user.');
-        } else {
-            console.error('Error saving file:', err);
-        }
+      console.error('Error saving file:', err);
     }
   },
   saveNote: function() {
@@ -100,7 +55,7 @@ const actions = {
     if (!actions.filename) {
       actions.filename = prompt('Enter filename to save note:') || 'cnote.txt';
     }
-    actions.saveas(encrypted,actions.filename, 'text/plain'),then(() => {
+    actions.saveas(encrypted, actions.filename, 'text/plain'),then(() => {
         alert('Note saved securely!');
     }).catch(err => {
         console.error('Error saving note:', err);
