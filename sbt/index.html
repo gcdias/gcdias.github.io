@@ -13,8 +13,10 @@
  </head>
  <body>
    <iframe id="iframe" sandbox="allow-scripts allow-forms" allowfullscreen="true" webkitallowfullscreen="true" onload="setUrl()"></iframe>
-   <button id="s-load">+</button>
-   <div id="m-top" hidden>
+  <button id="s-load" title="Open">●</button>
+  <div id="m-top" class="hidden" role="dialog" aria-modal="true" aria-label="Controls">
+   <button id="s-close" class="m-close" title="Close">✕</button>
+   <div class="mcontent">
     <div class="mfr">
       <select class="mfa" id="s-src"></select>
       <select class="mfa" id="s-id"></select>
@@ -25,6 +27,10 @@
         <option value="All">All</option>
         <option value="Any">Any</option>
       </select>
+    </div>
+    </div>
+    <div style="padding:12px;text-align:center">
+      <button id="s-file-load" class="m-action">Load file</button>
     </div>
    </div>
    <script src="main.js?v=260101"></script>

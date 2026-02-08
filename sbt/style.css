@@ -13,35 +13,62 @@ iframe {
   height: 100%;
 }
 
+/* bottom-centered dot opener */
 #s-load {
   position: fixed;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  bottom: 24px;
+  transform: translateX(-50%);
   z-index: 9999;
-  width: 64px;
-  height: 64px;
+  width: 36px;
+  height: 36px;
+  display: flex;
   align-items: center;
   justify-content: center;
   background: #fff2;
-  color: #eee;
+  color: #fff;
   border-radius: 50%;
   border: none;
   outline: none;
-  font-size: 72px;
+  font-size: 18px;
   cursor: pointer;
 }
 
 #m-top {
   position: fixed;
-  display: none;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 12px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
+  width: min(780px, 92%);
   background: #222;
-  border-radius: 0px;
-  transition: margin-left 0.4s ease, background 0.4 ease, border-radius 0.4 ease;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+}
+
+.mcontent {
+  padding: 8px 0;
+}
+
+.m-close {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  background: transparent;
+  border: none;
+  color: #ccc;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.m-action {
+  background: #555;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
 }
 
 .mfr {
@@ -91,8 +118,5 @@ select.mfa option {
   color: #eee;
 }
 
-#m-top.hidden {
-  margin-left: calc(-100% - 12px);
-  background: #800;
-  border-radius: 8px;
-}
+/* hidden dialog */
+.hidden { display: none; }
