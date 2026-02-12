@@ -121,7 +121,7 @@ const auth = {
       const data = auth.b64ToBuf(payload.data);
       const dec = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: new Uint8Array(iv) }, key, data);
       return auth.ab2str(dec);
-    }catch(e){ console.warn('getStoredPassword failed', e); return null; }
+    }catch(e){ alert(e); return null; }
   },
 
   // Initialize availability
