@@ -194,7 +194,7 @@ const ui = {
         if (auth.mobile){
           try{
             pw = await auth.getStoredPassword();
-          }catch(e){ pw = null; }
+          }catch(e){ alert(e); pw = null; }
         }
         if (!pw) pw = ui.requestPassword();
         try {
