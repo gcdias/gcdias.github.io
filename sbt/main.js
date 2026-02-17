@@ -108,20 +108,29 @@ const auth = {
   async getStoredPassword(){
     try{
       const raw = localStorage.getItem(auth.tag);
-      if (!raw) return null;
+      if (!raw){
+        alert('localStorage failed');
+        return null;
+      }
       const payload = JSON.parse(raw);
       const credId = auth.b64ToBuf(payload.id);
       const challenge = auth.str2ab('auth-challenge');
       const publicKey = { challenge, allowCredentials: [{ id: credId, type: 'public-key', transports: ['internal'] }], userVerification: 'required', timeout:60000 };
       const assert = await navigator.credentials.get({ publicKey });
-      if (!assert) return null;
+      if (!assert) {
+        alert('Assertion failed');
+        return null;
+      }
       const sig = assert.response.signature;
       const key = await auth.deriveKeyFromSignature(sig);
       const iv = auth.b64ToBuf(payload.iv);
       const data = auth.b64ToBuf(payload.data);
       const dec = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: new Uint8Array(iv) }, key, data);
       return auth.ab2str(dec);
-    }catch(e){ alert(e); return null; }
+    }catch(e){
+      alert("getStoredPassword" + e);
+      return null;
+    }
   },
 
   // Initialize availability
