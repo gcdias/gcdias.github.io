@@ -10,12 +10,14 @@ if ("serviceWorker" in navigator) {
 const ui = {
   loadId: document.getElementById('load-note'),
   saveId: document.getElementById('save-note'),
+  resetId: document.getElementById('reset-pw'),
   contentId: document.getElementById('t-content'),
   passwordInput: document.getElementById('input-password'),
   submitPassword: document.getElementById('submit-password'),
   init: function() {
     this.loadId.addEventListener('click', actions.loadNote);
     this.saveId.addEventListener('click', actions.saveNote);
+    this.resetId.addEventListener('click', actions.resetPassword);
     this.submitPassword.addEventListener('click', actions.setPassword);
   },
   requestPassword: function() {
@@ -30,6 +32,13 @@ const actions = {
   setPassword: function() {
     actions.password = ui.passwordInput.value;
     alert('Password set!');
+  },
+  resetPassword: function() {
+    if (confirm('This will clear cache. Are you sure?')) {
+      localStorage.clear();
+      actions.password = null;
+      alert('Cache is clean!');
+    }
   },
   saveas: async function(content, fileName, contentType) {
     try {
