@@ -70,7 +70,13 @@ const actions = {
       const reader = new FileReader();
       reader.onload = function(event) {
         const encrypted = event.target.result;
-        actions.password = ui.requestPassword();
+        let pw = localStorage.getItem(actions.filename.toLowerCase());
+        if (!pw){
+          pw = ui.requestPassword();
+          if (confirm('Store this password for biometric unlock next time?'))
+            localStorage.setItem(actions.filename.toLowerCase(), pw);
+        }
+        actions.password = pw;
         try {
           const decrypted = CryptoJS.AES.decrypt(encrypted, actions.password).toString(CryptoJS.enc.Utf8);
           ui.contentId.innerHTML = decrypted;

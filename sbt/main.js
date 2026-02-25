@@ -197,33 +197,20 @@ const ui = {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = async function(event) {
-        auth.init();
-        const encrypted = event.target.result;
-        let pw = null;
-        if (auth.mobile){
-          try{
-            pw = await auth.getStoredPassword();
-          }catch(e){ alert(e); pw = null; }
+        const n = file.name.toLowerCase();
+        let pw = localStorage.getItem(n);
+        if (!pw){
+          pw = ui.requestPassword();
+          if (confirm('Store this password for biometric unlock next time?'))
+            localStorage.setItem(n, pw);
         }
-        if (!pw) pw = ui.requestPassword();
         try {
+          const encrypted = event.target.result;
           const decrypted = CryptoJS.AES.decrypt(encrypted, pw).toString(CryptoJS.enc.Utf8);
           try {
             const j = JSON.parse(decrypted);
             data.load(j);
             ui.bload.style.display = 'none';
-
-            // Offer to store password with biometric if available and not already stored
-            if (auth.mobile){
-              const hasStored = !!localStorage.getItem(auth.tag);
-              if (!hasStored){
-                try{
-                  if (confirm('Store this password for biometric unlock next time?')){
-                    await auth.createAndStorePassword(pw);
-                  }
-                }catch(e){ console.warn('storing pw failed', e); }
-              }
-            }
 
           } catch (e0) {
             alert(`Invalid cfg file ${e0.message}`);  
