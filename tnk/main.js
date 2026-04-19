@@ -78,6 +78,7 @@ const tnk = {
     { "Metzora": "2;14:1–15:33" },
     { "Acharei Mot": "2;16:1–18:30" },
     { "Kedoshim": "2;19:1–20:27" },
+    { "Acharei Mot-Kedoshim": "2;16:1–20:27" },
     { "Emor": "2;21:1–24:23" },
     { "Behar": "2;25:1–26:2" },
     { "Bechukotai": "2;26:3–27:34" },
