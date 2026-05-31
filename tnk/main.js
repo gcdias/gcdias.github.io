@@ -86,7 +86,7 @@ const tnk = {
     { "Bamidbar": "3;1:1–4:20" },
     { "Nasso": "3;4:21–7:89" },
     { "Behaalotecha": "3;8:1–12:16" },
-    { "Beha'alotecha": "3;8:1–12:16" },
+    { "Beha'alotcha": "3;8:1–12:16" },
     { "Shelach": "3;13:1–15:41" },
     { "Korach": "3;16:1–18:32" },
     { "Chukat": "3;19:1–22:1" },
