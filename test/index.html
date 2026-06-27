@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Gravação Estéreo HAF</title>
+    <style>
+        body { font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; text-align: center; background: #f5f5f5; }
+        button { font-size: 16px; padding: 12px 24px; margin: 10px; cursor: pointer; border: none; border-radius: 4px; background: #007bff; color: white; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #stop { background: #dc3545; }
+        .meters { display: flex; justify-content: space-around; margin: 20px 0; }
+        .meter-container { width: 40%; background: #ddd; height: 30px; border-radius: 4px; overflow: hidden; position: relative; }
+        .meter-bar { height: 100%; width: 0%; background: #28a745; transition: width 0.1s ease; }
+        .meter-label { position: absolute; width: 100%; text-align: center; line-height: 30px; font-weight: bold; color: #333; }
+        audio { margin-top: 20px; width: 100%; }
+        #status { font-weight: bold; color: #666; margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+    <h2>Gravador Estéreo Web</h2>
+    <p>Certifique-se de que tem um microfone ou interface estéreo ligados.</p>
+
+    <div class="meters">
+        <div class="meter-container">
+            <div class="meter-label">Esq (L)</div>
+            <div id="meter-l" class="meter-bar"></div>
+        </div>
+        <div class="meter-container">
+            <div class="meter-label">Dir (R)</div>
+            <div id="meter-r" class="meter-bar"></div>
+        </div>
+    </div>
+
+    <div id="status">Pronto para iniciar</div>
+
+    <button id="start">Gravar</button>
+    <button id="stop" disabled>Parar</button>
+
+    <br>
+    <audio id="audioPlayback" controls></audio>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let audioContext;
+        let analyserL, analyserR;
+        let scriptProcessor;
+        let streamRef;
+
+        const startBtn = document.getElementById('start');
+        const stopBtn = document.getElementById('stop');
+        const statusDiv = document.getElementById('status');
+        const audioPlayback = document.getElementById('audioPlayback');
+        const meterL = document.getElementById('meter-l');
+        const meterR = document.getElementById('meter-r');
+
+        startBtn.onclick = async () => {
+            audioChunks = [];
+            
+            // Restrições estritas para forçar o estéreo e desativar processamento Mono
+            const constraints = {
+                audio: {
+                    channelCount: 2,
+                    echoCancellation: false,
+                    noiseSuppression: false,
+                    autoGainControl: false
+                }
+            };
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                streamRef = stream;
+                statusDiv.innerText = "A gravar em estéreo...";
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+
+                // 1. Configurar Gravação
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    audioPlayback.src = audioUrl;
+                    statusDiv.innerText = "Gravação concluída! Ouve o resultado.";
+                };
+                mediaRecorder.start();
+
+                // 2. Configurar Visualizador em Tempo Real (Medidor L/R)
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const source = audioContext.createMediaStreamSource(stream);
+                
+                // Separador de canais (Splitter)
+                const splitter = audioContext.createChannelSplitter(2);
+                source.connect(splitter);
+
+                // Analisadores independentes para Esquerdo e Direito
+                analyserL = audioContext.createAnalyser();
+                analyserR = audioContext.createAnalyser();
+                
+                splitter.connect(analyserL, 0); // Canal 0 = Esquerdo
+                splitter.connect(analyserR, 1); // Canal 1 = Direito
+
+                updateMeters();
+
+            } catch (err) {
+                statusDiv.innerText = "Erro: O navegador barrou o acesso ou não suporta estéreo.";
+                console.error(err);
+            }
+        };
+
+        stopBtn.onclick = () => {
+            mediaRecorder.stop();
+            streamRef.getTracks().forEach(track => track.stop());
+            if (audioContext) audioContext.close();
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            meterL.style.width = '0%';
+            meterR.style.width = '0%';
+        };
+
+        function updateMeters() {
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                const dataL = new Uint8Array(analyserL.frequencyBinCount);
+                const dataR = new Uint8Array(analyserR.frequencyBinCount);
+                
+                analyserL.getByteFrequencyData(dataL);
+                analyserR.getByteFrequencyData(dataR);
+
+                // Calcular volume médio de cada canal
+                const avgL = dataL.reduce((a, b) => a + b, 0) / dataL.length;
+                const avgR = dataR.reduce((a, b) => a + b, 0) / dataR.length;
+
+                // Converter para percentagem visual
+                const pctL = Math.min((avgL / 128) * 100, 100);
+                const pctR = Math.min((avgR / 128) * 100, 100);
+
+                meterL.style.width = pctL + '%';
+                meterR.style.width = pctR + '%';
+
+                requestAnimationFrame(updateMeters);
+            }
+        }
+    </script>
+</body>
+</html>
