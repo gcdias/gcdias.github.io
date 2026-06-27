@@ -107,7 +107,7 @@
                 updateMeters();
 
             } catch (err) {
-                statusDiv.innerText = "Erro: O navegador barrou o acesso ou não suporta estéreo.";
+                statusDiv.innerText = "Erro: O navegador barrou o acesso ou não suporta estéreo."+err;
                 console.error(err);
             }
         };
