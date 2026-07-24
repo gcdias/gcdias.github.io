@@ -451,7 +451,7 @@ const fonts = {
           fonts.select.value = JSON.stringify(fonts.defaultFont);
           fonts.select.addEventListener('change', renderSvg);
           intro.panel.style.display = 'none';
-          if (font_png){
+          if (typeof font_png !== undefined){
             font_png.init();
           }
       }).catch((err) => {

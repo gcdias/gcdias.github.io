@@ -68,7 +68,7 @@ const settings = {
     settings.resh = urlParams.get('h') || urlParams.get('height') || window.screen.height * window.devicePixelRatio;
     let modes = urlParams.get('modes') || "1980x1080,1280x1024,1024x768,800x600";
     settings.modes = modes.split(',');
-    if (settings.readMoreParams)
+    if (settings.readMoreParams !== undefined)
       settings.readMoreParams(urlParams);      
   }
 }
