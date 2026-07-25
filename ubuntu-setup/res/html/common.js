@@ -48,21 +48,21 @@ function encodeSvg(svg){
 }
 
 function spanText(id, y, fontSize, lineHeight) {
-  const e = document.getElementById(id);
-  return e ? e.value.split('\n')
+  const e = data.main[id];
+  return e ? e.split('\n')
     .map((a,i) => '<tspan x="50%" y="'+ (y + (fontSize * lineHeight) * (1 + i)) + '">' + a + '</tspan>')
     .join('\n') : '';
 }
 
 function genSvg(){
-  wallpaper.refresh();
+  //wallpaper.update(false);
   const preset = data.main;
-  const y_title = preset.title_y / 100 * opts.wp_h;
-  const y_footer = preset.footer_y / 100 * opts.wp_h;
+  const y_title = preset.title_y / 100 * opts.resY;
+  const y_footer = preset.footer_y / 100 * opts.resY;
   const title = spanText('title', y_title, preset.font_size_title, 1.2);
   const footer = spanText('footer', y_footer, preset.font_size_footer, 1.2);
   const font_stretch = `font-stretch='${preset.font_family.stretch}'`
-  const logo_y =  (1 + parseInt(preset.logo_dy)/50) * opts.wp_h/2 - wallpaper.logoH / 2 * preset.logo_scale;
+  const logo_y =  (1 + parseInt(preset.logo_dy)/50) * opts.resY/2 - wallpaper.logoH / 2 * preset.logo_scale;
   const logo_x =  (1 + parseInt(preset.logo_dx)/50) * 2256/2 - wallpaper.logoW / 2 * preset.logo_scale;
   return eval("`" + wallpaper.svg + "`");
 }
@@ -138,15 +138,9 @@ function init(){
   document.querySelectorAll('input').forEach(input => {
     input.addEventListener('input', render);
   });
-  document.getElementById('title').textContent = opts.defTitle;
-  document.getElementById('footer').textContent = opts.defFooter;
-  document.getElementById('title').addEventListener('input', render);
-  document.getElementById('footer').addEventListener('input', render);
-  // external function
-  wallpaper.load().then(() => {
-    render();
-  });
   initComponents();
+  wallpaper.init();
+  
 }
 
 function xmlElement(name, value){
@@ -198,8 +192,10 @@ const intro = {
   panel: document.getElementById('intro'),
   input: document.getElementById('intro-ctrl'),
   msgId: document.getElementById('intro-text'),
+  vndId: document.getElementById('intro-vendor'),
+  arId: document.getElementById('intro-ar'),
   ok: document.getElementById('intro-ok'),
-  msg: "This page needs to access all installed fonts. Click «ok» to proceed. After exporting the zip file, run «install.sh»", 
+  msg: "This site needs to access all installed fonts. Click «ok» to proceed. After exporting the zip file, run «install.sh»", 
   init: function(callback){
     this.panel.style.display = 'block';
     if (opts.vendor){
@@ -209,31 +205,30 @@ const intro = {
       this.loadIntroOpts();
     }
     this.msgId.textContent = this.msg;
-    this.ok.addEventListener('click', fonts.init);
+    this.ok.addEventListener('click', callback);
   },
   loadIntroOpts: function(){
-    const v = document.getElementById('ctrl-vendor');
-    const ar = document.getElementById('ctrl-ar');
-    opts.vndList.forEach(vnd => utils.addOption(v, vnd, vnd));
-    v.addEventListener('change', () => {
-      opts.vendor = v.value;
-      wallpaper.load();
-      renderSvg();
+    this.vndId.options.length = 0;
+    opts.vndList.forEach(vnd => utils.addOption(this.vndId, vnd, vnd));
+    this.vndId.addEventListener('change', () => {
+      opts.vendor = this.vndId.value;
+      wallpaper.reload();
+      //renderSvg();
     });
-    ar.addEventListener('change', () => {
-      let a = ar.value === 'auto' 
+    this.arId.addEventListener('change', () => {
+      let a = this.arId.value === 'auto' 
         ? [ window.screen.width, window.screen.height ]
-        : ar.value.split(':');
+        : this.arId.value.split(':');
       opts.ar = a[1]/a[2];
       opts.resX = 2256;
-      opts.resY = 2256 / ar.value;
-      opts.wp_h = opts.resY;
+      opts.resY = 2256 / this.arId.value;
     })
   }
 }
 
 const data = {
-  main: {
+  background: {
+    background_color: '#000000',
     pattern_color: '#804000',
     pattern_alpha: '0.05',
     grad_top: '#0d0704',
@@ -249,6 +244,28 @@ const data = {
     font_size_title: '40',
     font_size_footer: '18',
     font_alpha: '0.5',
+    title_y: 13,
+    footer_y: 72,
+  },
+  main: {
+    background_color: '#000000',
+    pattern_color: '#804000',
+    pattern_alpha: '0.05',
+    grad_top: '#0d0704',
+    grad_bot: '#03070d',
+    grad_alpha: '1.0',
+    logo_color: '#d82000',
+    logo_alpha: '0.1',
+    logo_scale: '1.0',
+    logo_dx: '0',
+    logo_dy: '0',
+    font_color: '#d82000',
+    font_family: {},
+    font_size_title: '40',
+    font_size_footer: '18',
+    font_alpha: '0.5',
+    title: '',
+    footer: '',
     title_y: 13,
     footer_y: 72,
     current: 'dark'
@@ -268,19 +285,19 @@ const data = {
     },
   },  
   availableParameters: [ 
-    {'pc':'pattern_color'},
-    {'pa':'pattern_alpha'},
-    {'gt':'grad_top'},
-    {'gb':'grad_bot'},
-    {'ga':'grad_alpha'},
-    {'lc':'logo_color'},
-    {'la':'logo_alpha'},
-    {'fc':'font_color'},
-    {'fst':'font_size_title'},
-    {'fsf':'font_size_footer'},
-    {'fa':'font_alpha'},
-    {'tity':'title_y'},
-    {'foty':'footer_y'}
+    {'pc':'pattern_color'}, {'patc':'pattern_color'},
+    {'pa':'pattern_alpha'}, {'pata':'pattern_alpha'},
+    {'gt':'grad_top'}, {'gradt':'grad_top'},
+    {'gb':'grad_bot'}, {'gradb':'grad_bot'},
+    {'ga':'grad_alpha'}, {'grada':'grad_alpha'},
+    {'lc':'logo_color'}, {'logoc':'logo_color'},
+    {'la':'logo_alpha'}, {'logoa':'logo_alpha'},
+    {'fc':'font_color'}, {'fontc':'font_color'},
+    {'fst':'font_size_title'}, {'titlesz':'font_size_title'},
+    {'fsf':'font_size_footer'}, {'footersz':'font_size_footer'},
+    {'fa':'font_alpha'}, {'fonta':'font_alpha'},
+    {'tity':'title_y'}, {'titley':'title_y'},
+    {'foty':'footer_y'}, {'footery':'footer_y'}
   ],
   readParams: function(urlParams){
     let pr = data.presets[urlParams.get('pre')] ?? data.main;
@@ -303,50 +320,107 @@ const data = {
 
 const wallpaper = {
   id: document.getElementById('img_preview'),
+  background_pattern: document.getElementById('background_pattern'),
+  details_pattern: document.getElementById('details_pattern'),
+  background_gradient: document.getElementById('background_gradient'),
+  details_gradient: document.getElementById('details_gradient'),
+  vendor: document.getElementById('vendor'),
+
   imgFormat: 'png',
   tmp: '',
   svg: '',
+  logoW: 512,
+  logoH: 512,
   logoCache: {},
-  keys: [],
-  load: async function() {
+  reloadKeys: ["background_pattern", "background_gradient", "vendor"],
+
+  init: async function() {
     data.main.font_family = fonts.defaultFont;
-    this.keys = Object.keys(data.main);
-    this.tmp = await fetchText('html/wp-base.svg');
-    this.loadVendorList();
-    this.svg = this.tmp;
-    if (opts.vendor){
-      this.setLogo();
-    }
+    wallpaper.keys = Object.keys(data.main);
+    wallpaper.initVendor();
+    wallpaper.initReloadKeys();
+    wallpaper.initUpdateKeys();
+
+    //wallpaper.update(false);
+    wallpaper.reload();
   },
-  loadVendorList: function(){
-    const vendor = document.getElementById('vendor');
+  initVendor: function(){
     opts.vndList.sort();
     const defVnd = urlParams.get('vnd');
     if (defVnd)
-      utils.addOption(vendor, defVnd, 'auto');
-    opts.vndList.forEach(vnd => utils.addOption(vendor, vnd, vnd));
+      utils.addOption(wallpaper.vendor, defVnd, 'auto');
+    opts.vndList.forEach(vnd => utils.addOption(wallpaper.vendor, vnd, vnd));
     if (opts.vendor !== '')
-      vendor.value = opts.vendor;
-    vendor.addEventListener('change', () => {
-      opts.vendor = vendor.value; 
-      this.setLogo()
+      wallpaper.vendor.value = opts.vendor;
+  },
+  initReloadKeys:function(){
+    wallpaper.reloadKeys.forEach(key => {
+      const id = document.getElementById(key);
+      if (id){
+        id.addEventListener('input', wallpaper.reload);
+      }
     });
   },
-  setLogo: async function(){
-    var logo;
-    if (this.logoCache[opts.vendor]){
-      logo = this.logoCache[opts.vendor];
-    } else {
+  initUpdateKeys:function(){
+    Object.keys(data.main).forEach(key => {
+      const id = document.getElementById(key);
+      if (id){
+        if (key === 'font_family'){
+          id.addEventListener('input', (e) => {
+            data.main[key] = JSON.parse(id.value);
+            renderSvg();
+          });
+          id.value = JSON.stringify(data.main[key]);
+        } else {
+          id.addEventListener('input', (e) => {
+            data.main[key] = id.value;
+            renderSvg();
+          });
+          id.value = data.main[key];
+        }
+      }
+    });
+  },
+  reload: async function() {
+    opts.usePattern = wallpaper.background_pattern.checked;
+    opts.useGradient = wallpaper.background_gradient.checked;
+    opts.vendor = wallpaper.vendor.value;
+    wallpaper.details_pattern.style.display = opts.usePattern ? 'block' : 'none';
+    wallpaper.details_gradient.style.display = opts.useGradient ? 'block' : 'none';
+    let svg = await fetchText('html/wp-base.svg');
+    if (opts.usePattern){
+      svg = svg.replaceAll('<!--set-pattern', '').replaceAll('set-pattern-->', '');
+    }
+    if (opts.useGradient){
+      svg = svg.replaceAll('<!--set-gradient', '').replaceAll('set-gradient-->', '');
+    }
+    if (opts.vendor){
+      let logo = await fetchText(`icons/hw/${opts.vendor}.svg`);
       logo = await fetchText(`icons/hw/${opts.vendor}.svg`);
       [ , this.logoW, this.logoH ] = logo.match('viewBox="0 0 (.*?) (.*?)"');
       logo = logo.replace(/^<svg.*>/gi,'')
-      .replace(/<\/svg>/gi,'')
-      .replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill='${preset.logo_color}'")
-      .trim();
-      this.logoCache[opts.vendor] = logo;
+        .replace(/<\/svg>/gi,'')
+        .replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill='${preset.logo_color}'")
+        .trim();
+      svg = svg.replace('<!--logo-data-->', logo);
     }
-    this.svg = this.tmp.replace('<!--logo-data-->', logo);
-    renderSvg();
+    wallpaper.svg = svg;
+    render();
+  },
+
+  update: function(render=true){
+    /*const curr = data.main.current;
+    wallpaper.forEachKey((key, ui) => {
+      let val = ui.value;
+      if (key === 'font_family')
+        val = val ? JSON.parse(val) : data.main.font_family;
+      data.main[key] = val;
+      if (data.presets[curr][key])
+        data.presets[curr][key] = val;
+    });
+    */
+    if (render)
+      render();
   },
   forEachKey: function(callback){
     this.keys = [];
@@ -362,23 +436,12 @@ const wallpaper = {
     if (data.presets[name]){
       data.main = { ...data.main, ...data.presets[name] };
       // load ui values to preset
-      this.forEachKey((key, id) => {
+      wallpaper.forEachKey((key, id) => {
         id.value = data.main[key];
       });
       renderSvg();
     }
   },
-  refresh: function(){
-    const curr = data.main.current;
-    this.forEachKey((key, ui) => {
-      let val = ui.value;
-      if (key === 'font_family')
-        val = val ? JSON.parse(val) : data.main.font_family;
-      data.main[key] = val;
-      if (data.presets[curr][key])
-        data.presets[curr][key] = val;
-    })
-  }
 }
 
 const fonts = {
@@ -465,11 +528,12 @@ const fonts = {
 
 /*  main  */
 
+opts.id = opts.id.replace('@id', Date.now().valueOf().toString(16));
+opts.type = urlParams.get('t') || opts.type.replace('@type','wallpaper');
 opts.vendor = urlParams.get('vnd') || opts.vendor.replace('@vendor','');
 opts.resX = urlParams.get('w') || opts.resX.replace('@resX',window.screen.width * window.devicePixelRatio);
 opts.resY = urlParams.get('h') || opts.resY.replace('@resY',window.screen.height * window.devicePixelRatio);
 opts.ar = opts.resX / opts.resY;
-opts.wp_h = 2256 / opts.ar;
 opts.user = urlParams.get('usr') || opts.user;
 opts.home = `/home/${opts.user}`;
 opts.grubSet = opts.grubSet.replace("@grub_set",'') || "grub-os-symb";
@@ -482,23 +546,23 @@ intro.init(fonts.init);
 
 const button_export = document.getElementById('button_export');
 
-if (opts.defTitle.startsWith("@")){
-  switch(opts.type){
-    case 'grub':
-      opts.defTitle="Choose an operating system to start";
-      opts.defFooter="Use the up and down keys to select your choice. Press Enter to boot the selected OS, &#39;e&#39;; to edit the commands before booting or &#39;c&#39; for a command-line"
-      break;
-    case 'refind':
-      opts.defTitle = "rEFInd boot menu";
-      break;
-    default:
-      opts.defTitle = "";
-      break;
-  }
+let t = data.main.footer = urlParams.get('title');
+let f = data.main.footer = urlParams.get('footer');
+
+switch(opts.type){
+  case 'grub':
+    data.main.title  = t || "Choose an operating system to start";
+    data.main.footer = f || "Use the up and down keys to select your choice. Press Enter to boot the selected OS, &#39;e&#39;; to edit the commands before booting or &#39;c&#39; for a command-line"
+    break;
+  case 'refind':
+    data.main.title = t || "rEFInd boot menu";
+    data.main.footer = f || "";
+    break;
+  default:
+    data.main.title = t || "";
+    data.main.footer = f || "";
+    break;
 }
-  
-opts.id = opts.id.replace('@id', Date.now().valueOf().toString(16));
-opts.type = urlParams.get('t') || opts.type.replace('@type','wallpaper');
 
 /* Panel Toggle Functionality for Mobile */
 const panelToggle = document.getElementById('panel-toggle');

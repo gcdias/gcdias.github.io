@@ -70,8 +70,47 @@
   <div id="controls">
     <div class="control-group">
       <div class="div-header">Background</div>
-      <details>
+      <details open>
+        <summary>Background type</summary>
+        <div class="flex-end">
+          <div class="flex-1">
+            <label for="background_color">Color:</label>
+            <input type="color" id="background_color" value="#000000" />
+          </div>
+          <div class="flex-switch">
+            <span class="span-label">Pattern</span>
+            <label class="material-switch">
+              <input type="checkbox" id="background_pattern" checked/>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="flex-switch">
+            <span class="span-label">Gradient</span>
+            <label class="material-switch">
+              <input type="checkbox" id="background_gradient" checked/>
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="flex-switch">
+            <span class="span-label">Adjust Size</span>
+            <label class="material-switch">
+              <input type="checkbox" id="adjust-sizes" checked/>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </details>
+      <details id="details_pattern">
         <summary>Pattern</summary>
+        <div class="flex-1" id="div-pattern">
+          <label for="pattern_type">Pattern Type:</label>
+          <select id="pattern_type">
+            <option value="none">None</option>
+            <option value="diagonal selected">Diagonal</option>
+            <option value="dots">Dots</option>
+            <option value="lines">Lines</option>
+          </select>
+        </div>
         <div class="flex-end">
           <div class="flex-1">
             <label for="pattern_color">Pattern Color:</label>
@@ -83,9 +122,17 @@
           </div>
         </div>
       </details>
-
-      <details>
+      <details id="details_gradient">
         <summary>Gradient</summary>
+        <div class="flex-1" id="div-gradient">
+          <label for="gradient_type">Gradient Type:</label>
+          <select id="gradient_type">
+            <option value="none">None</option>
+            <option value="solid">Solid</option>
+            <option value="grad2" selected>2-Gradient</option>
+            <option value="grad4">4-Gradient</option>
+          </select>
+        </div>
         <div class="flex-end">
           <div class="flex-1">
             <label for="grad_top">Top-Left:</label>
@@ -109,6 +156,16 @@
             <label for="vendor">Hardware vendor:</label>
             <select id="vendor"></select>
           </div>
+          <div class="flex-1" id="div-vendor-color">
+            <label for="vendor_type">Color:</label>
+            <select id="vendor_type">
+              <option value="none">Original, colored</option>
+              <option value="default">Default</option>
+              <option value="custom" selected>Custom</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex-end">
           <div class="flex-1">
             <label for="logo_color">Color:</label>
             <input type="color" id="logo_color" value="#FFFFFF">
@@ -174,14 +231,8 @@
         <textarea id="footer" spellcheck="false"></textarea>
       </details>
       <div class="flex-end">
-      <div class="flex-switch">
-        <span class="span-label">Adjust sizes to device pixel ratio</span>
-        <label class="material-switch">
-          <input type="checkbox" id="adjust-sizes" checked/>
-          <span class="slider"></span>
-        </label>
+
       </div>
-    </div>
     </div>
     <div id="control-extra">
     <!--control-extra-->
