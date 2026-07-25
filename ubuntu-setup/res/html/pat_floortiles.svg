@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="2256" height="1504" version="1.1" viewBox="0 0 2256 1504" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <pattern id="pattern" patternTransform="matrix(1.41 -1.41 1.41 1.41 0 0)" preserveAspectRatio="xMidYMid" xlink:href="#FloorTiles"/>
+  <pattern id="FloorTiles" width="90" height="90" fill="#000000" patternTransform="rotate(-45)" patternUnits="userSpaceOnUse" preserveAspectRatio="xMidYMid">
+   <path d="m0 0v1h15v14h-15v61h30v14h1v-14h14v14h1v-29h14v29h1v-44h14v44h1v-14h14v-1h-14v-44h14v-1h-44v-14h44v-1h-29v-14h29v-1h-30v15h-14v-15h-1v30h-14v-30h-16zm16 1h14v44h-14v-30zm-15 15h14v44h-14zm30 15h44v14h-44zm-15 15h44v14h-44zm-15 15h44v14h-44z" stroke-miterlimit="10" stroke-width="5"/>
+  </pattern>
+ </defs>
+ <rect width="100%" height="100%" fill="url(#pattern)"/>
+</svg>

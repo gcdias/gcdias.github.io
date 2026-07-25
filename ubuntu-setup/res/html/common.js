@@ -320,24 +320,36 @@ const data = {
 
 const wallpaper = {
   id: document.getElementById('img_preview'),
-  background_pattern: document.getElementById('background_pattern'),
-  details_pattern: document.getElementById('details_pattern'),
-  background_gradient: document.getElementById('background_gradient'),
-  details_gradient: document.getElementById('details_gradient'),
   vendor: document.getElementById('vendor'),
+  vendor_colortype: document.getElementById('logo_colortype'),
+  divlogo_color: document.getElementById('div-logo-color'),
+  pattern_type: document.getElementById('pattern_type'),
+  gradient_type: document.getElementById('gradient_type'),
+ 
+  font: document.getElementById('font_family'),
 
   imgFormat: 'png',
-  tmp: '',
   svg: '',
   logoW: 512,
   logoH: 512,
   logoCache: {},
-  reloadKeys: ["background_pattern", "background_gradient", "vendor"],
+  reloadKeys: ["pattern_type", "gradient_type", "vendor"],
 
   init: async function() {
     data.main.font_family = fonts.defaultFont;
     wallpaper.keys = Object.keys(data.main);
     wallpaper.initVendor();
+    
+    wallpaper.pattern_type.addEventListener('change', (e) => {
+      opts.pattern_type = wallpaper.pattern_type.value;
+      wallpaper.reload();
+    });
+
+    wallpaper.gradient_type.addEventListener('change', (e) => {
+      opts.gradient_type = wallpaper.gradient_type.value;
+      wallpaper.reload();
+    });
+
     wallpaper.initReloadKeys();
     wallpaper.initUpdateKeys();
 
@@ -352,11 +364,16 @@ const wallpaper = {
     opts.vndList.forEach(vnd => utils.addOption(wallpaper.vendor, vnd, vnd));
     if (opts.vendor !== '')
       wallpaper.vendor.value = opts.vendor;
+    wallpaper.vendor_colortype.addEventListener('change', (e) => {
+      opts.logo_colortype = wallpaper.vendor_colortype.value;
+      wallpaper.reload();
+    });
   },
   initReloadKeys:function(){
     wallpaper.reloadKeys.forEach(key => {
       const id = document.getElementById(key);
       if (id){
+        id.value = data.main[key];
         id.addEventListener('input', wallpaper.reload);
       }
     });
@@ -382,30 +399,42 @@ const wallpaper = {
     });
   },
   reload: async function() {
-    opts.usePattern = wallpaper.background_pattern.checked;
-    opts.useGradient = wallpaper.background_gradient.checked;
     opts.vendor = wallpaper.vendor.value;
-    wallpaper.details_pattern.style.display = opts.usePattern ? 'block' : 'none';
-    wallpaper.details_gradient.style.display = opts.useGradient ? 'block' : 'none';
     let svg = await fetchText('html/wp-base.svg');
-    if (opts.usePattern){
-      svg = svg.replaceAll('<!--set-pattern', '').replaceAll('set-pattern-->', '');
+    if (opts.pattern_type && opts.pattern_type !== 'none'){
+      let pattern = await fetchText(`html/pat_${opts.pattern_type}.svg`);
+      const match = pattern.match(/<defs>([\s\S]*?)<\/defs>/i);
+      let svg_pat = match ? match[1].trim() : '';
+      if (svg_pat){
+        svg_pat = svg_pat.replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill='${preset.pattern_color}'")
+        svg = svg.replace('<!--def-pattern-->', svg_pat);
+        svg = svg.replaceAll('<!--set-pattern', '').replaceAll('set-pattern-->', '');
+      }
     }
-    if (opts.useGradient){
+    if (opts.gradient_type && opts.gradient_type !== 'none'){
       svg = svg.replaceAll('<!--set-gradient', '').replaceAll('set-gradient-->', '');
     }
-    if (opts.vendor){
+    if (opts.vendor && opts.logo_colortype !== 'none'){
+      let defDisplay = wallpaper.divlogo_color.style.display;
+      wallpaper.divlogo_color.style.display = 'none';
       let logo = await fetchText(`icons/hw/${opts.vendor}.svg`);
       logo = await fetchText(`icons/hw/${opts.vendor}.svg`);
       [ , this.logoW, this.logoH ] = logo.match('viewBox="0 0 (.*?) (.*?)"');
-      logo = logo.replace(/^<svg.*>/gi,'')
-        .replace(/<\/svg>/gi,'')
-        .replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill='${preset.logo_color}'")
-        .trim();
+      logo = logo.replace(/^<svg.*>/gi,'').replace(/<\/svg>/gi,'').trim();
+      if (opts.logo_colortype === 'default'){
+        logo = logo.replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill='${preset.font_color}'");
+      } else if (opts.logo_colortype === 'custom'){
+        wallpaper.divlogo_color.style.display = defDisplay;
+        logo = logo.replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill='${preset.logo_color}'");
+      }
       svg = svg.replace('<!--logo-data-->', logo);
     }
     wallpaper.svg = svg;
     render();
+  },
+  updateFont: function(){
+    data.main.font_family = JSON.parse(wallpaper.font.value);
+    renderSvg();
   },
 
   update: function(render=true){

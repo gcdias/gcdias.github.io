@@ -78,20 +78,6 @@
             <input type="color" id="background_color" value="#000000" />
           </div>
           <div class="flex-switch">
-            <span class="span-label">Pattern</span>
-            <label class="material-switch">
-              <input type="checkbox" id="background_pattern" checked/>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="flex-switch">
-            <span class="span-label">Gradient</span>
-            <label class="material-switch">
-              <input type="checkbox" id="background_gradient" checked/>
-              <span class="slider"></span>
-            </label>
-          </div>
-          <div class="flex-switch">
             <span class="span-label">Adjust Size</span>
             <label class="material-switch">
               <input type="checkbox" id="adjust-sizes" checked/>
@@ -106,9 +92,10 @@
           <label for="pattern_type">Pattern Type:</label>
           <select id="pattern_type">
             <option value="none">None</option>
-            <option value="diagonal selected">Diagonal</option>
-            <option value="dots">Dots</option>
-            <option value="lines">Lines</option>
+            <option value="strips" selected>Strips</option>
+            <option value="bricks">Bricks</option>
+            <option value="cloth">Cloth</option>
+            <option value="decorativepaper">Decorative Paper</option>
           </select>
         </div>
         <div class="flex-end">
@@ -157,16 +144,17 @@
             <select id="vendor"></select>
           </div>
           <div class="flex-1" id="div-vendor-color">
-            <label for="logo_type">Color:</label>
-            <select id="logo_type">
-              <option value="none">Original, colored</option>
+            <label for="logo_colortype">Color:</label>
+            <select id="logo_colortype">
+              <option value="none">Disabled</option>
+              <option value="original">Original, colored</option>
               <option value="default">Default</option>
               <option value="custom" selected>Custom</option>
             </select>
           </div>
         </div>
         <div class="flex-end">
-          <div class="flex-1">
+          <div class="flex-1" id="div-logo-color">
             <label for="logo_color">Color:</label>
             <input type="color" id="logo_color" value="#FFFFFF">
           </div>

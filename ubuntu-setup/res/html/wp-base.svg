@@ -1,11 +1,6 @@
 <svg version="1.1" viewBox="0 0 2256 ${opts.resY}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
-  <!--set-pattern
-  <pattern id="pattern" patternTransform="matrix(2.12 2.12 -2.12 2.12 0 0)" preserveAspectRatio="xMidYMid" xlink:href="#pat_Strips"/>
-  <pattern id="pat_Strips" width="2" height="10" fill="${preset.pattern_color}" patternTransform="translate(0) scale(2)" patternUnits="userSpaceOnUse" preserveAspectRatio="xMidYMid">
-    <rect y="-.5" width="1" height="11"/>
-  </pattern>
-  set-pattern-->
+  <!--def-pattern-->
   <!--set-gradient
   <linearGradient id="gradient" x2="100%" y2="100%" gradientUnits="userSpaceOnUse">
     <stop stop-color="${preset.grad_top}" offset=".25"/>

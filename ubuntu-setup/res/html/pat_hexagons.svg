@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="2256" height="1504" version="1.1" viewBox="0 0 2256 1504" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <pattern id="pattern" patternTransform="matrix(2 0 0 2 229 236)" preserveAspectRatio="xMidYMid" xlink:href="#pattern15-83"/>
+  <pattern id="pattern15-83" width="45.034248" height="38.955639" patternTransform="translate(229 236)" patternUnits="userSpaceOnUse" preserveAspectRatio="xMidYMid">
+   <path transform="translate(-262 -121)" d="m285 134 5e-4 -26-22.5 13 0.0171 26zm-45-0.0304 22.5 13-4.3e-4 -26-22.5-13zm22.5-39-22.5 13 22.5 13 22.5-13zm67.5 39 5e-4 -26-22.5 13 0.0171 26zm-45-0.0304 22.5 13-4.3e-4 -26-22.5-13zm22.5-39-22.5 13 22.5 13 22.5-13zm-0.0267 78 5e-4 -26-22.5 13 0.0171 26zm-45-0.0304 22.5 13-4.3e-4 -26-22.5-13zm22.5-39-22.5 13 22.5 13 22.5-13zm67.5 39 5e-4 -26-22.5 13 0.0171 26zm-45-0.0304 22.5 13-4.3e-4 -26-22.5-13zm22.5-39-22.5 13 22.5 13 22.5-13z" clip-path="url(#clipPath15)" fill="none" stroke="#000" stroke-linejoin="bevel" style="paint-order:stroke markers fill"/>
+  </pattern>
+  <clipPath id="clipPath15">
+   <rect x="262" y="121" width="45" height="39" fill="none" stop-color="#000000" stroke="#000" stroke-linejoin="bevel" style="paint-order:stroke markers fill"/>
+  </clipPath>
+ </defs>
+ <rect width="100%" height="100%" fill="url(#pattern)"/>
+</svg>
