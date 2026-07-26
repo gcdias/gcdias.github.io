@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 2256 1504" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <radialGradient id="radialGradient1" cx="0" cy="0" gradientTransform="matrix(.252 .931 -.774 .21 1016 -1047)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#b7ff80" stop-opacity=".5" offset=".25"/>
+   <stop stop-color="#fff" stop-opacity="0" offset=".75"/>
+  </radialGradient>
+  <radialGradient id="radialGradient2" cx="100%" cy="0" gradientTransform="matrix(.707 -.685 .712 .734 -619 579)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#ffb780" stop-opacity=".5" offset=".25"/>
+   <stop stop-color="#fff" stop-opacity="0" offset=".75"/>
+  </radialGradient>
+  <radialGradient id="radialGradient3" cx="50%" cy="100%" gradientTransform="matrix(.967 -.255 .25 .945 -128 -158)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#80b7ff" stop-opacity=".5" offset=".25"/>
+   <stop stop-color="#fff" stop-opacity="0" offset=".75"/>
+  </radialGradient>
+ </defs>
+ <g id="grad">
+  <rect width="100%" height="100%" fill="url(#radialGradient3)"/>
+  <rect width="100%" height="100%" fill="url(#radialGradient2)"/>
+  <rect width="100%" height="100%" fill="url(#radialGradient1)"/>
+ </g>
+</svg>

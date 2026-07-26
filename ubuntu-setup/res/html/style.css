@@ -4,6 +4,7 @@
   --tools-size: 48px;
   --panel-width: 340px;
   --panel-toggle-size: 48px;
+  --grad-columns: 4;
 }
 
 body {
@@ -290,6 +291,28 @@ input[type="color"] {
   border-bottom: 1px solid #ddd;
   padding-bottom: 4px;
 }
+
+.flex-grad-div {
+  display: grid;
+  grid-template-columns: repeat(var(--grad-columns), minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  width: 100%;
+}
+
+.flex-grad {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: stretch;
+  width: 100%;
+}
+
+.flex-grad-input {
+  width: 100%;
+  min-height: 2.25rem;
+}
+
 .flex-end {
   display: flex;
   gap: 8px;

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 2256 1504" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <linearGradient id="linearGradient10" x2="100%" y1="100%" gradientTransform="matrix(2.35 0 .0034 1.57 474 -176)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#ffb780" stop-opacity=".5" offset=".25"/>
+   <stop stop-color="#fff" stop-opacity="0" offset=".75"/>
+  </linearGradient>
+  <linearGradient id="linearGradient11" x2="100%" y2="100%" gradientTransform="matrix(0 1.57 -2.35 .0067 3681 -1221)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#b7ff80" stop-opacity=".5" offset=".25"/>
+   <stop stop-color="#fff" stop-opacity="0" offset=".75"/>
+  </linearGradient>
+  <linearGradient id="linearGradient12" x1="100%" x2="0" y1="100%" gradientTransform="matrix(0 -1.57 2.35 -.007 -3077 4469)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#80b7ff" stop-opacity=".5" offset=".25"/>
+   <stop stop-color="#fff" stop-opacity="0" offset=".75"/>
+  </linearGradient>
+  <linearGradient id="linearGradient13" x1="100%" x2="0" y2="100%" gradientTransform="matrix(0 -1.57 2.35 -.007 -3077 4469)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#b780ff" stop-opacity=".502" offset=".25"/>
+   <stop stop-color="#fff" stop-opacity="0" offset=".75"/>
+  </linearGradient>
+ </defs>
+ <g id="grad">
+    <rect width="100%" height="100%" fill="url(#linearGradient13)"/>
+    <rect width="100%" height="100%" fill="url(#linearGradient12)"/>
+    <rect width="100%" height="100%" fill="url(#linearGradient11)"/>
+    <rect width="100%" height="100%" fill="url(#linearGradient10)"/>
+ </g>
+</svg>

@@ -55,7 +55,6 @@ function spanText(id, y, fontSize, lineHeight) {
 }
 
 function genSvg(){
-  //wallpaper.update(false);
   const preset = data.main;
   const y_title = preset.title_y / 100 * opts.resY;
   const y_footer = preset.footer_y / 100 * opts.resY;
@@ -231,8 +230,7 @@ const data = {
     background_color: '#000000',
     pattern_color: '#804000',
     pattern_alpha: '0.05',
-    grad_top: '#0d0704',
-    grad_bot: '#03070d',
+    grad: ['#0d0704', '#03070d','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
     grad_alpha: '1.0',
     logo_color: '#d82000',
     logo_alpha: '0.1',
@@ -251,8 +249,7 @@ const data = {
     background_color: '#000000',
     pattern_color: '#804000',
     pattern_alpha: '0.05',
-    grad_top: '#0d0704',
-    grad_bot: '#03070d',
+    grad: ['#0d0704', '#03070d','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
     grad_alpha: '1.0',
     logo_color: '#d82000',
     logo_alpha: '0.1',
@@ -272,14 +269,12 @@ const data = {
   },
   presets: {
     dark: {
-      grad_top: '#0d0704',
-      grad_bot: '#03070d',
+      grad: ['#0d0704', '#03070d','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
       logo_alpha: '0.3',
       current: 'dark'
     },
     light: {
-      grad_top: '#d8d8d8',
-      grad_bot: '#c0c6cc',
+      grad: ['#d8d8d8', '#c0c6cc','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
       logo_alpha: '0.1',
       current: 'light'
     },
@@ -287,8 +282,6 @@ const data = {
   availableParameters: [ 
     {'pc':'pattern_color'}, {'patc':'pattern_color'},
     {'pa':'pattern_alpha'}, {'pata':'pattern_alpha'},
-    {'gt':'grad_top'}, {'gradt':'grad_top'},
-    {'gb':'grad_bot'}, {'gradb':'grad_bot'},
     {'ga':'grad_alpha'}, {'grada':'grad_alpha'},
     {'lc':'logo_color'}, {'logoc':'logo_color'},
     {'la':'logo_alpha'}, {'logoa':'logo_alpha'},
@@ -301,6 +294,8 @@ const data = {
   ],
   readParams: function(urlParams){
     let pr = data.presets[urlParams.get('pre')] ?? data.main;
+    if (urlParams.get('grad'))
+      pr.grad = urlParams.get('grad').split(',');
     for (const param of this.availableParameters){
       const [key, pk] = Object.entries(param)[0];
       const val = urlParams.get(key);
@@ -325,7 +320,10 @@ const wallpaper = {
   divlogo_color: document.getElementById('div-logo-color'),
   pattern_type: document.getElementById('pattern_type'),
   gradient_type: document.getElementById('gradient_type'),
+  font_family: document.getElementById('font_family'),
  
+  divGrad: document.getElementById('div-gradient'),
+  gradColumns: 4,
   font: document.getElementById('font_family'),
 
   imgFormat: 'png',
@@ -334,22 +332,23 @@ const wallpaper = {
   logoH: 512,
   logoCache: {},
   reloadKeys: ["pattern_type", "gradient_type", "vendor"],
+  updateKeys: ["background_color", "pattern_color", "pattern_alpha", "grad_alpha", "logo_color", "logo_alpha", "logo_scale", "logo_dx", "logo_dy", "font_color", "font_size_title", "font_size_footer", "font_alpha", "title_y", "footer_y"],
 
   init: async function() {
     data.main.font_family = fonts.defaultFont;
     wallpaper.keys = Object.keys(data.main);
     wallpaper.initVendor();
     wallpaper.initPatterns();
-
-    wallpaper.gradient_type.addEventListener('change', (e) => {
-      opts.gradient_type = wallpaper.gradient_type.value;
-      wallpaper.reload();
-    });
-
+    wallpaper.gradInit();
+   
     wallpaper.initReloadKeys();
+    wallpaper.font_family.addEventListener('input', () => {
+      data.main.font_family = JSON.parse(wallpaper.font_family.value);
+      renderSvg();
+    });
+    wallpaper.font_family.value = JSON.stringify(data.main.font_family);
     wallpaper.initUpdateKeys();
 
-    //wallpaper.update(false);
     wallpaper.reload();
   },
   initPatterns: function(){
@@ -363,6 +362,59 @@ const wallpaper = {
       opts.pattern_type = wallpaper.pattern_type.value;
       wallpaper.reload();
     });
+  },
+  gradUpdateUI: function(){
+    if (!wallpaper.divGrad || !wallpaper.gradCount) return;
+    if (wallpaper.gradCount !== wallpaper.gradColumns){
+      wallpaper.gradSetColumnsUI(Math.min(wallpaper.gradCount, wallpaper.gradColumns));
+    }
+    
+    const grid = document.createElement('div')
+    grid.classList.add('flex-grad-div');
+    
+    for (let i = 0; i < wallpaper.gradCount; i++) {
+      const wrapper = document.createElement('div');
+      wrapper.classList.add('flex-grad');
+      
+      const label = document.createElement('label');
+      label.htmlFor = `grad${i}`;
+      label.textContent = `Color ${i + 1}`;
+
+      const input = document.createElement('input');
+      input.type = 'color';
+      input.id = `grad${i}`;
+      input.value = data.main.grad[i] || '#000000';
+      input.classList.add('flex-grad-input');
+      input.addEventListener('input', (e) => {
+        const idx = parseInt(e.target.id.replace('grad', ''));
+        data.main.grad[idx] = e.target.value;
+        wallpaper.update();
+      });
+
+      wrapper.appendChild(label);
+      wrapper.appendChild(input);
+      grid.appendChild(wrapper);
+    }
+    wallpaper.divGrad.replaceChildren();
+    grid.setAttribute('data-gradient-grid', 'true');
+    wallpaper.divGrad.appendChild(grid);
+  },
+  gradSetColumnsUI: function(columns){
+    wallpaper.gradColumns = columns;
+    document.documentElement.style.setProperty("--grad-columns", columns);
+  },
+  gradInit: function(){
+    opts.gradList.sort();
+    const defGrad = urlParams.get('grad');
+    if (defGrad)
+      utils.addOption(wallpaper.gradient_type, defGrad, 'auto');
+    opts.gradList.forEach(grad => utils.addOption(wallpaper.gradient_type, grad, grad));
+    wallpaper.gradient_type.value = opts.gradient_type ? opts.gradient_type : 'none';
+    wallpaper.gradient_type.addEventListener('change', (e) => {
+      opts.gradient_type = wallpaper.gradient_type.value;
+      wallpaper.reload();
+    });
+    wallpaper.gradUpdateUI();
   },
   initVendor: function(){
     opts.vndList.sort();
@@ -387,40 +439,54 @@ const wallpaper = {
     });
   },
   initUpdateKeys:function(){
-    Object.keys(data.main).forEach(key => {
+    wallpaper.updateKeys.forEach(key => {
       const id = document.getElementById(key);
       if (id){
-        if (key === 'font_family'){
-          id.addEventListener('input', (e) => {
-            data.main[key] = JSON.parse(id.value);
-            renderSvg();
-          });
-          id.value = JSON.stringify(data.main[key]);
-        } else {
-          id.addEventListener('input', (e) => {
+        id.addEventListener('input', (e) => {
             data.main[key] = id.value;
             renderSvg();
-          });
-          id.value = data.main[key];
-        }
+        });
+        id.value = data.main[key];
       }
     });
+  },
+  updateGradients: async function(svg){
+    let gradient = await fetchText(`gradients/grad_${opts.gradient_type}.svg`);
+    let def = gradient.match(/<defs>([\s\S]*?)<\/defs>/i);
+    let set = gradient.match(/<g id="grad">([\s\S]*?)<\/g>/i);
+    def = def ? def[1].trim() : '';
+    set = set ? set[1].trim() : '';
+    if (def && set){
+      wallpaper.gradCount = (def.match(/stop-color="/g) || []).length;
+      for (let i = 0; i < wallpaper.gradCount; i++) {
+        const color = data.main.grad[i] || '#000000';
+        def = def.replace(/stop-color="#([0-9a-fA-F]+)"/, `stop-color='\${preset.grad[${i}]}'`);
+      }
+      wallpaper.gradUpdateUI();
+      svg = svg.replace('<!--def-gradient-->', def);
+      svg = svg.replace('<!--set-gradient-->', set);
+    }
+    return svg;
+  },
+  updatePatterns: async function(svg){
+    let pattern = await fetchText(`patterns/pat_${opts.pattern_type}.svg`);
+    const def = pattern.match(/<defs>([\s\S]*?)<\/defs>/i);
+    let svg_pat = def ? def[1].trim() : '';
+    if (svg_pat){
+      svg_pat = svg_pat.replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill='${preset.pattern_color}'")
+      svg = svg.replace('<!--def-pattern-->', svg_pat);
+      svg = svg.replaceAll('<!--set-pattern', '').replaceAll('set-pattern-->', '');
+    }
+    return svg;
   },
   reload: async function() {
     opts.vendor = wallpaper.vendor.value;
     let svg = await fetchText('html/wp-base.svg');
     if (opts.pattern_type && opts.pattern_type !== 'none'){
-      let pattern = await fetchText(`patterns/pat_${opts.pattern_type}.svg`);
-      const match = pattern.match(/<defs>([\s\S]*?)<\/defs>/i);
-      let svg_pat = match ? match[1].trim() : '';
-      if (svg_pat){
-        svg_pat = svg_pat.replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill='${preset.pattern_color}'")
-        svg = svg.replace('<!--def-pattern-->', svg_pat);
-        svg = svg.replaceAll('<!--set-pattern', '').replaceAll('set-pattern-->', '');
-      }
+      svg = await wallpaper.updatePatterns(svg);
     }
     if (opts.gradient_type && opts.gradient_type !== 'none'){
-      svg = svg.replaceAll('<!--set-gradient', '').replaceAll('set-gradient-->', '');
+      svg = await wallpaper.updateGradients(svg);
     }
     if (opts.vendor && opts.logo_colortype !== 'none'){
       let defDisplay = wallpaper.divlogo_color.style.display;
@@ -445,19 +511,8 @@ const wallpaper = {
     renderSvg();
   },
 
-  update: function(render=true){
-    /*const curr = data.main.current;
-    wallpaper.forEachKey((key, ui) => {
-      let val = ui.value;
-      if (key === 'font_family')
-        val = val ? JSON.parse(val) : data.main.font_family;
-      data.main[key] = val;
-      if (data.presets[curr][key])
-        data.presets[curr][key] = val;
-    });
-    */
-    if (render)
-      render();
+  update: function(){
+    renderSvg();
   },
   forEachKey: function(callback){
     this.keys = [];

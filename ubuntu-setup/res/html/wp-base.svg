@@ -1,17 +1,10 @@
 <svg version="1.1" viewBox="0 0 2256 ${opts.resY}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <defs>
-  <!--def-pattern-->
-  <!--set-gradient
-  <linearGradient id="gradient" x2="100%" y2="100%" gradientUnits="userSpaceOnUse">
-    <stop stop-color="${preset.grad_top}" offset=".25"/>
-    <stop stop-color="${preset.grad_bot}" offset=".75"/>
-  </linearGradient>
-  set-gradient-->
+    <!--def-pattern-->
+    <!--def-gradient-->
   </defs>
   <rect width="100%" height="100%" fill="${preset.background_color}"/>
-  <!--set-gradient
-  <rect width="100%" height="100%" fill="url(#gradient)" opacity="${preset.grad_alpha}"/>
-  set-gradient-->
+  <!--set-gradient-->
   <!--set-pattern
   <rect width="100%" height="100%" fill="url(#pattern)" opacity="${preset.pattern_alpha}"/>
   set-pattern-->

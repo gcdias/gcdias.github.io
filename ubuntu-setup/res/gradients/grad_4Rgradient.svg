@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 2256 1504" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <radialGradient id="radialGradient1" cx="772" cy="1564" gradientTransform="matrix(-8.53e-8 1.57 -2.35 .00671 3681 -1221)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#b7ff80" stop-opacity=".5" offset=".25"/>
+   <stop stop-color="#fff" stop-opacity="0" offset=".75"/>
+  </radialGradient>
+  <radialGradient id="radialGradient2" cx="-203" cy="1071" gradientTransform="matrix(2.35 0 .0034 1.57 474 -176)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#ffb780" stop-opacity=".5" offset=".25"/>
+   <stop stop-color="#fff" stop-opacity="0" offset=".75"/>
+  </radialGradient>
+  <radialGradient id="radialGradient3" cx="1880" cy="2266" gradientTransform="matrix(6.82e-8 -1.57 2.35 -.00705 -3077 4469)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#80b7ff" stop-opacity=".5" offset=".25"/>
+   <stop stop-color="#fff" stop-opacity="0" offset=".75"/>
+  </radialGradient>
+  <radialGradient id="radialGradient4" cx="2838" cy="2266" gradientTransform="matrix(-2.44 -.00313 -.00286 -1.57 9188 3564)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#b780ff" stop-opacity=".502" offset=".25"/>
+   <stop stop-color="#fff" stop-opacity="0" offset=".75"/>
+  </radialGradient>
+ </defs>
+ <g id="grad">
+   <rect width="100%" height="100%" fill="url(#radialGradient4)"/>
+   <rect width="100%" height="100%" fill="url(#radialGradient3)"/>
+   <rect width="100%" height="100%" fill="url(#radialGradient1)"/>
+   <rect width="100%" height="100%" fill="url(#radialGradient2)"/>
+ </g>
+</svg>

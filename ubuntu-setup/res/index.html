@@ -28,9 +28,10 @@
     fontList: '@font_list',
     grubSet: '@grub_set',
     ar: 1,
-    patList: [ "bricks","cloth","decorativepaper","diamondplate","floortiles","flowers","hexagons","leaves","strips"],
-    vndList: [ "acer","apple","asus","beelink","corsair","dell","fujitsu","geekom","gigabyte","google","hp","intel","lenovo","lg","microsoft","minisforum","msi","razer","samsung","surface","toshiba","vaio","xiaomi" ],
-    osList: [ "4MLinux","AlpineLinux","android","anonymous","antergos","archlinux","arcolinux","artix", "blissos", "cancel","centos","chakra","debian","deepin","devuan","driver","edit","efi","elementary","endeavouros","fedora","freebsd","gameros","gentoo","gnu-linux","gpart","haiku","help","kali","kaos","kbd","korora","kubuntu","lang","linuxmint","lubuntu","macosx","mageia","manjaro","mx-linux","neon","opensuse","parrot","peppermint","pop-os","puppy","q4os","recovery","red","regolith","restart","rocky","shutdown","siduction","slackware","solus","sparky","steamos","submenu","SystemRescueCD","type","tz","ubuntubudgie","ubuntumate","ubuntustudio","ubuntu","unset","void","windows","xubuntu","zorin" ],
+    patList: ["bricks", "cloth", "decorativepaper", "diamondplate", "floortiles", "flowers", "hexagons", "leaves", "strips"],
+    gradList: ["2-gradient-bltr", "2-gradient-tlbr", "3-gradient", "3R-gradient", "4L-gradient", "4M-gradient", "4Rgradient"],
+    vndList: ["acer", "apple", "asus", "beelink", "corsair", "dell", "fujitsu", "geekom", "gigabyte", "google", "hp", "intel", "lenovo", "lg", "microsoft", "minisforum", "msi", "razer", "samsung", "surface", "toshiba", "vaio", "xiaomi"],
+    osList: ["4MLinux", "AlpineLinux", "SystemRescueCD", "android", "anonymous", "antergos", "archlinux", "arcolinux", "artix", "blissos", "cancel", "centos", "chakra", "debian", "deepin", "devuan", "driver", "edit", "efi", "elementary", "endeavouros", "fedora", "freebsd", "gameros", "gentoo", "gnu-linux", "gpart", "haiku", "help", "kali", "kaos", "kbd", "korora", "kubuntu", "lang", "linuxmint", "lubuntu", "macosx", "mageia", "manjaro", "memtest", "mx-linux", "neon", "opensuse", "parrot", "peppermint", "pop-os", "puppy", "q4os", "recovery", "red", "regolith", "restart", "rocky", "shutdown", "siduction", "slackware", "solus", "sparky", "steamos", "submenu", "type", "tz", "ubuntu", "ubuntubudgie", "ubuntumate", "ubuntustudio", "uefi-firmware", "unset", "void", "windows", "windows10", "xubuntu", "zorin"],
     pngList: [ "select_c","select_e","select_w","terminal_box_c","terminal_box_e","terminal_box_ne","terminal_box_n","terminal_box_nw","terminal_box_se","terminal_box_s","terminal_box_sw","terminal_box_w" ],
     refindList: [ "arrow_left","arrow_right","find.efi","find.none","func_about","func_bootorder","func_csr_rotate","func_exit","func_firmware2","func_firmware3","func_firmware","func_hidden","func_install","func_reset","func_shutdown","reorder-svgrepo-com","tool_fwupdate","tool_memtest","tool_mok_tool","tool_netboot","tool_part","tool_rescue","tool_shell","vol_external","vol_internal" ],
     refindExtraList: [ "dejavu-mans-mono-bold-12","dejavu-mans-mono-bold-14","selection_big-c","selection_big-w","selection_big","selection_small-w","selection_small" ],
@@ -93,10 +94,6 @@
           <label for="pattern_type">Pattern Type:</label>
           <select id="pattern_type">
             <option value="none">None</option>
-            <option value="strips" selected>Strips</option>
-            <option value="bricks">Bricks</option>
-            <option value="cloth">Cloth</option>
-            <option value="decorativepaper">Decorative Paper</option>
           </select>
         </div>
         <div class="flex-end">
@@ -112,28 +109,19 @@
       </details>
       <details id="details_gradient">
         <summary>Gradient</summary>
-        <div class="flex-1" id="div-gradient">
-          <label for="gradient_type">Gradient Type:</label>
-          <select id="gradient_type">
-            <option value="none">None</option>
-            <option value="solid">Solid</option>
-            <option value="grad2" selected>2-Gradient</option>
-            <option value="grad4">4-Gradient</option>
-          </select>
-        </div>
         <div class="flex-end">
           <div class="flex-1">
-            <label for="grad_top">Top-Left:</label>
-            <input type="color" id="grad_top" value="#333333">
-          </div>
-          <div class="flex-1">
-            <label for="grad_bot">Bottom-Right:</label>
-            <input type="color" id="grad_bot" value="#03080c">
+            <label for="gradient_type">Gradient Type:</label>
+            <select id="gradient_type">
+              <option value="none">None</option>
+            </select>
           </div>
           <div class="flex-1">
             <label for="grad_alpha">Opacity:</label>
             <input type="number" id="grad_alpha" min="0" max="1" step="0.01" value="1.0">
           </div>
+        </div>
+        <div class="flex-end" id="div-gradient">
         </div>
       </details>
 

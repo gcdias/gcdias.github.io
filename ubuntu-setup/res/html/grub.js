@@ -38,10 +38,6 @@ const menu = {
       if (rect.height === 0) rect.height = opts.resY;
       
       let [x,y,w,h] = [menu.grubMenuX.value,menu.grubMenuY.value,menu.grubMenuW.value,menu.grubMenuH.value];
-      //let x = menu.grubMenuX.value,
-      //    y = menu.grubMenuY.value,
-      //    w = menu.grubMenuW.value,
-      //    h = menu.grubMenuH.value;
       menu.id.style.left = (rect.left + x / 100 * rect.width)  + 'px';
       menu.id.style.top  = (rect.top  + y / 100 * rect.height) + 'px';
       menu.id.style.width = w / 100 * rect.width + 'px';
