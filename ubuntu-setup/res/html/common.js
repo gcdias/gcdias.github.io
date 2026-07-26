@@ -339,11 +339,7 @@ const wallpaper = {
     data.main.font_family = fonts.defaultFont;
     wallpaper.keys = Object.keys(data.main);
     wallpaper.initVendor();
-    
-    wallpaper.pattern_type.addEventListener('change', (e) => {
-      opts.pattern_type = wallpaper.pattern_type.value;
-      wallpaper.reload();
-    });
+    wallpaper.initPatterns();
 
     wallpaper.gradient_type.addEventListener('change', (e) => {
       opts.gradient_type = wallpaper.gradient_type.value;
@@ -355,6 +351,18 @@ const wallpaper = {
 
     //wallpaper.update(false);
     wallpaper.reload();
+  },
+  initPatterns: function(){
+    opts.patList.sort();
+    const defPat = urlParams.get('pat');
+    if (defPat)
+      utils.addOption(wallpaper.pattern_type, defPat, 'auto');
+    opts.patList.forEach(pat => utils.addOption(wallpaper.pattern_type, pat, pat));
+    wallpaper.pattern_type.value = opts.pattern_type === '' ? 'none' : opts.pattern_type;
+    wallpaper.pattern_type.addEventListener('change', (e) => {
+      opts.pattern_type = wallpaper.pattern_type.value;
+      wallpaper.reload();
+    });
   },
   initVendor: function(){
     opts.vndList.sort();
@@ -402,7 +410,7 @@ const wallpaper = {
     opts.vendor = wallpaper.vendor.value;
     let svg = await fetchText('html/wp-base.svg');
     if (opts.pattern_type && opts.pattern_type !== 'none'){
-      let pattern = await fetchText(`html/pat_${opts.pattern_type}.svg`);
+      let pattern = await fetchText(`patterns/pat_${opts.pattern_type}.svg`);
       const match = pattern.match(/<defs>([\s\S]*?)<\/defs>/i);
       let svg_pat = match ? match[1].trim() : '';
       if (svg_pat){
