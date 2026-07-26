@@ -226,45 +226,26 @@ const intro = {
 }
 
 const data = {
-  background: {
-    background_color: '#000000',
-    pattern_color: '#804000',
-    pattern_alpha: '0.05',
-    grad: ['#0d0704', '#03070d','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
-    grad_alpha: '1.0',
-    logo_color: '#d82000',
-    logo_alpha: '0.1',
-    logo_scale: '1.0',
-    logo_dx: '0',
-    logo_dy: '0',
-    font_color: '#d82000',
-    font_family: {},
-    font_size_title: '40',
-    font_size_footer: '18',
-    font_alpha: '0.5',
-    title_y: 13,
-    footer_y: 72,
-  },
   main: {
     background_color: '#000000',
-    pattern_color: '#804000',
+    pattern_color: '#888',
     pattern_alpha: '0.05',
     grad: ['#0d0704', '#03070d','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
     grad_alpha: '1.0',
-    logo_color: '#d82000',
+    logo_color: '#fff',
     logo_alpha: '0.1',
     logo_scale: '1.0',
     logo_dx: '0',
     logo_dy: '0',
-    font_color: '#d82000',
+    font_color: '#fff',
     font_family: {},
     font_size_title: '40',
-    font_size_footer: '18',
+    font_size_footer: '22',
     font_alpha: '0.5',
     title: '',
     footer: '',
     title_y: 13,
-    footer_y: 72,
+    footer_y: 90,
     current: 'dark'
   },
   presets: {
@@ -324,7 +305,7 @@ const wallpaper = {
  
   divGrad: document.getElementById('div-gradient'),
   gradColumns: 4,
-  font: document.getElementById('font_family'),
+  //font: document.getElementById('font_family'),
 
   imgFormat: 'png',
   svg: '',
@@ -332,26 +313,28 @@ const wallpaper = {
   logoH: 512,
   logoCache: {},
   reloadKeys: ["pattern_type", "gradient_type", "vendor"],
-  updateKeys: ["background_color", "pattern_color", "pattern_alpha", "grad_alpha", "logo_color", "logo_alpha", "logo_scale", "logo_dx", "logo_dy", "font_color", "font_size_title", "font_size_footer", "font_alpha", "title_y", "footer_y"],
+  updateKeys: ["background_color", "pattern_color", "pattern_alpha", "grad_alpha", "logo_color", "logo_alpha", "logo_scale", "logo_dx", "logo_dy", "font_color", "font_size_title", "font_size_footer", "font_alpha", "title_y", "footer_y", "title", "footer"],
 
   init: async function() {
-    data.main.font_family = fonts.defaultFont;
-    wallpaper.keys = Object.keys(data.main);
-    wallpaper.initVendor();
-    wallpaper.initPatterns();
+    //wallpaper.keys = Object.keys(data.main);
+    wallpaper.vndInit();
+    wallpaper.patInit();
     wallpaper.gradInit();
-   
+    wallpaper.fontInit();
     wallpaper.initReloadKeys();
+    wallpaper.initUpdateKeys();
+
+    wallpaper.reload();
+  },
+  fontInit: function(){
+    data.main.font_family = fonts.defaultFont;
     wallpaper.font_family.addEventListener('input', () => {
       data.main.font_family = JSON.parse(wallpaper.font_family.value);
       renderSvg();
     });
     wallpaper.font_family.value = JSON.stringify(data.main.font_family);
-    wallpaper.initUpdateKeys();
-
-    wallpaper.reload();
   },
-  initPatterns: function(){
+  patInit: function(){
     opts.patList.sort();
     const defPat = urlParams.get('pat');
     if (defPat)
@@ -416,18 +399,19 @@ const wallpaper = {
     });
     wallpaper.gradUpdateUI();
   },
-  initVendor: function(){
+  vndInit: function(){
     opts.vndList.sort();
     const defVnd = urlParams.get('vnd');
-    if (defVnd)
+    if (defVnd){
       utils.addOption(wallpaper.vendor, defVnd, 'auto');
+      data.main.vendor = defVnd;
+    }
     opts.vndList.forEach(vnd => utils.addOption(wallpaper.vendor, vnd, vnd));
-    if (opts.vendor !== '')
-      wallpaper.vendor.value = opts.vendor;
     wallpaper.vendor_colortype.addEventListener('change', (e) => {
       opts.logo_colortype = wallpaper.vendor_colortype.value;
       wallpaper.reload();
     });
+
   },
   initReloadKeys:function(){
     wallpaper.reloadKeys.forEach(key => {
@@ -450,7 +434,7 @@ const wallpaper = {
       }
     });
   },
-  updateGradients: async function(svg){
+  gradUpdate: async function(svg){
     let gradient = await fetchText(`gradients/grad_${opts.gradient_type}.svg`);
     let def = gradient.match(/<defs>([\s\S]*?)<\/defs>/i);
     let set = gradient.match(/<g id="grad">([\s\S]*?)<\/g>/i);
@@ -459,8 +443,10 @@ const wallpaper = {
     if (def && set){
       wallpaper.gradCount = (def.match(/stop-color="/g) || []).length;
       for (let i = 0; i < wallpaper.gradCount; i++) {
-        const color = data.main.grad[i] || '#000000';
+        //const color = data.main.grad[i] || '#000000';
+        let color = def.match(/stop-color="#([0-9a-fA-F]+)"/); 
         def = def.replace(/stop-color="#([0-9a-fA-F]+)"/, `stop-color='\${preset.grad[${i}]}'`);
+        data.main.grad[i] = color && color[1] ? `#${color[1].trim()}` : data.main.grad[i];
       }
       wallpaper.gradUpdateUI();
       svg = svg.replace('<!--def-gradient-->', def);
@@ -468,7 +454,7 @@ const wallpaper = {
     }
     return svg;
   },
-  updatePatterns: async function(svg){
+  patUpdate: async function(svg){
     let pattern = await fetchText(`patterns/pat_${opts.pattern_type}.svg`);
     const def = pattern.match(/<defs>([\s\S]*?)<\/defs>/i);
     let svg_pat = def ? def[1].trim() : '';
@@ -483,10 +469,10 @@ const wallpaper = {
     opts.vendor = wallpaper.vendor.value;
     let svg = await fetchText('html/wp-base.svg');
     if (opts.pattern_type && opts.pattern_type !== 'none'){
-      svg = await wallpaper.updatePatterns(svg);
+      svg = await wallpaper.patUpdate(svg);
     }
     if (opts.gradient_type && opts.gradient_type !== 'none'){
-      svg = await wallpaper.updateGradients(svg);
+      svg = await wallpaper.gradUpdate(svg);
     }
     if (opts.vendor && opts.logo_colortype !== 'none'){
       let defDisplay = wallpaper.divlogo_color.style.display;
@@ -505,10 +491,6 @@ const wallpaper = {
     }
     wallpaper.svg = svg;
     render();
-  },
-  updateFont: function(){
-    data.main.font_family = JSON.parse(wallpaper.font.value);
-    renderSvg();
   },
 
   update: function(){
@@ -599,12 +581,14 @@ const fonts = {
       window.queryLocalFonts()
         .then((fnts) => {
           fnts.sort((a,b) => a.fullName.localeCompare(b.fullName));
+          utils.addOption(fonts.select, JSON.stringify(fonts.defaultFont), fonts.defaultFont.name );
           fnts.forEach((font) => {
             const f = fonts.guess(font);
             utils.addOption(fonts.select, JSON.stringify(f), f.name );
           });
-          fonts.select.value = JSON.stringify(fonts.defaultFont);
-          fonts.select.addEventListener('change', renderSvg);
+          //data.main.font_family = JSON.stringify(fonts.defaultFont);
+          fonts.select.options[0].select = 'selected';
+          //fonts.select.addEventListener('change', renderSvg);
           intro.panel.style.display = 'none';
           if (typeof font_png !== "undefined"){
             font_png.init();
