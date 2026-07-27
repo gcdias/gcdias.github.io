@@ -32,7 +32,7 @@ case "${vnd,,}" in
   *microsoft*) vnd="$(cat /sys/devices/virtual/dmi/id/product_family)";;
 esac
 
-microsoft-edge "https://gcdias.github.io/ubuntu-setup/index.html?usr=${USER}&vnd=${vnd}&w=${res[0]}&h=${res[1]}&m=${efiModes}&osv=${osv}&osd=${osd}&os=${os}"
+microsoft-edge "https://gcdias.github.io/ubuntu-setup/index.html?usr=${USER}&vnd=${vnd}&w=${res[0]}&h=${res[1]}&m=${efiModes}&osv=${osv}&osd=${osd}&os=${os}&grub=${grubEntries}&gnome=${gnome}"
 
 
 #set +x
