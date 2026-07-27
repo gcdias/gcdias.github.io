@@ -54,3 +54,6 @@ const utils = {
     URL.revokeObjectURL(url);
   }
 }
+
+
+ui.init();
