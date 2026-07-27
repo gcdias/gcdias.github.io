@@ -368,6 +368,7 @@ function initComponents() {
   opts.w_icon = 32;
   opts.iconList = [];
   data.main.iconData = {};
+  fonts.initCallback = font_png.init;
   panel_os.init();
   panel_tools.init();
 }

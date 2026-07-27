@@ -298,15 +298,14 @@ const wallpaper = {
   id: document.getElementById('img_preview'),
   vendor: document.getElementById('vendor'),
   vendor_colortype: document.getElementById('logo_colortype'),
-  divlogo_color: document.getElementById('div-logo-color'),
   pattern_type: document.getElementById('pattern_type'),
   gradient_type: document.getElementById('gradient_type'),
   font_family: document.getElementById('font_family'),
  
+  divlogo_color: document.getElementById('div-logo-color'),
   divGrad: document.getElementById('div-gradient'),
   gradColumns: 4,
-  //font: document.getElementById('font_family'),
-
+  
   imgFormat: 'png',
   svg: '',
   logoW: 512,
@@ -316,7 +315,6 @@ const wallpaper = {
   updateKeys: ["background_color", "pattern_color", "pattern_alpha", "grad_alpha", "logo_color", "logo_alpha", "logo_scale", "logo_dx", "logo_dy", "font_color", "font_size_title", "font_size_footer", "font_alpha", "title_y", "footer_y", "title", "footer"],
 
   init: async function() {
-    //wallpaper.keys = Object.keys(data.main);
     wallpaper.vndInit();
     wallpaper.patInit();
     wallpaper.gradInit();
@@ -492,7 +490,6 @@ const wallpaper = {
     wallpaper.svg = svg;
     render();
   },
-
   update: function(){
     renderSvg();
   },
@@ -520,6 +517,7 @@ const wallpaper = {
 
 const fonts = {
   select: document.getElementById('font_family'), 
+  initCallback: null,
   weights: {
     "thin": 100,
     "extralight": 200,
@@ -586,13 +584,12 @@ const fonts = {
             const f = fonts.guess(font);
             utils.addOption(fonts.select, JSON.stringify(f), f.name );
           });
-          //data.main.font_family = JSON.stringify(fonts.defaultFont);
           fonts.select.options[0].select = 'selected';
-          //fonts.select.addEventListener('change', renderSvg);
           intro.panel.style.display = 'none';
-          if (typeof font_png !== "undefined"){
-            font_png.init();
-          }
+          if (fonts.initCallback) fonts.initCallback();
+          //if (typeof font_png !== "undefined"){
+          //  font_png.init();
+          //}
       }).catch((err) => {
         fonts.setDefault("Error accessing local fonts:" + err);
       });
