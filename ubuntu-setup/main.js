@@ -34,7 +34,7 @@ const ui = {
     });
   },
   navTo: function(page,type){
-    type = type ? `&${type}` : '';
+    type = type ? `&t=${type}` : '';
     let res = ui.res.value.split('x');
     let url = `https://gcdias.github.io/ubuntu-setup/${page}/index.html?usr=${opts.usr}&vnd=${opts.vnd}&w=${res[0]}&h=${res[1]}${type}`
     window.location.href = url;
