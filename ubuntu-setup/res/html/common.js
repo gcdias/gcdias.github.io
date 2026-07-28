@@ -618,7 +618,11 @@ opts.defFooter = urlParams.get('fstr') || `powered by ${opts.user}`;
 let grad = urlParams.get('grad');
 if (grad){
   let array = grad.split(',');
-   
+  let out = [];
+  array.forEach(a => {
+    out.push(a.startsWith('#') ? a : `#${a}`);
+  });
+  data.main.grad = out;
 }
 
 data.readParams(urlParams);
