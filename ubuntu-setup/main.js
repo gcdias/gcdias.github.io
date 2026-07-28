@@ -7,11 +7,8 @@ const opts = {
 }
 
 const ui = {
-  navWp: document.getElementById('web-wp'),
-  navGr: document.getElementById('web-grub'),
-  navRf: document.getElementById('web-refind'),
-  navSw: document.getElementById('web-sw'),
   ids: [ "vnd", "res", "os", "osv", "gnome", "usr"],
+  nav: [ "wp", "grub", "refind", "sw" ],
   init: function(){
     this.ids.forEach( (i) => {
       ui[i] = document.getElementById(i);
@@ -25,12 +22,22 @@ const ui = {
     let modes = urlParams.get("m");
     if (modes){
       this.res.replaceChildren();
+      const defRes = `${window.screen.width}x${window.screen.height}`;
+      ui.addOption(ui.res,defRes,defRes,true);
       modes.split(",")?.forEach(m => ui.addOption(ui.res,m,m));
     }
-    this.navWp.addEventListener('click', navWp);
-    this.navGr.addEventListener('click', navGr);
-    this.navRf.addEventListener('click', navRf);
-    this.navSw.addEventListener('click', navSw);
+    this.nav.forEach((nav) => {
+      const id = document.getElementById(`web-${nav}`);
+      id.addEventListener('click', () => {
+        ui.navTo(nav === 'sw' ? 'sw' : 'res', nav === 'wp' ? 'wallpaper' : nav === 'sw' ? null : nav);
+      })
+    });
+  },
+  navTo: function(page,type){
+    type = type ? `&${type}` : '';
+    let res = ui.res.value.split('x');
+    let url = `https://gcdias.github.io/ubuntu-setup/${page}/index.html?usr=${opts.usr}&vnd=${opts.vnd}&w=${res[0]}&h=${res[1]}${type}`
+    window.location.href = url;
   },
   addOption: function(parent, val, txt, sel){
     const o = this.createOption(val, txt, sel);

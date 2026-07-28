@@ -10,7 +10,7 @@ function getMsEdge() {
   sudo apt install -y microsoft-edge-stable
 }
 
-nav_app="$(dpkg -l | grep -E 'chromium|brave|edge|vivaldi')"
+nav_app="$(dpkg -l | grep -E 'chromium|brave|edge|vivaldi|opera')"
 
 if [ -z "${nav_app}" ]; then
   echo -e "Install a chrome-based browser first."

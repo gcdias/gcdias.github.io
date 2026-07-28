@@ -227,10 +227,11 @@ const intro = {
 
 const data = {
   main: {
-    background_color: '#000000',
+    background_color: '#333',
+    foreground_color: '#fff',
     pattern_color: '#888',
     pattern_alpha: '0.05',
-    grad: ['#0d0704', '#03070d','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
+    grad: ['#444', '#333','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
     grad_alpha: '1.0',
     logo_color: '#fff',
     logo_alpha: '0.1',
@@ -250,11 +251,15 @@ const data = {
   },
   presets: {
     dark: {
+      background_color: '#333',
+      foreground_color: '#fff',
       grad: ['#0d0704', '#03070d','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
       logo_alpha: '0.3',
       current: 'dark'
     },
     light: {
+      background_color: '#ccc',
+      foreground_color: '#333',
       grad: ['#d8d8d8', '#c0c6cc','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
       logo_alpha: '0.1',
       current: 'light'
@@ -587,9 +592,6 @@ const fonts = {
           fonts.select.options[0].select = 'selected';
           intro.panel.style.display = 'none';
           if (fonts.initCallback) fonts.initCallback();
-          //if (typeof font_png !== "undefined"){
-          //  font_png.init();
-          //}
       }).catch((err) => {
         fonts.setDefault("Error accessing local fonts:" + err);
       });
@@ -612,6 +614,12 @@ opts.home = `/home/${opts.user}`;
 opts.grubSet = opts.grubSet.replace("@grub_set",'') || "grub-os-symb";
 opts.ratio = 100 / window.screen.height / window.devicePixelRatio;
 opts.defFooter = urlParams.get('fstr') || `powered by ${opts.user}`;
+
+let grad = urlParams.get('grad');
+if (grad){
+  let array = grad.split(',');
+   
+}
 
 data.readParams(urlParams);
 
