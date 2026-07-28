@@ -290,6 +290,32 @@ const data = {
         document.getElementById(pk)?.setAttribute('value', val);
       }
     }
+    let grad = urlParams.get('grad');
+    if (grad){
+      let array = grad.split(',');
+      let out = [];
+      array.forEach(a => {
+        out.push(a.startsWith('#') ? a : `#${a}`);
+      });
+      data.main.grad = out;
+    }
+    let t = data.main.footer = urlParams.get('title');
+    let f = data.main.footer = urlParams.get('footer');
+
+    switch(opts.type){
+      case 'grub':
+        data.main.title  = t || "Choose an operating system to start";
+        data.main.footer = f || "Use the up and down keys to select your choice. Press Enter to boot the selected OS, &#39;e&#39;; to edit the commands before booting or &#39;c&#39; for a command-line"
+        break;
+      case 'refind':
+        data.main.title = t || "rEFInd boot menu";
+        data.main.footer = f || "";
+        break;
+      default:
+        data.main.title = t || "";
+        data.main.footer = f || "";
+        break;
+    }
   },
   read: function(id){ //updatePreset(key)
     const val = document.getElementById(id).value;
@@ -603,103 +629,79 @@ const fonts = {
 
 /*  main  */
 
-opts.id = opts.id.replace('@id', Date.now().valueOf().toString(16));
-opts.type = urlParams.get('t') || opts.type.replace('@type','wallpaper');
-opts.vendor = urlParams.get('vnd') || opts.vendor.replace('@vendor','');
-opts.resX = urlParams.get('w') || opts.resX.replace('@resX',window.screen.width * window.devicePixelRatio);
-opts.resY = urlParams.get('h') || opts.resY.replace('@resY',window.screen.height * window.devicePixelRatio);
-opts.ar = opts.resX / opts.resY;
-opts.user = urlParams.get('usr') || opts.user;
-opts.home = `/home/${opts.user}`;
-opts.grubSet = opts.grubSet.replace("@grub_set",'') || "grub-os-symb";
-opts.ratio = 100 / window.screen.height / window.devicePixelRatio;
-opts.defFooter = urlParams.get('fstr') || `powered by ${opts.user}`;
-
-let grad = urlParams.get('grad');
-if (grad){
-  let array = grad.split(',');
-  let out = [];
-  array.forEach(a => {
-    out.push(a.startsWith('#') ? a : `#${a}`);
-  });
-  data.main.grad = out;
+opts.readParams = function(){
+  opts.id = urlParams.get('id') || Date.now().valueOf().toString(16);
+  opts.type = urlParams.get('t') || urlParams.get('type') || 'wallpaper';
+  opts.vendor = urlParams.get('vnd') || urlParams.get('vendor') || '';
+  opts.user = urlParams.get('usr') || opts.user;
+  opts.home = `/home/${opts.user}`;
+  opts.resX = urlParams.get('w') || urlParams.get('width') || window.screen.width * window.devicePixelRatio;
+  opts.resY =  urlParams.get('h') || urlParams.get('height') || window.screen.height * window.devicePixelRatio;
+  opts.grubSet = urlParams.get('grubset') || 'grub-os-symb';
+  opts.ar = opts.resX / opts.resY;
+  opts.ratio = 100 / window.screen.height / window.devicePixelRatio;
 }
 
+opts.readParams();
 data.readParams(urlParams);
 
 intro.init(fonts.init);
 
 const button_export = document.getElementById('button_export');
 
-let t = data.main.footer = urlParams.get('title');
-let f = data.main.footer = urlParams.get('footer');
+const ui = {
+  panelToggle: document.getElementById('panel-toggle'),
+  controls: document.getElementById('controls'),
+  preview: document.getElementById('preview'),
+  adjustSize: document.getElementById('adjust-size'),
+  init: function(){
+    /* Panel Toggle Functionality for Mobile */
+    ui.adjustSize?.addEventListener('change', (e) => {
+        opts.ar = e.value ? window.devicePixelRatio : 1;
+      });
+    if (ui.panelToggle && ui.controls) {
+      // Toggle panel on button click
+      ui.panelToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        ui.controls.classList.toggle('collapsed');
+      });
 
-switch(opts.type){
-  case 'grub':
-    data.main.title  = t || "Choose an operating system to start";
-    data.main.footer = f || "Use the up and down keys to select your choice. Press Enter to boot the selected OS, &#39;e&#39;; to edit the commands before booting or &#39;c&#39; for a command-line"
-    break;
-  case 'refind':
-    data.main.title = t || "rEFInd boot menu";
-    data.main.footer = f || "";
-    break;
-  default:
-    data.main.title = t || "";
-    data.main.footer = f || "";
-    break;
-}
+      // Close panel when clicking outside on mobile
+      document.addEventListener('touch', (e) => {
+        if (!ui.controls.contains(e.target) && !ui.panelToggle.contains(e.target)) {
+          if (window.innerWidth <= 768) {
+            ui.controls.classList.add('collapsed');
+          }
+        }
+      });
 
-/* Panel Toggle Functionality for Mobile */
-const panelToggle = document.getElementById('panel-toggle');
-const controls = document.getElementById('controls');
-const preview = document.getElementById('preview');
-const adjustSize = document.getElementById('adjust-size');
+      // Close panel on orientation change
+      window.addEventListener('orientationchange', () => {
+        setTimeout(() => {
+          if (window.innerWidth > 768) {
+            ui.controls.classList.remove('collapsed');
+          }
+        }, 100);
+      });
 
-if (adjustSize)
-  adjustSize.addEventListener('change', (e) => {
-    opts.ar = e.value ? window.devicePixelRatio : 1;
-  });
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+          ui.controls.classList.remove('collapsed');
+          ui.panelToggle.style.display = 'none';
+        } else {
+          ui.panelToggle.style.display = 'flex';
+        }
+      });
 
-if (panelToggle) {
-  // Toggle panel on button click
-  panelToggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    controls.classList.toggle('collapsed');
-  });
-
-  // Close panel when clicking outside on mobile
-  document.addEventListener('touch', (e) => {
-    if (!controls.contains(e.target) && !panelToggle.contains(e.target)) {
-      if (window.innerWidth <= 768) {
-        controls.classList.add('collapsed');
-      }
-    }
-  });
-
-  // Close panel on orientation change
-  window.addEventListener('orientationchange', () => {
-    setTimeout(() => {
+      // Initial state on load
       if (window.innerWidth > 768) {
-        controls.classList.remove('collapsed');
+        ui.panelToggle.style.display = 'none';
+        ui.controls.classList.remove('collapsed');
       }
-    }, 100);
-  });
-
-  // Handle window resize
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 768) {
-      controls.classList.remove('collapsed');
-      panelToggle.style.display = 'none';
-    } else {
-      panelToggle.style.display = 'flex';
     }
-  });
-
-  // Initial state on load
-  if (window.innerWidth > 768) {
-    panelToggle.style.display = 'none';
-    controls.classList.remove('collapsed');
   }
 }
 
+ui.init();
 loadContent(opts.type);
