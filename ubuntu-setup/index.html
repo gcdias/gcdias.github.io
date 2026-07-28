@@ -9,32 +9,48 @@
   <link rel="stylesheet" href="res/html/style.css">
 </head>
 <body allow="local-fonts">
-  <div class="div-header">Machine</div>
-    <details open>
-    <summary>Vendor</summary>
-      
-        <div class="flex-1">
-          <label for="vendor">Vendor</label>
-          <select id="vendor">
-          </select>
-        </div>
-        <div class="flex-1">
-          <label for="res">Screen Res</label>
-          <select id="res">
-          </select>
-        </div>
-      <div class="flex-end">
-        <div class="flex-1">
-          <label for="os">OS</label>
-          <select id="os">
-          </select>
-        </div>
-        <div class="flex-1">
-          <label for="osv">Version</label>
-          <input type="text" id="osv" value=""/>
-        </div>
-      </div>  
-    </details>
+  <details open>
+  <summary>Machine</summary>
+  <div class="flex-end">
+    <div class="flex-1">
+      <label for="vnd">Vendor</label>
+      <select id="vnd">
+      </select>
+    </div>
+    <div class="flex-1">
+      <label for="res">Screen Res</label>
+      <select id="res">
+      </select>
+    </div>
+  </div>
+  <div class="flex-end">
+    <div class="flex-1">
+      <label for="os">OS</label>
+      <select id="os">
+      </select>
+    </div>
+    <div class="flex-1">
+      <label for="osv">Version</label>
+      <input type="text" id="osv" value=""/>
+    </div>
+    <div class="flex-1">
+      <label for="gnome">Gnome</label>
+      <input type="text" id="gnome" value=""/>
+    </div>
+  </div>
+  <div class="flex-end">
+    <div class="flex-1">
+      <label for="usr">User</label>
+      <input type="text" id="usr" value=""/>
+    </div>
+  </div>
+  <div class="flex-end">
+    <button class="flex-1" id="web-wp">Wallpaper</button>
+    <button class="flex-1" id="web-grub">Grub</button>
+    <button class="flex-1" id="web-refind">Refind</button>
+  </div>
+  <div class="flex-end">
+    <button class="flex-1" id="web-sw">Setup</button>
   </div>
   <script type="text/javascript" src="main.js"></script>
 </body>

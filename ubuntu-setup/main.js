@@ -7,29 +7,35 @@ const opts = {
 }
 
 const ui = {
-  vendor: document.getElementById('vendor'),
-  res: document.getElementById('res'),
-  os: document.getElementById('os'),
-  osv: document.getElementById('osv'),
+  navWp: document.getElementById('web-wp'),
+  navGr: document.getElementById('web-grub'),
+  navRf: document.getElementById('web-refind'),
+  navSw: document.getElementById('web-sw'),
+  ids: [ "vnd", "res", "os", "osv", "gnome", "usr"],
   init: function(){
-    this.vendor.replaceChildren();
+    this.ids.forEach( (i) => {
+      ui[i] = document.getElementById(i);
+      opts[i] = urlParams.get(i)?.toLowerCase();
+      if (opts[i]) ui[i].value = opts[i];
+    });
+    this.vnd.replaceChildren();
+    opts.vndList.forEach((vnd) => ui.addOption(ui.vnd,vnd,vnd, vnd === opts.vnd));
     this.os.replaceChildren();
-    opts.os = urlParams.get('os')?.toLowerCase();
-    opts.vnd = urlParams.get('vnd')?.toLowerCase();
-    opts.osv = urlParams.get('osv');
-    if (opts.osv) ui.osv.value = opts.osv;
     opts.osList.forEach((os) => ui.addOption(ui.os,os,os, os.toLowerCase() === opts.os));
-    opts.vndList.forEach((vnd) => ui.addOption(ui.vendor,vnd,vnd, vnd.toLowerCase() === opts.vnd));
     let modes = urlParams.get("m");
     if (modes){
       this.res.replaceChildren();
       modes.split(",")?.forEach(m => ui.addOption(ui.res,m,m));
     }
+    this.navWp.addEventListener('click', navWp);
+    this.navGr.addEventListener('click', navGr);
+    this.navRf.addEventListener('click', navRf);
+    this.navSw.addEventListener('click', navSw);
   },
-  addOption: function(parent, val, txt, selected=false){
-    const o = this.createOption(val, txt, selected);
+  addOption: function(parent, val, txt, sel){
+    const o = this.createOption(val, txt, sel);
     parent.appendChild(o);
-    if (selected)
+    if (sel)
       parent.value = val;
   },
   createOption: function(val, txt, sel){
@@ -42,27 +48,28 @@ const ui = {
   },
 }
 
-
-
-const utils = {
-  addOption: function(parent, val, txt){
-    parent.appendChild(this.createOption(val, txt));
-  },
-  createOption: function(val, txt){
-    const o = document.createElement('option');
-    o.value = val;
-    o.textContent = txt;
-    return o;
-  },
-  downloadBlob: function(blob, filename) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
+function navSw(){
+  const url = `https://gcdias.github.io/ubuntu-setup/sw/index.html?usr=${opts.usr}&vnd=${opts.vnd}`;
+  window.location.href = url;
 }
 
+function navWp(){
+  const url = `https://gcdias.github.io/ubuntu-setup/res/index.html?usr=${opts.usr}&vnd=${opts.vnd}&t=wallpaper`;
+  window.location.href = url;
+}
+
+function navGr(){
+  const url = `https://gcdias.github.io/ubuntu-setup/res/index.html?usr=${opts.usr}&vnd=${opts.vnd}&t=grub`;
+  window.location.href = url;
+}
+
+function navRf(){
+  const url = `https://gcdias.github.io/ubuntu-setup/res/index.html?usr=${opts.usr}&vnd=${opts.vnd}&t=refind`;
+  window.location.href = url;
+}
+
+function openUrl(url){
+  window.location.href = url;
+}
 
 ui.init();
