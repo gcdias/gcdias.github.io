@@ -14,6 +14,7 @@ const menu = {
     menu.sizeId.addEventListener("change", menu.update);
     menu.renderCap.addEventListener("change", menu.update)
     menu.update();
+    //setGrubWp();
   },
   import: async function(path){
     let svg = await fetchText(path);
@@ -26,7 +27,7 @@ const menu = {
       .forEach(async img => {
         let name = img.id.replace("img_","");
         opts.iconList.push(name);
-        menu.iconData[name] = await this.import(`icons/${opts.grubSet}/${name}.svg`);
+        menu.iconData[name] = await menu.import(`icons/${opts.grubSet}/${name}.svg`);
       });
   },
   update: function(rect){
@@ -94,6 +95,51 @@ function updateIcons(){
     }
   });
 }
+
+
+const grub = {
+  config: {
+    grub_menu_x: 2,
+    grub_menu_y: 32,
+    grub_menu_w: 40,
+    grub_menu_h: 40,
+    item_color: '#ccc',
+    icon_width: 64,
+    icon_height: 64,
+    item_height: 64,
+    item_padding: 8,
+    item_spacing: 8,
+    item_icon_space: 16,
+    selected_item_color: '#fff',
+  },
+  iconsz: 64,
+  scale: 1,
+  renderCap: false,
+  defEntries: "ubuntu,windows,macosx,uefi-firmware,memtest,restart,shutdown",
+  setGrubWp: async function () {
+    let svg = '<g width="100%" height="100%">\n'
+    let gos = (opts.grubEntries || grub.defEntries).split(',');
+    grub.scale = (grub.config.icon_width / opts.resX * 5).toFixed(2);
+    let n = 1;
+    for(let n = 1; n < gos.length + 1; n++){
+      svg += '<g transform="translate(${opts.resX * grub.config.grub_menu_x / 100} ${opts.resY * (grub.config.grub_menu_y * ' + n +' + grub.config.item_padding) / 100}) scale(${grub.scale})">\n';
+      let icon = await fetchText(`icons/${opts.grubSet}/${gos[n-1]}.svg`);
+      if (menu.renderCap.checked){
+        let font = data.main.font_family;
+        let font_size = data.main.os_iconsize / opts.ui_resize / 2;
+        let cap_title = svg.match('<title>(.*?)</title>')[1];
+        let t = '<text x="48" y="22.5" fill="${data.main.os_color}" font-family="${data.main.font_family}" font-style="${data.main.font.style}" font-stretch="${data.main.font.stretch}" font-size="${data.main.os_iconsize/opts.ui_resize/2}px" font-weight="${data.main.font_weight}">${cap_title}</text>';
+        icon = icon.replaceAll("<!--text-here-->", t);
+        //icon = icon.replaceAll("viewBox=\"0 0 32 32\"",`viewBox=\"0 0 ${opts.w_icon} 32\"`);
+      }
+      icon = icon.replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill=\"${preset.os_color}\"");
+      svg += `${icon}\n</g>\n`;
+    }
+    svg +="</g>\n";
+    wallpaper.svg = wallpaper.svg.replace('<!--extra-data-->',svg);    
+  }
+}
+
 
 function genSvgIcon(name){
   //let svg = document.getElementById(`os_${name}`).textContent;

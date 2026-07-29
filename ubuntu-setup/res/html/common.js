@@ -47,8 +47,6 @@ function encodeSvg(svg){
   return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 
-
-
 function genSvg(){
 
   function spanText(id, y, fontSize, lineHeight) {
@@ -249,7 +247,7 @@ const data = {
     font_family: {},
     font_size_title: '40',
     font_size_footer: '22',
-    font_alpha: '0.5',
+    font_alpha: '1.0',
     title: '',
     footer: '',
     title_y: 13,
@@ -552,6 +550,8 @@ const wallpaper = {
     }
   },
 }
+
+
 
 const fonts = {
   select: document.getElementById('font_family'), 
