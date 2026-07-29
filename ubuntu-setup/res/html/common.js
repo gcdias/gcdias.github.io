@@ -47,22 +47,29 @@ function encodeSvg(svg){
   return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 
-function spanText(id, y, fontSize, lineHeight) {
-  const e = data.main[id];
-  return e ? e.split('\n')
-    .map((a,i) => '<tspan x="50%" y="'+ (y + (fontSize * lineHeight) * (1 + i)) + '">' + a + '</tspan>')
-    .join('\n') : '';
-}
+
 
 function genSvg(){
+
+  function spanText(id, y, fontSize, lineHeight) {
+    const e = data.main[id];
+    return e ? e.split('\n')
+      .map((a,i) => '<tspan x="50%" y="'+ (y + (fontSize * lineHeight) * (1 + i)) + '">' + a + '</tspan>')
+      .join('\n') : '';
+  }
+
+  function pos(d,r,l){
+    return (1 + parseInt(d) / 50) * r/2 - l / 2 * preset.logo_scale
+  }
+
   const preset = data.main;
   const y_title = preset.title_y / 100 * opts.resY;
   const y_footer = preset.footer_y / 100 * opts.resY;
   const title = spanText('title', y_title, preset.font_size_title, 1.2);
   const footer = spanText('footer', y_footer, preset.font_size_footer, 1.2);
   const font_stretch = `font-stretch='${preset.font_family.stretch}'`
-  const logo_y =  (1 + parseInt(preset.logo_dy)/50) * opts.resY/2 - wallpaper.logoH / 2 * preset.logo_scale;
-  const logo_x =  (1 + parseInt(preset.logo_dx)/50) * 2256/2 - wallpaper.logoW / 2 * preset.logo_scale;
+  const logo_y = pos(preset.logo_dy, opts.resY, wallpaper.logoH); // (1 + parseInt(preset.logo_dy)/50) * opts.resY/2 - wallpaper.logoH / 2 * preset.logo_scale;
+  const logo_x = pos(preset.logo_dx, opts.resX, wallpaper.logoW); // (1 + parseInt(preset.logo_dx)/50) * opts.resX/2 - wallpaper.logoW / 2 * preset.logo_scale;
   return eval("`" + wallpaper.svg + "`");
 }
 
@@ -635,8 +642,8 @@ opts.readParams = function(){
   opts.vendor = urlParams.get('vnd') || urlParams.get('vendor') || '';
   opts.user = urlParams.get('usr') || opts.user;
   opts.home = `/home/${opts.user}`;
-  opts.resX = urlParams.get('w') || urlParams.get('width') || window.screen.width * window.devicePixelRatio;
-  opts.resY =  urlParams.get('h') || urlParams.get('height') || window.screen.height * window.devicePixelRatio;
+  opts.resX = (urlParams.get('w') || urlParams.get('width') || window.screen.width * window.devicePixelRatio).toFixed(0);
+  opts.resY = (urlParams.get('h') || urlParams.get('height') || window.screen.height * window.devicePixelRatio).toFixed(0);
   opts.grubSet = urlParams.get('grubset') || 'grub-os-symb';
   opts.ar = opts.resX / opts.resY;
   opts.ratio = 100 / window.screen.height / window.devicePixelRatio;

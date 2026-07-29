@@ -26,7 +26,7 @@ const ui = {
     opts.osList.forEach((os) => ui.addOption(ui.os,os,os, os.toLowerCase() === opts.os));
     
     let modes = urlParams.get("m");
-    const defRes = `${window.screen.width}x${window.screen.height}`;
+    const defRes = `${window.screen.width * window.devicePixelRatio}x${window.screen.height * window.devicePixelRatio}`;
     ui.addOption(ui.res,defRes,defRes,true);
     if (modes){
       this.res.replaceChildren();
