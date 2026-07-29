@@ -189,6 +189,10 @@ const utils = {
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+  },
+  replaceFill: function(src, newColor, all=false){
+    return all ? src.replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill=\""+newColor+"\"") : 
+                 src.replace(/fill="#[0-9a-fA-F]+"/,"fill=\""+newColor+"\"");
   }
 }
 

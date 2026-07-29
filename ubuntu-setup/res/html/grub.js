@@ -12,7 +12,7 @@ const menu = {
     opts.iconList = [ 'ubuntu', 'windows', 'macosx' ];
     opts.osList.push("uefi-firmware","memtest","restart","shutdown");
     menu.sizeId.addEventListener("change", menu.update);
-    menu.renderCap.addEventListener("change", menu.update)
+    menu.renderCap.addEventListener("change", menu.update);
     menu.update();
     //setGrubWp();
   },
