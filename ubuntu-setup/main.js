@@ -10,11 +10,10 @@ const ui = {
   ids: [ "vnd", "res", "os", "osv", "gnome", "usr"],
   nav: [ "wp", "grub", "refind", "sw" ],
   init: async function(){
-    if (urlParams.size === 0){
-      alert('Download ubuntu-setup.sh and run it to collect hw info');
+    if (urlParams.size === 0 && confirm('Download ubuntu-setup.sh and run it to collect hw info')){
       const t = await utils.fetchText("init.sh");
       utils.downloadText(t, "ubuntu-setup.sh");
-    }
+    };
     this.ids.forEach( (i) => {
       ui[i] = document.getElementById(i);
       opts[i] = urlParams.get(i)?.toLowerCase();
@@ -25,13 +24,15 @@ const ui = {
     opts.vndList.forEach((vnd) => ui.addOption(ui.vnd,vnd,vnd, vnd === opts.vnd));
     this.os.replaceChildren();
     opts.osList.forEach((os) => ui.addOption(ui.os,os,os, os.toLowerCase() === opts.os));
+    
     let modes = urlParams.get("m");
+    const defRes = `${window.screen.width}x${window.screen.height}`;
+    ui.addOption(ui.res,defRes,defRes,true);
     if (modes){
       this.res.replaceChildren();
-      const defRes = `${window.screen.width}x${window.screen.height}`;
-      ui.addOption(ui.res,defRes,defRes,true);
       modes.split(",")?.forEach(m => ui.addOption(ui.res,m,m));
     }
+    
     this.nav.forEach((nav) => {
       const id = document.getElementById(`web-${nav}`);
       id.addEventListener('click', () => {
