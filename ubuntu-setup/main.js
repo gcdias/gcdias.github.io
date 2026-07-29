@@ -11,9 +11,9 @@ const ui = {
   nav: [ "wp", "grub", "refind", "sw" ],
   init: async function(){
     if (urlParams.size === 0){
-      alert('Download init.sh and run it to collect hw info');
+      alert('Download ubuntu-setup.sh and run it to collect hw info');
       const t = await utils.fetchText("init.sh");
-      utils.downloadText(t, "init.sh");
+      utils.downloadText(t, "ubuntu-setup.sh");
     }
     this.ids.forEach( (i) => {
       ui[i] = document.getElementById(i);
@@ -79,7 +79,7 @@ const utils = {
     this.download(URL.createObjectURL(blob));
   },
   downloadText: function(text, filename){
-    this.download(`data:text/plain;charset=utf-8,${encodeURIComponent(text)}`);
+    this.download(`data:text/plain;charset=utf-8,${encodeURIComponent(text)}`, filename);
   }
 }
 
