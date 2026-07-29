@@ -9,12 +9,18 @@ const opts = {
 const ui = {
   ids: [ "vnd", "res", "os", "osv", "gnome", "usr"],
   nav: [ "wp", "grub", "refind", "sw" ],
-  init: function(){
+  init: async function(){
+    if (urlParams.size === 0){
+      alert('Download init.sh and run it to collect hw info');
+      const t = await utils.fetchText("init.sh");
+      utils.downloadText(t, "init.sh");
+    }
     this.ids.forEach( (i) => {
       ui[i] = document.getElementById(i);
       opts[i] = urlParams.get(i)?.toLowerCase();
       if (opts[i]) ui[i].value = opts[i];
     });
+    this.grubEntries = urlParams.get('grub') || null;
     this.vnd.replaceChildren();
     opts.vndList.forEach((vnd) => ui.addOption(ui.vnd,vnd,vnd, vnd === opts.vnd));
     this.os.replaceChildren();
@@ -37,6 +43,7 @@ const ui = {
     type = type ? `&t=${type}` : '';
     let res = ui.res.value.split('x');
     let url = `https://gcdias.github.io/ubuntu-setup/${page}/index.html?usr=${opts.usr}&vnd=${opts.vnd}&w=${res[0]}&h=${res[1]}${type}`
+    if (type !== 'wp' && ui.grubEntries) url += `&grub=${ui.grubEntries}`;
     window.location.href = url;
   },
   addOption: function(parent, val, txt, sel){
@@ -55,28 +62,25 @@ const ui = {
   },
 }
 
-function navSw(){
-  const url = `https://gcdias.github.io/ubuntu-setup/sw/index.html?usr=${opts.usr}&vnd=${opts.vnd}`;
-  window.location.href = url;
-}
-
-function navWp(){
-  const url = `https://gcdias.github.io/ubuntu-setup/res/index.html?usr=${opts.usr}&vnd=${opts.vnd}&t=wallpaper`;
-  window.location.href = url;
-}
-
-function navGr(){
-  const url = `https://gcdias.github.io/ubuntu-setup/res/index.html?usr=${opts.usr}&vnd=${opts.vnd}&t=grub`;
-  window.location.href = url;
-}
-
-function navRf(){
-  const url = `https://gcdias.github.io/ubuntu-setup/res/index.html?usr=${opts.usr}&vnd=${opts.vnd}&t=refind`;
-  window.location.href = url;
-}
-
-function openUrl(url){
-  window.location.href = url;
+const utils = {
+  fetchText: async function(url){
+    const res = await fetch(url);
+    const text = await res.text();
+    return text;
+  },
+  download: function(encodedUrl, filename){
+    const a = document.createElement('a');
+    a.href = encodedUrl;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+  downloadBlob: function(blob, filename) {
+    this.download(URL.createObjectURL(blob));
+  },
+  downloadText: function(text, filename){
+    this.download(`data:text/plain;charset=utf-8,${encodeURIComponent(text)}`);
+  }
 }
 
 ui.init();
