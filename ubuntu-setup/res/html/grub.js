@@ -24,18 +24,11 @@ const menu = {
     opts.osList.push("uefi-firmware","memtest","restart","shutdown");
     menu.id.replaceChildren();
     opts.iconList.forEach(async os => {
-      let div = `<div class="os-square-grub"><img id="img_${os}" alt="${os} Logo"/><div class="os-square-grub-label" id="grub-label-${os}">${os}</div></div>\n`;
+      let oslab = os.replaceAll("-", "&#x2011;")
+      let div = `<div class="os-square-grub"><img id="img_${os}" alt="${os} Logo"/><div class="os-square-grub-label" id="grub-label-${os}">${oslab}</div></div>\n`;
       menu.id.innerHTML += div;
       menu.iconData[os] = await menu.import(`icons/${opts.grubSet}/${os}.svg`);
     });
-    /*opts.iconList = [];
-    this.id.querySelectorAll('[id^="img_"]')
-      .forEach(async img => {
-        let name = img.id.replace("img_","");
-        opts.iconList.push(name);
-        menu.iconData[name] = await menu.import(`icons/${opts.grubSet}/${name}.svg`);
-      });
-    */
   },
   update: function(rect){
     data.main.os_iconsize = menu.sizeId.value;
@@ -68,7 +61,7 @@ function renderSvg(){
 }
 
 function updateIcons(){
-  data.main.os_color = data.read('os_color');
+  data.main.os_color = data.main.foreground_color; //data.read('os_color');
   let label;
   if (menu.renderCap.checked){
     opts.w_icon = 8;
@@ -77,11 +70,13 @@ function updateIcons(){
     opts.w_icon = 1;
     label = 'flex';
     document.querySelectorAll('.os-square-grub-label').forEach(e => {
+      e.style.color = data.main.os_color;
       e.style.fontFamily = data.main.font_family.family;
       e.style.fontStyle = data.main.font_family.style;
       e.style.fontWeight = data.main.font_family.weight;
       e.style.fontStretch = data.main.font_family.stretch;
-      e.style.fontSize = data.main.os_iconsize / opts.ui_resize / 2 + 'px';
+      //e.style.fontSize = data.main.os_iconsize / opts.ui_resize / 2 + 'px';
+      e.style.fontSize = data.main.os_iconsize * 0.25 + 'px';
     });
   }
 
