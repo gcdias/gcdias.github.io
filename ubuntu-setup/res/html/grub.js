@@ -8,9 +8,8 @@ const menu = {
   grubMenuH: document.getElementById('grub_menu_h'),
   iconData: {},
   init: function(){
+    opts.iconList = urlParams.get('grub')?.split(',') || [ 'ubuntu', 'windows', 'macosx' ];
     menu.loadData();
-    opts.iconList = [ 'ubuntu', 'windows', 'macosx' ];
-    opts.osList.push("uefi-firmware","memtest","restart","shutdown");
     menu.sizeId.addEventListener("change", menu.update);
     menu.renderCap.addEventListener("change", menu.update);
     menu.update();
@@ -22,13 +21,21 @@ const menu = {
   },
   loadData: async function(){
     opts.scaleX = window.devicePixelRatio;
-    opts.iconList = [];
+    opts.osList.push("uefi-firmware","memtest","restart","shutdown");
+    menu.id.replaceChildren();
+    opts.iconList.forEach(async os => {
+      let div = `<div class="os-square-grub"><img id="img_${os}" alt="${os} Logo"/><div class="os-square-grub-label" id="grub-label-${os}">${os}</div></div>\n`;
+      menu.id.innerHTML += div;
+      menu.iconData[os] = await menu.import(`icons/${opts.grubSet}/${os}.svg`);
+    });
+    /*opts.iconList = [];
     this.id.querySelectorAll('[id^="img_"]')
       .forEach(async img => {
         let name = img.id.replace("img_","");
         opts.iconList.push(name);
         menu.iconData[name] = await menu.import(`icons/${opts.grubSet}/${name}.svg`);
       });
+    */
   },
   update: function(rect){
     data.main.os_iconsize = menu.sizeId.value;
@@ -190,6 +197,7 @@ function initComponents(){
   data.main.grub_padding = 8;
   data.main.grub_iconspace = 16;
   data.main.grub_spacing = 8;
-  menu.init();
   window.addEventListener('resize', renderSvg);
 }
+
+menu.init();

@@ -14,7 +14,7 @@
       "request": "launch",
       "name": "ubuntu-setup-res",
       "webRoot": "${workspaceRoot}/ubuntu-setup",
-      "file": "${workspaceFolder}/ubuntu-setup/res/index.html?usr=diasgc&t=grub&grad=9299a0,9299a0,ff0,fff,f0f,0ff,00f&vnd=minisforum",
+      "file": "${workspaceFolder}/ubuntu-setup/res/index.html?usr=diasgc&t=grub&grad=9299a0,9299a0,ff0,fff,f0f,0ff,00f&vnd=minisforum&grub=ubuntu,windows,uefi-firmware,restart,shutdown,memtest",
       "runtimeArgs": ["--disable-web-security"] 
     },
     {
