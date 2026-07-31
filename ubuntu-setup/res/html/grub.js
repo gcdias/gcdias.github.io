@@ -13,6 +13,7 @@ const menu = {
     menu.sizeId.addEventListener("change", menu.update);
     menu.renderCap.addEventListener("change", menu.update);
     menu.update();
+    renderSvg();
     //setGrubWp();
   },
   import: async function(path){
@@ -152,9 +153,9 @@ function genSvgIcon(name){
 function evalSvgIcon(svg){
   if (menu.renderCap.checked){
     let font = data.main.font_family;
-    let font_size = data.main.os_iconsize / opts.ui_resize / 2;
+    let font_size = data.main.os_iconsize * 0.1; /*/ opts.ui_resize / 2*/;
     let cap_title = svg.match('<title>(.*?)</title>')[1];
-    let t = `<text x="48" y="22.5" fill="${data.main.os_color}" font-family="'${font.family}'" font-style="'${font.style}'" font-stretch="'${font.stretch}'" font-size="${font_size}px" font-weight="'${font.weight}'">${cap_title}</text>`
+    let t = `<text x="48" y="50%" fill="${data.main.os_color}" dominant-baseline="middle" font-family="'${font.family}'" font-style="'${font.style}'" font-stretch="'${font.stretch}'" font-size="${font_size}px" font-weight="'${font.weight}'">${cap_title}</text>`
     svg = svg.replaceAll("<!--text-here-->", t);
   }
   svg = svg.replaceAll("viewBox=\"0 0 32 32\"",`viewBox=\"0 0 ${opts.w_icon} 32\"`);
