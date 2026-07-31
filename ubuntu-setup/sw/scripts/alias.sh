@@ -26,7 +26,8 @@ function ffmpeg-avif() {
     test -n "$(grep -oP "\d+" <<<"${1}")" && args+=(-crf "${1}") && shift
     args=(-c:v libaom-av1 -crf ${qual:-28})
     for i in "$@"; do
-        ffmpeg -hide_banner -i "${i}" "${args[@]}" "${i/.*/.avif}" && case "${rem,,}" in y) rm "${i}" ;; esac
+        o=$(basename i);
+        ffmpeg -hide_banner -i "${i}" "${args[@]}" "${o/.*/.avif}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
 }
 
@@ -36,7 +37,10 @@ function ffmpeg-hevc() {
     test -n "$(grep -oP "\d+" <<<"${1}")" && args+=(-crf "${1}") && shift
     args=(-c:v libx265 -crf ${qual:-28})
     for i in "$@"; do
-        ffmpeg -hide_banner -i "${i}" "${args[@]}" "${i/.*/-HEVC.mp4}" && case "${rem,,}" in y) rm "${i}" ;; esac
+        o=$(basename i);
+        o=${o%%\?*}
+        o=${o/.*/-HEVC.mp4}
+        ffmpeg -hide_banner -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
 }
 
@@ -48,7 +52,8 @@ function ffmpeg-cut() {
     test -n "$(grep -oP "\d{2}:\d{2}" <<<"${c[0]}")" && args+=(-ss "${c[0]}")
     test -n "$(grep -oP "\d{2}:\d{2}" <<<"${c[1]}")" && args+=(-to "${c[1]}")
     for i in "$@"; do
-        ffmpeg -hide_banner -i "${i}" "${args[@]}" "${i/.*/-cut.mp4}" && case "${rem,,}" in y) rm "${i}" ;; esac
+        o=$(basename i);
+        ffmpeg -hide_banner -i "${i}" "${args[@]}" "${o/.*/-cut.mp4}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
 }
 
