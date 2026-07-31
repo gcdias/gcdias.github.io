@@ -18,6 +18,9 @@ const ui = {
       ui[i] = document.getElementById(i);
       opts[i] = urlParams.get(i)?.toLowerCase();
       if (opts[i]) ui[i].value = opts[i];
+      ui[i].addEventListener('change', () => {
+        opts[i] = ui[i].value;
+      });
     });
     this.grubEntries = urlParams.get('grub') || null;
     this.vnd.replaceChildren();
