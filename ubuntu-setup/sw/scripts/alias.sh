@@ -27,7 +27,9 @@ function ffmpeg-avif() {
     args=(-c:v libaom-av1 -crf ${qual:-28})
     for i in "$@"; do
         o=$(basename i);
-        ffmpeg -hide_banner -i "${i}" "${args[@]}" "${o/.*/.avif}" && case "${rem,,}" in y) rm "${i}" ;; esac
+        o=${o%%\?*}
+        o=${o/.*/.avif}
+        ffmpeg -hide_banner -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
 }
 
@@ -53,7 +55,9 @@ function ffmpeg-cut() {
     test -n "$(grep -oP "\d{2}:\d{2}" <<<"${c[1]}")" && args+=(-to "${c[1]}")
     for i in "$@"; do
         o=$(basename i);
-        ffmpeg -hide_banner -i "${i}" "${args[@]}" "${o/.*/-cut.mp4}" && case "${rem,,}" in y) rm "${i}" ;; esac
+        o=${o%%\?*}
+        o=${o/.*/-cut.mp4}
+        ffmpeg -hide_banner -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
 }
 
