@@ -27,13 +27,13 @@ const ui = {
     opts.vndList.forEach((vnd) => ui.addOption(ui.vnd,vnd,vnd, vnd === opts.vnd));
     this.os.replaceChildren();
     opts.osList.forEach((os) => ui.addOption(ui.os,os,os, os.toLowerCase() === opts.os));
-    
+
+    this.res.replaceChildren();
     let modes = urlParams.get("m");
     let res = [ (window.screen.width * window.devicePixelRatio).toFixed(0),(window.screen.height * window.devicePixelRatio).toFixed(0) ];
     const defRes = `${res[0]}x${res[1]}`;
     ui.addOption(ui.res,defRes,defRes,true);
     if (modes){
-      this.res.replaceChildren();
       modes.split(",")?.forEach(m => ui.addOption(ui.res,m,m));
     }
     
