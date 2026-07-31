@@ -45,6 +45,7 @@ function ffmpeg-hevc() {
         ffmpeg -hide_banner -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
 }
+alias ff-hevc='ffmpeg-hevc'
 
 function ffmpeg-cut() {
     test -z "$1" && echo "Usage: ffmpeg-cut [-r=remove original file] <start_time>[-<end_time>] <file1> [file2 ...]" && return 1
