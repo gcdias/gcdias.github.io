@@ -174,28 +174,37 @@ function evalSvgIcon(svg){
 }
 
 async function exportMedia(){
+
+  const status = document.getElementById('progress_status');
   const zip = new JSZip();
+  let blob;
+
+  function addtoZip(desc, filename, blob, split=false, base64=false) {
+    status.innerText = desc;;
+    zip.file(filename, split ? blob.split(',')[1] : blob, base64 ? { base64: true } : null);
+  }
+
   // add config grub
-  zip.file("theme.txt", fetchEval("html/config-grub-theme.txt"));
+  addtoZip("Adding Grub Config", "theme.txt", fetchEval("html/config-grub-theme.txt"));
   // add background
-  zip.file('background.png', getWpBlob('png', opts.resX, opts.resY), { base64: true });
+  addtoZip("Adding Background", "background.png", getWpBlob('png', opts.resX, opts.resY), false, true);
+  
   // add os-icons
   for (os of opts.osList) {
     let svg = await fetchText(`icons/${opts.grubSet}/${os}.svg`);
     svg = svg.replaceAll(/fill="#[0-9a-fA-F]+"/gi,`fill="${data.main.os_color}"`);
     svg = evalSvgIcon(svg);
     const blob = await svg2image(svg, 'png', data.main.os_iconsize_w, data.main.os_iconsize);
-    zip.file(`icons/${os}.png`, blob.split(',')[1], { base64: true });
+    addtoZip(`Adding OS Icon ${os}`, `icons/${os}.png`, blob, true, true);
   }
   // add grub-ui png
   opts.pngList.forEach(icon => {
-    zip.file(`${icon}.png`, fetchBlob(`grub/${icon}.png`));
+    addtoZip(`Adding Grub UI Icon ${icon}`, `${icon}.png`, fetchBlob(`grub/${icon}.png`));
   });
   // generate zip
   const content = await zip.generateAsync({ type: "blob" });
   // download
-  utils.downloadBlob(content, `theme-${opts.id}.zip`);
-
+  utils.downloadBlob(content, `grub-theme-${opts.vnd}-${opts.id}.zip`);
 }
 
 function initComponents(){
