@@ -12,9 +12,11 @@ const menu = {
     menu.loadData();
     menu.sizeId.addEventListener("change", menu.update);
     menu.renderCap.addEventListener("change", menu.update);
+    //renderSvg();
+    //menu.updateIcons();
     menu.update();
-    renderSvg();
     //setGrubWp();
+    setTimeout(renderSvg, 500);
   },
   import: async function(path){
     let svg = await fetchText(path);
