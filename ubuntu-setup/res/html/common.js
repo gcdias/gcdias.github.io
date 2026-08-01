@@ -480,11 +480,14 @@ const wallpaper = {
     set = set ? set[1].trim() : '';
     if (def && set){
       wallpaper.gradCount = (def.match(/stop-color="/g) || []).length;
+      let replacePalette = confirm("Replace current palette?");
       for (let i = 0; i < wallpaper.gradCount; i++) {
         //const color = data.main.grad[i] || '#000000';
         let color = def.match(/stop-color="#([0-9a-fA-F]+)"/); 
         def = def.replace(/stop-color="#([0-9a-fA-F]+)"/, `stop-color='\${preset.grad[${i}]}'`);
-        data.main.grad[i] = color && color[1] ? `#${color[1].trim()}` : data.main.grad[i];
+        if (replacePalette && color && color[1]){
+          data.main.grad[i] = `#${color[1].trim()}`;
+        }
       }
       wallpaper.gradUpdateUI();
       svg = svg.replace('<!--def-gradient-->', def);
