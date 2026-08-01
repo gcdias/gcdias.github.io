@@ -11,11 +11,11 @@ terminal-border: "0"
 
 # Boot menu
 + boot_menu {
-  left = ${data.main.grub_menu_x}%
-  top = ${data.main.grub_menu_y}%
-  width = ${data.main.grub_menu_w}%
-  height = ${data.main.grub_menu_h}%
-  item_color = ${data.main.os_color}
+  left = ${data.main.grub_menu_x}
+  top = ${data.main.grub_menu_y}
+  width = ${data.main.grub_menu_w}
+  height = ${data.main.grub_menu_h}
+  item_color = ${data.main.grub_itemcolor}
   icon_width = ${data.main.os_iconsize_w}
   icon_height = ${data.main.os_iconsize}
   item_height = ${data.main.os_iconsize}

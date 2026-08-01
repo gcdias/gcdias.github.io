@@ -5,6 +5,8 @@
   --panel-width: 340px;
   --panel-toggle-size: 48px;
   --grad-columns: 4;
+  --os-iconspace: 18px;
+  --os-spacing: 8px;
 }
 
 body {
@@ -189,14 +191,14 @@ body {
   width: var(--os-size-w);
   flex-direction: row;
   font-size: 24px;
-  padding: 8px;
+  padding: var(--os-spacing);
 }
 
 .os-square-grub-label {
   height: 100%;
   display: flex;
   align-items: center;
-  padding-left: 18px;
+  padding-left: var(--os-iconspace);
 }
 
 .tools-square {

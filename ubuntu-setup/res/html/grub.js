@@ -7,13 +7,22 @@ const menu = {
   grubMenuW: document.getElementById('grub_menu_w'),
   grubMenuH: document.getElementById('grub_menu_h'),
   iconData: {},
+  ids: [ 'os-size','grub_rendercap','grub_padding','grub_itemcolor','grub_selectedcolor','grub_iconspace','grub_spacing','grub_menu_x','grub_menu_y','grub_menu_w','grub_menu_h' ],
   init: function(){
     opts.iconList = urlParams.get('grub')?.split(',') || [ 'ubuntu', 'windows', 'macosx' ];
     menu.loadData();
-    menu.sizeId.addEventListener("change", menu.update);
-    menu.renderCap.addEventListener("change", menu.update);
-    //renderSvg();
-    //menu.updateIcons();
+    //menu.sizeId.addEventListener("change", menu.update);
+    //menu.renderCap.addEventListener("change", menu.update);
+    menu.ids.forEach(id => {
+      let el = document.getElementById(id);
+      if (el) {
+        el.addEventListener("change", () => { 
+          data.main[id] = el.value;
+          menu.update();
+        });
+        data.main[id] = el.value;
+      }
+    });
     menu.update();
     //setGrubWp();
     setTimeout(renderSvg, 500);
@@ -36,7 +45,7 @@ const menu = {
   update: function(rect){
     data.main.os_iconsize = menu.sizeId.value;
     data.main.os_iconsize_w = menu.sizeId.value;
-    document.documentElement.style.setProperty("--os-size", data.main.os_iconsize / opts.ui_resize + "px");
+    menu.updateProperties();
     if (rect){
       if (rect.width === 0) rect.width = opts.resX;
       if (rect.height === 0) rect.height = opts.resY;
@@ -52,6 +61,12 @@ const menu = {
       data.main.grub_menu_y = y + "%";
     }
   },
+  updateProperties: function(){
+    document.documentElement.style.setProperty("--os-size", data.main.os_iconsize / opts.ui_resize + "px");
+    document.documentElement.style.setProperty("--os-size-w", (data.main.os_iconsize_w / opts.ui_resize) + "px");
+    document.documentElement.style.setProperty("--os-iconspace", data.main.grub_iconspace + "px");
+    document.documentElement.style.setProperty("--os-spacing", data.main.grub_spacing + "px");
+  }
 }
 
 function renderSvg(){
@@ -85,12 +100,11 @@ function updateIcons(){
 
   data.main.os_iconsize = menu.sizeId.value * window.devicePixelRatio;
   data.main.os_iconsize_w = data.main.os_iconsize * opts.w_icon;
-  data.main.grub_iconspace = data.main.os_iconsize_w / 4;
+  //data.main.grub_iconspace = data.main.os_iconsize_w / 4;
   data.main.grub_padding = data.main.grub_iconspace / 2;
-  data.main.grub_spacing = data.main.grub_iconspace / 2;
+  //data.main.grub_spacing = data.main.grub_iconspace / 2;
   opts.w_icon *= 32;
-  document.documentElement.style.setProperty("--os-size-w", (data.main.os_iconsize_w / opts.ui_resize) + "px");
-  document.documentElement.style.setProperty("--os-size", (data.main.os_iconsize / opts.ui_resize) + "px");
+  //document.documentElement.style.setProperty("--os-size", (data.main.os_iconsize / opts.ui_resize) + "px");
   
   opts.iconList.forEach(icon => {
     if (menu.iconData[icon]){
