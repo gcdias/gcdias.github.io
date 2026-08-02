@@ -29,7 +29,7 @@ function ffmpeg-avif() {
         o=$(basename $i);
         o=${o%%\?*}
         o=${o/.*/.avif}
-        ffmpeg -hide_banner -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
+        ffmpeg -hide_banner -loglevel quiet -stats -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
 }
 
