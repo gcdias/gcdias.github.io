@@ -314,7 +314,7 @@ const data = {
     switch(opts.type){
       case 'grub':
         data.main.title  = t || "Choose an operating system to start";
-        data.main.footer = f || "Use the up and down keys to select your choice. Press Enter to boot the selected OS, &#39;e&#39;; to edit the commands before booting or &#39;c&#39; for a command-line"
+        data.main.footer = f || "Use the up and down keys to select your choice.\nPress Enter to boot the selected OS, 🅴 to edit the commands before booting or 🅲 for a command-line"
         break;
       case 'refind':
         data.main.title = t || "rEFInd boot menu";
@@ -557,8 +557,6 @@ const wallpaper = {
     }
   },
 }
-
-
 
 const fonts = {
   select: document.getElementById('font_family'), 

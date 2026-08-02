@@ -6,15 +6,19 @@ const menu = {
   grubMenuY: document.getElementById('grub_menu_y'),
   grubMenuW: document.getElementById('grub_menu_w'),
   grubMenuH: document.getElementById('grub_menu_h'),
+  defTitle: "Choose an operating system to start",
+  defFooter: "Use the up and down keys to select your choice.\nPress Enter to boot the selected OS, 🅴 to edit the commands before booting or 🅲 for a command-line",
   iconData: {},
-  ids: [ 'os-size', 'grub_rendercap','grub_padding','grub_itemcolor','grub_selectedcolor','grub_iconspace','grub_spacing','grub_menu_x','grub_menu_y','grub_menu_w','grub_menu_h' ],
+  ids: [ 'os_color', 'os_size', 'grub_rendercap','grub_padding','grub_itemcolor','grub_selectedcolor','grub_iconspace','grub_spacing','grub_menu_x','grub_menu_y','grub_menu_w','grub_menu_h' ],
   init: function(){
     opts.iconList = urlParams.get('grub')?.split(',') || [ 'ubuntu', 'windows', 'macosx' ];
+    data.main.title  = urlParams.get('title') || menu.defTitle;
+    data.main.footer = urlParams.get('footer') || menu.defFooter;    
     menu.loadData();
     menu.ids.forEach(id => {
       let el = document.getElementById(id);
       if (el) {
-        el.addEventListener("change", () => { 
+        el.addEventListener("input", () => { 
           data.main[id] = el.value;
           menu.update();
         });
@@ -27,6 +31,7 @@ const menu = {
   },
   import: async function(path){
     let svg = await fetchText(path);
+    //return utils.replaceFill(svg,'"${preset.os_color}"',true);
     return svg.replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill=\"${preset.os_color}\"");
   },
   loadData: async function(){
@@ -77,7 +82,7 @@ function renderSvg(){
 }
 
 function updateIcons(){
-  data.main.os_color = data.main.foreground_color; //data.read('os_color');
+  //data.main.os_color = data.main.foreground_color; //data.read('os_color');
   let label;
   if (menu.renderCap.checked){
     opts.w_icon = 8;
@@ -145,7 +150,8 @@ const grub = {
         icon = icon.replaceAll("<!--text-here-->", t);
         //icon = icon.replaceAll("viewBox=\"0 0 32 32\"",`viewBox=\"0 0 ${opts.w_icon} 32\"`);
       }
-      icon = icon.replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill=\"${preset.os_color}\"");
+      icon = utils.replaceFill(icon,'"${preset.os_color}"',true);
+      //icon = icon.replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill=\"${preset.os_color}\"");
       svg += `${icon}\n</g>\n`;
     }
     svg +="</g>\n";
@@ -193,6 +199,7 @@ async function exportMedia(){
   for (os of opts.osList) {
     let svg = await fetchText(`icons/${opts.grubSet}/${os}.svg`);
     svg = svg.replaceAll(/fill="#[0-9a-fA-F]+"/gi,`fill="${data.main.os_color}"`);
+    //svg = utils.replaceFill(svg,'${data.main.os_color}',true);
     svg = evalSvgIcon(svg);
     const blob = await svg2image(svg, 'png', data.main.os_iconsize_w, data.main.os_iconsize);
     addtoZip(`Adding OS Icon ${os}`, `icons/${os}.png`, blob, true, true);

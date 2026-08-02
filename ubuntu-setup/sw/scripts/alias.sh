@@ -43,7 +43,7 @@ function ffmpeg-hevc() {
         o=${o%%\?*}
         o=${o/.*/-HEVC.mp4}
         echo "output ${o}"
-        ffmpeg -hide_banner -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
+        ffmpeg -hide_banner -loglevel quiet -stats -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
 }
 alias ff-hevc='ffmpeg-hevc'
