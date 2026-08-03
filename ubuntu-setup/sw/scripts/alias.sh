@@ -63,9 +63,14 @@ function ffmpeg-cut() {
     done
 }
 
-function ff-tags() {
-    test -z "$1" && echo "Usage: ff-tags <file>" && return 1
-    ffprobe -show_entries format_tags -show_entries stream_tags "$1"
+function ff-tag() {
+    test -z "$1" && echo "Usage: ff-tag [-t|--tag tagname] <files>" && return 1
+    local f=".*"
+    case "$1" in -t|--tag) f="${2}=.*"; shift 2;; esac
+    for i in "$@"; do
+        echo -e "\n$(basename $i):"
+        ffprobe -hide_banner -loglevel quiet -show_entries format_tags -show_entries stream_tags "$i" | grep -oE "$f"
+    done
 }
 
 function alias-help(){
@@ -77,7 +82,7 @@ echo -e "Functions and alias added to your shell:
 \e[1;92mffmpeg-avif:\e[0;2m Convert images to AVIF format using ffmpeg.\e[0m
 \e[1;92mffmpeg-hevc:\e[0;2m Convert videos to HEVC format using ffmpeg.\e[0m
 \e[1;92mffmpeg-cut :\e[0;2m Cut videos using ffmpeg.\e[0m
-\e[1;92mff-tags    :\e[0;2m Show metadata tags of media files using ffprobe.\e[0m
+\e[1;92mff-tag     :\e[0;2m Show metadata tags of media files using ffprobe.\e[0m
 "
 }
 

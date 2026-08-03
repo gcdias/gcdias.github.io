@@ -308,6 +308,11 @@ const data = {
       });
       data.main.grad = out;
     }
+
+    data.main.title  = urlParams.get('title');
+    data.main.footer = urlParams.get('footer');
+    
+    /*
     let t = data.main.footer = urlParams.get('title');
     let f = data.main.footer = urlParams.get('footer');
 
@@ -325,6 +330,7 @@ const data = {
         data.main.footer = f || "";
         break;
     }
+    */
   },
   read: function(id){ //updatePreset(key)
     const val = document.getElementById(id).value;
@@ -647,8 +653,10 @@ opts.readParams = function(){
   opts.vendor = urlParams.get('vnd') || urlParams.get('vendor') || '';
   opts.user = urlParams.get('usr') || opts.user;
   opts.home = `/home/${opts.user}`;
-  opts.resX = urlParams.get('w') || urlParams.get('width') || (window.screen.width * window.devicePixelRatio).toFixed(0);
-  opts.resY = urlParams.get('h') || urlParams.get('height') || (window.screen.height * window.devicePixelRatio).toFixed(0);
+  opts.defResX = (window.screen.width * window.devicePixelRatio).toFixed(0);
+  opts.defResY = (window.screen.height * window.devicePixelRatio).toFixed(0);
+  opts.resX = urlParams.get('w') || urlParams.get('width') || opts.defResX;
+  opts.resY = urlParams.get('h') || urlParams.get('height') || opts.defResY;
   opts.grubSet = urlParams.get('grubset') || 'grub-os-symb';
   opts.ar = opts.resX / opts.resY;
   opts.ratio = 100 / window.screen.height / window.devicePixelRatio;
