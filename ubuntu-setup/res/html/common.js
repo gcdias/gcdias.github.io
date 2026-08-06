@@ -308,13 +308,18 @@ const data = {
       });
       data.main.grad = out;
     }
+
+    data.main.title  = urlParams.get('title');
+    data.main.footer = urlParams.get('footer');
+    
+    /*
     let t = data.main.footer = urlParams.get('title');
     let f = data.main.footer = urlParams.get('footer');
 
     switch(opts.type){
       case 'grub':
         data.main.title  = t || "Choose an operating system to start";
-        data.main.footer = f || "Use the up and down keys to select your choice. Press Enter to boot the selected OS, &#39;e&#39;; to edit the commands before booting or &#39;c&#39; for a command-line"
+        data.main.footer = f || "Use the up and down keys to select your choice.\nPress Enter to boot the selected OS, 🅴 to edit the commands before booting or 🅲 for a command-line"
         break;
       case 'refind':
         data.main.title = t || "rEFInd boot menu";
@@ -325,6 +330,7 @@ const data = {
         data.main.footer = f || "";
         break;
     }
+    */
   },
   read: function(id){ //updatePreset(key)
     const val = document.getElementById(id).value;
@@ -558,8 +564,6 @@ const wallpaper = {
   },
 }
 
-
-
 const fonts = {
   select: document.getElementById('font_family'), 
   initCallback: null,
@@ -649,8 +653,10 @@ opts.readParams = function(){
   opts.vendor = urlParams.get('vnd') || urlParams.get('vendor') || '';
   opts.user = urlParams.get('usr') || opts.user;
   opts.home = `/home/${opts.user}`;
-  opts.resX = urlParams.get('w') || urlParams.get('width') || (window.screen.width * window.devicePixelRatio).toFixed(0);
-  opts.resY = urlParams.get('h') || urlParams.get('height') || (window.screen.height * window.devicePixelRatio).toFixed(0);
+  opts.defResX = (window.screen.width * window.devicePixelRatio).toFixed(0);
+  opts.defResY = (window.screen.height * window.devicePixelRatio).toFixed(0);
+  opts.resX = urlParams.get('w') || urlParams.get('width') || opts.defResX;
+  opts.resY = urlParams.get('h') || urlParams.get('height') || opts.defResY;
   opts.grubSet = urlParams.get('grubset') || 'grub-os-symb';
   opts.ar = opts.resX / opts.resY;
   opts.ratio = 100 / window.screen.height / window.devicePixelRatio;

@@ -369,6 +369,8 @@ function initComponents() {
   opts.iconList = [];
   data.main.iconData = {};
   fonts.initCallback = font_png.init;
+  data.main.title  = urlParams.get('title') || "rEFInd boot menu";
+  data.main.footer = urlParams.get('footer') || "";  
   panel_os.init();
   panel_tools.init();
 }
