@@ -1,3 +1,5 @@
+# Grub Manual Ref: https://www.gnu.org/software/grub/manual/grub/grub.html
+
 # Main options
 title-text: ""
 desktop-image: "background.png"
