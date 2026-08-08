@@ -312,27 +312,8 @@ const data = {
     data.main.title  = urlParams.get('title');
     data.main.footer = urlParams.get('footer');
     
-    /*
-    let t = data.main.footer = urlParams.get('title');
-    let f = data.main.footer = urlParams.get('footer');
-
-    switch(opts.type){
-      case 'grub':
-        data.main.title  = t || "Choose an operating system to start";
-        data.main.footer = f || "Use the up and down keys to select your choice.\nPress Enter to boot the selected OS, 🅴 to edit the commands before booting or 🅲 for a command-line"
-        break;
-      case 'refind':
-        data.main.title = t || "rEFInd boot menu";
-        data.main.footer = f || "";
-        break;
-      default:
-        data.main.title = t || "";
-        data.main.footer = f || "";
-        break;
-    }
-    */
   },
-  read: function(id){ //updatePreset(key)
+  read: function(id){
     const val = document.getElementById(id).value;
     this.presets[this.main.current][id] = val;
     this.main[id] = val;
