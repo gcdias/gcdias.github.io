@@ -674,6 +674,24 @@ const ui = {
   controls: document.getElementById('controls'),
   preview: document.getElementById('preview'),
   adjustSize: document.getElementById('adjust-size'),
+  addInputRange: function(parent, id, label, value, max, min, step){
+    const div = document.createElement('div');
+    div.classList.add('flex-1');
+    div.innerHTML = `<label for="${id}">${label}:</label><input type="number" id="${id}" min="${min}" max="${max}" step="${step}" value="${value}"/>`;
+    parent.appendChild(div);
+  },
+  addInputColor: function(parent, id, label, value){
+    const div = document.createElement('div');
+    div.classList.add('flex-1');
+    div.innerHTML = `<label for="${id}">${label}:</label><input type="color" id="${id}" value="${value}"/>`;
+    parent.appendChild(div);
+  },
+  addInputSwitch: function(parent, id, label, value){
+    const div = document.createElement('div');
+    div.classList.add('flex-switch');
+    div.innerHTML = `<label for="${id}">${label}:</label><input type="checkbox" id="${id}" ${value ? 'checked' : ''}/>`;
+    parent.appendChild(div);
+  },
   init: function(){
     /* Panel Toggle Functionality for Mobile */
     ui.adjustSize?.addEventListener('change', (e) => {
