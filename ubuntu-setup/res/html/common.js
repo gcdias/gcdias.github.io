@@ -315,7 +315,7 @@ const data = {
     }
     const ex = JSON.stringify(data, null, 2);
     const blob = new Blob([ex], { type: 'application/json' });
-    utils.downloadBlob(blob, 'data.json');
+    utils.downloadBlob(blob, `config-${opts.type}-${opts.id}.json`);
   },
   importData: async function(){
     const file = await utils.selectFile();
