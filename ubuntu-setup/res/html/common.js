@@ -193,6 +193,14 @@ const utils = {
   replaceFill: function(src, newColor, all=false){
     return all ? src.replaceAll(/fill="#[0-9a-fA-F]+"/gi,"fill=\""+newColor+"\"") : 
                  src.replace(/fill="#[0-9a-fA-F]+"/,"fill=\""+newColor+"\"");
+  },
+  selectFile: function(){
+    return new Promise((resolve, reject) => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.onchange = () => resolve(input.files[0]);
+      input.click();
+    });
   }
 }
 
@@ -273,7 +281,38 @@ const data = {
       logo_alpha: '0.1',
       current: 'light'
     },
-  },  
+  },
+  exportData: function(){
+    const data = {
+      main: this.main,
+      presets: this.presets
+    }
+    const ex = JSON.stringify(data, null, 2);
+    const blob = new Blob([ex], { type: 'application/json' });
+    utils.downloadBlob(blob, 'data.json');
+  },
+  importData: async function(){
+    const file = await utils.selectFile();
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const importedData = JSON.parse(event.target.result);
+        if (importedData.main && importedData.presets) {
+          this.main = importedData.main;
+          this.presets = importedData.presets;
+          wallpaper.forEachKey((key, id) => {
+            id.value = this.main[key];
+          });
+        } else {
+          throw new Error("Invalid data format");
+        }
+      }
+      catch (error) {
+        alert("Error importing data: " + error.message);
+      }
+    }
+    reader.readAsText(file);
+  },
   availableParameters: [ 
     {'pc':'pattern_color'}, {'patc':'pattern_color'},
     {'pa':'pattern_alpha'}, {'pata':'pattern_alpha'},
@@ -323,6 +362,7 @@ const data = {
 
 const wallpaper = {
   id: document.getElementById('img_preview'),
+  theme_id: document.getElementById('theme_id'),
   vendor: document.getElementById('vendor'),
   vendor_colortype: document.getElementById('logo_colortype'),
   pattern_type: document.getElementById('pattern_type'),
@@ -342,6 +382,10 @@ const wallpaper = {
   updateKeys: ["background_color", "pattern_color", "pattern_alpha", "grad_alpha", "logo_color", "logo_alpha", "logo_scale", "logo_dx", "logo_dy", "font_color", "font_size_title", "font_size_footer", "font_alpha", "title_y", "footer_y", "title", "footer"],
 
   init: async function() {
+    this.theme_id.value = opts.id;
+    this.theme_id.addEventListener('input', (e) => {
+      opts.id = this.theme_id.value;
+    });
     wallpaper.vndInit();
     wallpaper.patInit();
     wallpaper.gradInit();
@@ -655,6 +699,8 @@ const ui = {
   controls: document.getElementById('controls'),
   preview: document.getElementById('preview'),
   adjustSize: document.getElementById('adjust-size'),
+  exportConfig: document.getElementById('export-config'),
+  importConfig: document.getElementById('import-config'),
   addInputRange: function(parent, id, label, value, max, min, step){
     const div = document.createElement('div');
     div.classList.add('flex-1');
@@ -674,6 +720,13 @@ const ui = {
     parent.appendChild(div);
   },
   init: function(){
+    this.importConfig?.addEventListener('click', async () => {
+      await data.importData();
+      renderSvg();
+    });
+    this.exportConfig?.addEventListener('click', () => {
+      data.exportData();
+    });
     /* Panel Toggle Functionality for Mobile */
     ui.adjustSize?.addEventListener('change', (e) => {
         opts.ar = e.value ? window.devicePixelRatio : 1;

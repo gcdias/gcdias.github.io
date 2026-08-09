@@ -69,6 +69,10 @@
       <div class="div-header">Background</div>
       <details open>
       <summary>Theme Colors</summary>
+        <div class="flex-1">
+          <label for="theme_id">Background:</label>
+          <input type="text" id="theme_id" />
+        </div>
         <div class="flex-end">
           <div class="flex-1">
             <label for="background_color">Background:</label>
@@ -208,6 +212,10 @@
     </div>
     <div class="flex-end status" id="progress_status"></div>
     <button id="button_export">Export</button>
+    <div class="flex-end">
+      <button id="import-config" class="flex-1">Import Config</button>
+      <button id="export-config" class="flex-1">Export Config</button>
+    </div>
   </div>
 </body>
 <script type="text/javascript" src="html/common.js?v=2.0"></script>
