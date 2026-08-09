@@ -153,25 +153,6 @@ function xmlElement(name, value){
   return xml;
 }
 
-// triple-state checkbox
-function checkTripleStateCheckbox(){
-  document.querySelectorAll("input[type=checkbox][id^=conf_]")
-    .forEach(el => {
-      el.state = 0;
-      el.indeterminate = true;
-      el.checked = true;
-      el.onclick = () => {
-        el.state = ++el.state % 3   // cycle through 0,1,2
-        if (el.state == 0) {
-            el.indeterminate = true;
-            el.checked = true;   // after 'indeterminate' the state 'false' follows 
-        }    
-      }
-    }
-  );
-}
-
-
 const utils = {
   addOption: function(parent, val, txt){
     parent.appendChild(this.createOption(val, txt));
@@ -242,31 +223,6 @@ const intro = {
   }
 }
 
-const cfg = {
-  wp: {
-    background_color: '#333',
-    foreground_color: '#fff',
-    pattern_color: '#888',
-    pattern_alpha: '0.05',
-    grad: ['#444', '#333','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
-    grad_alpha: '1.0',
-    logo_color: '#fff',
-    logo_alpha: '0.1',
-    logo_scale: '1.0',
-    logo_dx: '0',
-    logo_dy: '0',
-    font_color: '#fff',
-    font_family: {},
-    font_size_title: '40',
-    font_size_footer: '22',
-    font_alpha: '1.0',
-    title: '',
-    footer: '',
-    title_y: 13,
-    footer_y: 90,
-  }
-}
-
 
 const data = {
   main: {
@@ -274,7 +230,7 @@ const data = {
     foreground_color: '#fff',
     pattern_color: '#888',
     pattern_alpha: '0.05',
-    grad: ['#444', '#333','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
+    grad: ['#444', '#333','#9fbecb','#bfc5cf','#9ee16b','#cbebcf','#80b7ff','#50b452' ],
     grad_alpha: '1.0',
     logo_color: '#fff',
     logo_alpha: '0.1',
@@ -296,14 +252,14 @@ const data = {
     dark: {
       background_color: '#333',
       foreground_color: '#fff',
-      grad: ['#0d0704', '#03070d','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
+      grad: ['#0d0704', '#03070d','#9fbecb','#bfc5cf','#9ee16b','#cbebcf','#80b7ff','#50b452' ],
       logo_alpha: '0.3',
       current: 'dark'
     },
     light: {
       background_color: '#ccc',
       foreground_color: '#333',
-      grad: ['#d8d8d8', '#c0c6cc','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
+      grad: ['#d8d8d8', '#c0c6cc','#9fbecb','#bfc5cf','#9ee16b','#cbebcf','#80b7ff','#50b452' ],
       logo_alpha: '0.1',
       current: 'light'
     },
@@ -727,6 +683,23 @@ const ui = {
   adjustSize: document.getElementById('adjust-size'),
   exportConfig: document.getElementById('export-config'),
   importConfig: document.getElementById('import-config'),
+  // triple-state checkbox
+  checkTripleStateCheckbox: function(){
+    document.querySelectorAll("input[type=checkbox][id^=conf_]")
+      .forEach(el => {
+        el.state = 0;
+        el.indeterminate = true;
+        el.checked = true;
+        el.onclick = () => {
+          el.state = ++el.state % 3   // cycle through 0,1,2
+          if (el.state == 0) {
+              el.indeterminate = true;
+              el.checked = true;   // after 'indeterminate' the state 'false' follows 
+          }    
+        }
+      }
+    );
+  },
   addInputRange: function(parent, id, label, value, max, min, step){
     const div = document.createElement('div');
     div.classList.add('flex-1');

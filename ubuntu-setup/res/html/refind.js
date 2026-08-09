@@ -354,7 +354,7 @@ async function exportMedia() {
 
 function initComponents() {
 
-  checkTripleStateCheckbox();
+  ui.checkTripleStateCheckbox();
   
   const confTimeout = document.getElementById('conf_timeout');
   if (confTimeout){
