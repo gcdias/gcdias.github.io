@@ -66,8 +66,8 @@ function genSvg(){
   const title = spanText('title', y_title, preset.font_size_title, 1.2);
   const footer = spanText('footer', y_footer, preset.font_size_footer, 1.2);
   const font_stretch = `font-stretch='${preset.font_family.stretch}'`
-  const logo_y = pos(preset.logo_dy, opts.resY, wallpaper.logoH); // (1 + parseInt(preset.logo_dy)/50) * opts.resY/2 - wallpaper.logoH / 2 * preset.logo_scale;
-  const logo_x = pos(preset.logo_dx, opts.resX, wallpaper.logoW); // (1 + parseInt(preset.logo_dx)/50) * opts.resX/2 - wallpaper.logoW / 2 * preset.logo_scale;
+  const logo_y = pos(preset.logo_dy, opts.resY, wallpaper.logoH);
+  const logo_x = pos(preset.logo_dx, opts.resX, wallpaper.logoW);
   return eval("`" + wallpaper.svg + "`");
 }
 
@@ -241,6 +241,32 @@ const intro = {
     })
   }
 }
+
+const cfg = {
+  wp: {
+    background_color: '#333',
+    foreground_color: '#fff',
+    pattern_color: '#888',
+    pattern_alpha: '0.05',
+    grad: ['#444', '#333','#FF0000','#00FF00','#0000FF','#FFFF00','#00FFFF','#FF00FF'],
+    grad_alpha: '1.0',
+    logo_color: '#fff',
+    logo_alpha: '0.1',
+    logo_scale: '1.0',
+    logo_dx: '0',
+    logo_dy: '0',
+    font_color: '#fff',
+    font_family: {},
+    font_size_title: '40',
+    font_size_footer: '22',
+    font_alpha: '1.0',
+    title: '',
+    footer: '',
+    title_y: 13,
+    footer_y: 90,
+  }
+}
+
 
 const data = {
   main: {
