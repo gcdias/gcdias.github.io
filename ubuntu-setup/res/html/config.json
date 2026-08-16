@@ -1,0 +1,10 @@
+{
+    "wallpaper": {
+        "ui": {
+            "wp_type": [ "single", "day-night", "time-shift" ],
+            "out_format": [ "webp", "jpg", "png", "svg" ],
+            "wp_options": [ "zoom", "wallpaper", "centered", "scaled", "stretched", "spanned", "none" ],
+            "wp_shader": [ "solid", "horizontal", "vertical" ]
+        }
+    }
+}
