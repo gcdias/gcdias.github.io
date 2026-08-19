@@ -12,6 +12,21 @@ if [[ -z "$f" ]]; then
 	exit 1
 fi
 
+function insertMenu(){
+ local class=$1
+ local command=$2
+ local file=$3
+ if [[ -z "$(grep '\-\-class '$class' \-\-class os' "$f")" ]]; then
+sudo cat <<EOF >> "$file"
+
+menuentry '$class' --class $class --class os {
+	$command
+}
+EOF
+ echo "Added $class menu entry to $file"
+ fi
+}
+
 if [[ -z "$(grep '\-\-class restart \-\-class os' "$f")" ]]; then
 sudo cat <<'EOF' >> "$f"
 
@@ -33,12 +48,15 @@ echo "Added shutdown menu entry to $f"
 fi
 
 # 2. Add grub2 drive icon to "Advanced options for..." menu entry
-for i in $(find /etc/grub.d -name '*os-prober'); do
-	case $i in *backup*);;
-		*)
-			a='"Advanced options for %s"'
-			b='"${OS} $onstr"'
-			sudo sed -i "s/$a $b/$a \-\-class driver $b/g" $i && echo "Added grub2 drive icon to $i"
-		;;
-	esac;
-done
+function checkSubmenu(){
+	for i in $(find /etc/grub.d -name '*'$1''); do
+		case $i in *backup*);;
+			*) sudo sed -i '/submenu/ { /Advanced options for/ s/\\\$menuentry_id_option/--class driver \\\$menuentry_id_option/ }' $i && \
+			echo "Added grub2 drive icon to $i"
+			;;
+		esac;
+	done
+}
+
+checkSubmenu "linux"
+checkSubmenu "os-prober"
