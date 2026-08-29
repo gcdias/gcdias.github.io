@@ -9,6 +9,14 @@ alias gedit='gnome-text-editor'
 alias ged='gnome-text-editor'
 alias edit='gnome-text-editor'
 
+function reboot-win(){
+    local winboot=$(efibootmgr -v | grep \*.*Windows | sed 's/\*//g;s/Boot//g' | awk '{print $1}')
+    test -z "${winboot}" && echo "Windows boot entry not found." && return 1
+    #sudo systemctl reboot --boot-loader-entry="${winboot}"
+    sudo efibootmgr -n "${winboot}"
+    reboot
+}
+
 function git-config(){
     p=($(zenity --forms --text="Git Config" --add-entry="email" --add-entry="username" --add-combo="Scope" --combo-values="Local|Global" --separator=" "))
     test -z "${p[0]}" && echo "Email is required." && return 1
@@ -86,6 +94,6 @@ echo -e "Functions and alias added to your shell:
 "
 }
 
-echo -e "Extra functions added to your shell. Type \e[1;92malias-help\e[0m or press \e[1;92m<F12>\e[0m to show\n"
+echo -e "$(lsb_release -ds). Type \e[1;92malias-help\e[0m or press \e[1;92m<F12>\e[0m to show extra functions and alias.\n"
 bind '"\e[24~":"alias-help\n"'
 EOF
