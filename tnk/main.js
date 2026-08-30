@@ -105,8 +105,9 @@ const tnk = {
     { "Ki Teitzei": "4;21:10–25:19" },
     { "Ki Tavo": "4;26:1–29:8" },
     { "Nitzavim": "4;29:9–30:20" },
-    { "Vayelech": "4;31:1–30" },
-    { "Haazinu": "4;32:1–52" },
+    { "Vayeilech": "4;31:1–31:30" },
+    { "Nitzavim-Vayeilech": "4;29:9–31:30" },
+    { "Haazinu": "4;32:1–32:52" },
     { "Vezot Haberakhah": "4;33:1–34:12" }
   ],
   transLang: 'portuguese',
