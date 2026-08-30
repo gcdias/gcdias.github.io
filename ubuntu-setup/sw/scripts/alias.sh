@@ -1,5 +1,5 @@
 cat <<'EOF' > ~/.bash_aliases
-alias reboot-uefi='systemctl reboot --firmware-setup'
+#alias reboot-uefi='systemctl reboot --firmware-setup'
 alias cls='clear'
 alias upgrade='sudo apt update && sudo apt upgrade'
 alias apt-upgrade='sudo apt update && sudo apt upgrade'
@@ -13,8 +13,14 @@ function reboot-win(){
     local winboot=$(efibootmgr -v | grep \*.*Windows | sed 's/\*//g;s/Boot//g' | awk '{print $1}')
     test -z "${winboot}" && echo "Windows boot entry not found." && return 1
     #sudo systemctl reboot --boot-loader-entry="${winboot}"
+    echo -e "\e[1;93mWarning: Rebooting into Windows \e[0m(boot entry ${winboot}).\nPress \e[1;92mCtrl+C\e[0m to cancel or \e[1;92mpassword\e[0m to continue."
     sudo efibootmgr -n "${winboot}" 1>/dev/null
     systemctl reboot -i
+}
+
+function reboot-uefi(){
+    echo -e "\e[1;93mWarning: Rebooting into UEFI firmware setup.\e[0m\nPress \e[1;92mCtrl+C\e[0m to cancel or \e[1;92mpassword\e[0m to continue."
+    sudo systemctl reboot --firmware-setup
 }
 
 function git-config(){
