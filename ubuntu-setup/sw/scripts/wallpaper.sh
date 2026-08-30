@@ -19,8 +19,8 @@ fi
 
 usr="$(basename $HOME)"
 
-vrs="$(lsb_release -r | grep -oP "[0-9.]+")"
-vstr="$(lsb_release -d | sed "s;.*Description:[[:space:]]*;;g")"
+vrs="$(lsb_release -rs)"
+vstr="$(lsb_release -ds)"
 gnome="$(gnome-shell --version | grep -oP '\d\d')"
 
 vnd="$(sed 's/.*/\L&/' /sys/devices/virtual/dmi/id/sys_vendor)"

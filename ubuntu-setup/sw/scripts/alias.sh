@@ -34,6 +34,23 @@ function git-config(){
     echo "Git config updated."
 }
 
+function grub-theme(){
+    local d="/boot/grub/themes"
+    test ! -d "${d}" && echo "Grub themes directory not found." && return 1
+    local c="/etc/default/grub"
+    test ! -f "${c}" && echo "Grub config file not found." && return 1
+    local a=($(ls ${d}))
+    local theme=$(zenity --forms --text="Set Grub Theme" --add-combo="Theme" --combo-values="$(sed 's, ,|,g' <<<${a[@]})" --separator=" ")
+    test ! -f "$d/$theme/theme.txt" && echo "Theme file not found." && return 1
+    if grep -q "GRUB_THEME=" "${c}"; then
+        sudo sed -i "s|GRUB_THEME=.*|GRUB_THEME=\"${d}/${theme}/theme.txt\"|g" "${c}"
+    else
+        echo "GRUB_THEME=\"${d}/${theme}/theme.txt\"" | sudo tee -a "${c}" >/dev/null
+    fi
+    sudo update-grub
+    echo "Grub theme set to ${theme}."
+}
+
 function ffmpeg-avif() {
     test -z "$1" && echo "Usage: ffmpeg-avif [-r=remove original file] [<quality>] <file1> [file2 ...]" && return 1
     case "$1" in -r) rem=y; shift ;; esac
