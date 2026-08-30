@@ -13,8 +13,8 @@ function reboot-win(){
     local winboot=$(efibootmgr -v | grep \*.*Windows | sed 's/\*//g;s/Boot//g' | awk '{print $1}')
     test -z "${winboot}" && echo "Windows boot entry not found." && return 1
     #sudo systemctl reboot --boot-loader-entry="${winboot}"
-    sudo efibootmgr -n "${winboot}"
-    reboot
+    sudo efibootmgr -n "${winboot}" 1>/dev/null
+    systemctl reboot -i
 }
 
 function git-config(){
