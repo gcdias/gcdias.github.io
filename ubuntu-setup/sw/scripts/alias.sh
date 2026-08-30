@@ -40,6 +40,7 @@ function ffmpeg-avif() {
         ffmpeg -hide_banner -loglevel quiet -stats -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
 }
+alias ff-avif='ffmpeg-avif'
 
 function ffmpeg-hevc() {
     test -z "$1" && echo "Usage: ffmpeg-hevc [-r=remove original file] [<quality>] <file1> [file2 ...]" && return 1
@@ -70,6 +71,7 @@ function ffmpeg-cut() {
         ffmpeg -hide_banner -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
 }
+alias ff-cut='ffmpeg-cut'
 
 function ff-tag() {
     test -z "$1" && echo "Usage: ff-tag [-t|--tag tagname] <files>" && return 1
@@ -84,12 +86,12 @@ function ff-tag() {
 function alias-help(){
 echo -e "Functions and alias added to your shell:
 
-\e[1;92malias      :\e[0;2m reboot-uefi, cls, upgrade/apt-upgrade, apt-clean, sys-upgrade, gedit/ged/edit\e[0m
+\e[1;92malias      :\e[0;2m reboot-uefi, reboot-win, cls, upgrade/apt-upgrade, apt-clean, sys-upgrade, gedit/edit\e[0m
 
 \e[1;92mgit-config :\e[0;2m Configure Git user email and username via GUI.\e[0m
-\e[1;92mffmpeg-avif:\e[0;2m Convert images to AVIF format using ffmpeg.\e[0m
-\e[1;92mffmpeg-hevc:\e[0;2m Convert videos to HEVC format using ffmpeg.\e[0m
-\e[1;92mffmpeg-cut :\e[0;2m Cut videos using ffmpeg.\e[0m
+\e[1;92mff-avif:\e[0;2m Convert images to AVIF format using ffmpeg.\e[0m
+\e[1;92mff-hevc:\e[0;2m Convert videos to HEVC format using ffmpeg.\e[0m
+\e[1;92mff-cut :\e[0;2m Cut videos using ffmpeg.\e[0m
 \e[1;92mff-tag     :\e[0;2m Show metadata tags of media files using ffprobe.\e[0m
 "
 }
