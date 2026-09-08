@@ -1,0 +1,17 @@
+.quick-settings {
+  background-color: #1e1e2e;
+}
+
+.quick-toggle {
+  background-color: #313244;
+  color: #cdd6f4;
+}
+
+.quick-toggle:checked {
+  background-color: #89b4fa;
+  color: #1e1e2e;
+}
+
+.quick-slider {
+  background-color: #313244;
+}
