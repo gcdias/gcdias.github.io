@@ -1,11 +1,11 @@
 const staticApp = "static-app"
 const assetsApp = [
   "/home/",
-  "/home/icons/",
   "/home/index.html",
   "/home/style.css",
   "/home/main.js",
-  "/home/data.js"
+  "/home/data.js",
+  "/home/extra.js",
 ]
 
 self.addEventListener("install", installEvent => {
