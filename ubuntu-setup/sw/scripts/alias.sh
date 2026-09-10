@@ -122,3 +122,5 @@ echo -e "Functions and alias added to your shell:
 echo -e "$(lsb_release -ds). Type \e[1;92malias-help\e[0m or press \e[1;92m<F12>\e[0m to show extra functions and alias.\n"
 bind '"\e[24~":"alias-help\n"'
 EOF
+
+
