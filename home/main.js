@@ -169,4 +169,5 @@ window.onload = function(){
     backCamera();
   else
     backGlsl();
+  ui.toggleTheme();
 }
