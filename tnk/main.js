@@ -107,7 +107,7 @@ const tnk = {
     { "Nitzavim": "4;29:9–30:20" },
     { "Vayeilech": "4;31:1–31:30" },
     { "Nitzavim-Vayeilech": "4;29:9–31:30" },
-    { "Haazinu": "4;32:1–32:52" },
+    { "Ha’azinu": "4;32:1–32:52" },
     { "Vezot Haberakhah": "4;33:1–34:12" }
   ],
   transLang: 'portuguese',
