@@ -53,6 +53,7 @@ const actions = {
       await writable.close(); // Close the file and save changes
     } catch (err) {
       alert(`${err.name}: ${err.message}`);
+      download(content, fileName, contentType); // Fallback to download if save fails
     }
   },
   saveNote: function() {
