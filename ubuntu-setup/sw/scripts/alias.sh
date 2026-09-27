@@ -96,6 +96,22 @@ function ffmpeg-cut() {
 }
 alias ff-cut='ffmpeg-cut'
 
+function ff-join() {
+    test -z "$1" && echo "Usage: ff-join [-r=remove original file] <file1> [file2 ...]" && return 1
+    case "$1" in -r) rem=y; shift ;; esac
+    local o=$(basename $1);
+    o=${o%%\?*}
+    o=${o/.*/-join.mp4}
+    local r=()
+    for i in "$@"; do
+    	echo "file '${i}'" >> joinlist.txt
+    	r+=($i)
+    done
+    ffmpeg -hide_banner -loglevel quiet -stats -f concat -safe 0 -i joinlist.txt -c copy $o && \
+     rm joinlist.txt && \
+     case $rem in y) for i in "${r[@]}"; do rm $i; done;; esac 
+}
+
 function ff-tag() {
     test -z "$1" && echo "Usage: ff-tag [-t|--tag tagname] <files>" && return 1
     local f=".*"
@@ -122,5 +138,3 @@ echo -e "Functions and alias added to your shell:
 echo -e "$(lsb_release -ds). Type \e[1;92malias-help\e[0m or press \e[1;92m<F12>\e[0m to show extra functions and alias.\n"
 bind '"\e[24~":"alias-help\n"'
 EOF
-
-
