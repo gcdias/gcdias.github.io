@@ -16,6 +16,8 @@ sudo apt install linux-surface-secureboot-mok
 # if [ -n "$(sbverify $shim --list | grep -oP 'Microsoft.*UEFI')" ] && [ -n "$(command -v refind-install)" ]; then
 # refind-install --shim $shim --localkeys
 # fi
+
+# set GRUB_TOP_LEVEL to the latest surface kernel
 function update_surface_grub(){
     local d="/boot"
     local a=$(find $d -name "vmlinuz-*surface*" 2>/dev/null | sort | tail -n 1 )
