@@ -42,17 +42,13 @@ const actions = {
   },
   saveas: async function(content, fileName, contentType) {
     try {
-      const fileHandle = await window.showSaveFilePicker({
-        suggestedName: fileName, // Suggested default name
-        types: [{
-          description: 'CNote Files'
-        }],
-      });
+      const fileHandle = await window.showSaveFilePicker();
       const writable = await fileHandle.createWritable(); // Create a writable stream
       await writable.write(content); // Write the new content
       await writable.close(); // Close the file and save changes
     } catch (err) {
       alert(`${err.name}: ${err.message}`);
+      download(content, fileName, contentType); // Fallback to download if save fails
     }
   },
   saveNote: function() {
