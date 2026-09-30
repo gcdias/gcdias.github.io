@@ -65,6 +65,22 @@ function ffmpeg-avif() {
 }
 alias ff-avif='ffmpeg-avif'
 
+function ffmpeg-heic() {
+    test -z "$1" && echo "Usage: ffmpeg-heic [-r=remove original file] [<quality>] <file1> [file2 ...]" && return 1
+    case "$1" in -r) rem=y; shift ;; esac
+    test -n "$(grep -oP "\d+" <<<"${1}")" && args+=(-crf "${1}") && shift
+
+    for i in "$@"; do
+        o=$(basename $i);
+        o=${o%%\?*}
+        o=${o/.*/.heic}
+        echo -ne "$(basename $i) -> ${o}"
+        heif-enc -q ${qual:-85} $i -o ${o} && case "${rem,,}" in y) rm "${i}" ;; esac
+        echo
+    done
+}
+alias ff-heic='ffmpeg-heic'
+
 function ffmpeg-hevc() {
     test -z "$1" && echo "Usage: ffmpeg-hevc [-r=remove original file] [<quality>] <file1> [file2 ...]" && return 1
     case "$1" in -r) rem=y; shift ;; esac
