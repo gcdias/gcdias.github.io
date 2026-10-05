@@ -32,3 +32,4 @@ cat <<-EOF >~/Templates/blank.html
   -->
 </head>
 <body>
+EOF
