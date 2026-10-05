@@ -57,6 +57,19 @@ function checkSubmenu(){
 		esac;
 	done
 }
-
 checkSubmenu "linux"
 checkSubmenu "os-prober"
+
+# 3. Add grub2 drive icon to "UEFI Firmware Settings" menu entry
+efi_fw=$(find /etc/grub.d -name '*_uefi-firmware')
+if [[ -f "$efi_fw" ]]; then
+	sudo sed -i '/menuentry/ { s/\\\$menuentry_id_option/--class efi \\\$menuentry_id_option/ } ' $efi_fw && \
+	echo "Added grub2 drive icon to $efi_fw"
+fi
+
+# 4. Set "Memory test" menu entry to the end
+mem_test=$(find /etc/grub.d -name '*_memtest86+')
+if [[ -f "$mem_test" ]]; then
+	sudo mv "$mem_test" /etc/grub.d/99_memtest86+ && \
+	echo "Set $mem_test to the end"
+fi
