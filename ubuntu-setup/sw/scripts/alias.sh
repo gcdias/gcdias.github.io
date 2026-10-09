@@ -2,11 +2,10 @@ cat <<'EOF' > ~/.bash_aliases
 #alias reboot-uefi='systemctl reboot --firmware-setup'
 alias cls='clear'
 alias upgrade='sudo apt update && sudo apt upgrade'
+alias apt-install='sudo apt install'
 alias apt-upgrade='sudo apt update && sudo apt upgrade'
 alias apt-clean='sudo apt clean && sudo apt autoremove'
 alias sys-upgrade='sudo do-release-upgrade'
-alias gedit='gnome-text-editor'
-alias ged='gnome-text-editor'
 alias edit='gnome-text-editor'
 
 function reboot-win(){
@@ -31,7 +30,7 @@ function git-config(){
         local)  git config user.email "${p[0]}" && git config user.name "${p[1]}" ;;
         global) git config --global user.email "${p[0]}" && git config --global user.name "${p[1]}" ;;
     esac
-    echo "Git config updated."
+    test $? -eq 0 && echo "Git config updated." || "Error updating Git config."
 }
 
 function grub-theme(){
@@ -141,7 +140,7 @@ function ff-tag() {
 function alias-help(){
 echo -e "Functions and alias added to your shell:
 
-\e[1;92malias      :\e[0;2m reboot-uefi, reboot-win, cls, upgrade/apt-upgrade, apt-clean, sys-upgrade, gedit/edit\e[0m
+\e[1;92malias      :\e[0;2m reboot-uefi, reboot-win, cls, upgrade/apt-upgrade, apt-install apt-clean, sys-upgrade, edit\e[0m
 
 \e[1;92mgit-config :\e[0;2m Configure Git user email and username via GUI.\e[0m
 \e[1;92mff-avif:\e[0;2m Convert images to AVIF format using ffmpeg.\e[0m
