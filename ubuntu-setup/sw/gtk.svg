@@ -32,7 +32,7 @@
   <g class="side-fg">
     <text x="49.0" y="97.2">
      <tspan x="49.0" y="97.2">Home</tspan>
-     <tspan x="49.0" y="105.9">Recent</tspan>class="view-bg"
+     <tspan x="49.0" y="105.9">Recent</tspan>
      <tspan x="49.0" y="114.7">Starred</tspan>
      <tspan x="49.0" y="123.6">Network</tspan>
      <tspan x="49.0" y="132.4">Trash</tspan>
@@ -45,7 +45,7 @@
     <text x="84.5" y="89.1" font-size="6.35px" font-weight="normal">
      <tspan x="84.5" y="89.1">〈</tspan>
      <tspan x="98.2" y="89.1" opacity="0.5">〉</tspan>
-     <tspan x="45" y="89.1" font-size="">⌕</tspan>
+     <tspan x="45" y="89.1" font-size="6">⌕</tspan>
      <tspan x="78" y="89.1">☰</tspan>
     </text>
    </g>
