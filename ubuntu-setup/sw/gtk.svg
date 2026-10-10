@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 183 119">
+<defs>
+ <style>
+  :root {
+    --view-bg-color: #fdfdfd;
+    --sidebar-fg-color: #333333;
+    --headerbar-bg-color: #e0e0e0;
+    --headerbar-fg-color: #333333;
+    --popover-bg-color: #ffffff;
+    --popover-fg-color: #333333;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --view-bg-color: #2e3436;
+      --sidebar-fg-color: #eeeeec;
+      --headerbar-bg-color: #555753;
+      --headerbar-fg-color: #eeeeec;
+      --popover-bg-color: #2e3436;
+      --popover-fg-color: #eeeeec;
+    }
+  }
+  .view-bg { fill: var(--view-bg-color); }
+  .side-fg { fill: var(--sidebar-fg-color); }
+  .header-bg { fill: var(--headerbar-bg-color); }
+  .header-fg { fill: var(--headerbar-fg-color); }
+  .pop-bg { fill: var(--popover-bg-color); }
+  .pop-fg { fill: var(--popover-fg-color); stroke: var(--popover-fg-color);}
+ </style>
+</defs>
+<g transform="translate(-43.2 -81.5)" font-family="'Ubuntu Sans'" font-weight="bold" font-size="4px" stroke="none" stroke-width=".2">
+  <rect class="view-bg" x="43.2" y="81.5" width="183" height="119" ry="6.47" stroke-width="1.74"/>
+  <g class="side-fg">
+    <text x="49.0" y="97.2">
+     <tspan x="49.0" y="97.2">Home</tspan>
+     <tspan x="49.0" y="105.9">Recent</tspan>class="view-bg"
+     <tspan x="49.0" y="114.7">Starred</tspan>
+     <tspan x="49.0" y="123.6">Network</tspan>
+     <tspan x="49.0" y="132.4">Trash</tspan>
+     <tspan x="49.0" y="145.7">Documents</tspan>
+     <tspan x="49.0" y="154.5">Music</tspan>
+     <tspan x="49.0" y="163.3">Pictures</tspan>
+     <tspan x="49.0" y="172.1">Videos</tspan>
+     <tspan x="49.0" y="180.9">Downloads</tspan>
+    </text>
+    <text x="84.5" y="89.1" font-size="6.35px" font-weight="normal">
+     <tspan x="84.5" y="89.1">〈</tspan>
+     <tspan x="98.2" y="89.1" opacity="0.5">〉</tspan>
+     <tspan x="45" y="89.1" font-size="">⌕</tspan>
+     <tspan x="78" y="89.1">☰</tspan>
+    </text>
+   </g>
+  
+  <g class="header-bg">
+    <rect x="105.5" y="83.1" width="103" height="8.98" ry="2.66"/>
+    <text x="115.3" y="88.9"><tspan>Ubuntu</tspan></text>
+  </g>
+  
+  <g class="pop-fg">
+    <rect x="108" y="96.8" width="68.4" height="84.5" ry="6.47"/>
+    <text x="59.3" y="88.4"><tspan>Files</tspan></text>
+    <text x="113.7" y="104.2"><tspan>Open</tspan></text>
+    <text x="113.7" y="118.2" opacity="0.5">
+      <tspan x="113.7" y="118.2">Cut</tspan>
+      <tspan x="161.5" y="118.2">Ctrl+X</tspan>
+    </text>
+    <text x="113.7" y="126.6">
+      <tspan x="113.7" y="126.6">Copy</tspan>
+      <tspan x="161.5" y="126.6" opacity="0.5">Ctrl+C</tspan>
+    </text>
+    <text x="113.7" y="134.2" opacity="0.5"><tspan>Move to...</tspan></text>
+    <text x="113.7" y="142.2"><tspan>Copy to...</tspan></text>
+    <text x="113.7" y="156.2" opacity="0.5">
+      <tspan x="113.7" y="156.2">Rename...</tspan>
+      <tspan x="168.3" y="156.2">F2</tspan>
+    </text>
+    <text x="113.7" y="164.4"><tspan>Email...</tspan></text>
+    <text x="113.7" y="176.4">
+      <tspan x="113.7" y="176.4">Properties</tspan>
+      <tspan x="153.9" y="176.4" opacity="0.5">Alt+Return</tspan>
+    </text>
+    <g opacity=".5" stroke-width=".1">
+      <path d="m109 110h65.6"/>
+      <path d="m109 149h65.6"/>
+      <path d="m109 169h65.6"/>
+    </g>
+  </g>
+
+ </g>
+</svg>
