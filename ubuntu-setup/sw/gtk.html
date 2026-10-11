@@ -23,18 +23,159 @@
       --sidebar-bg-color: #181825;
       --sidebar-fg-color: #cdd6f4;
     }
+    html, body {
+      height: auto;
+    }
+    body {
+      min-height: 100vh;
+      overflow: auto;
+      padding: 24px;
+    }
+    .editor-header {
+      max-width: 1200px;
+      margin: 0 auto 20px;
+    }
+    .editor-header h1 {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+    .editor-header p,
+    .preview-panel p,
+    .control-help {
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .gtk-editor {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+      gap: 20px;
+      align-items: start;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .preview-panel,
+    .controls-panel {
+      min-width: 0;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background: var(--surface-1);
+      box-shadow: var(--shadow-sm);
+    }
+    .preview-panel h2,
+    .controls-panel h2 {
+      margin-bottom: 16px;
+      font-size: 1.15rem;
+    }
+    .preview-window {
+      display: grid;
+      min-height: 360px;
+      place-items: center;
+      padding: 20px;
+      overflow: hidden;
+      border-radius: 8px;
+      background: var(--window-bg-color);
+    }
+    .preview-window svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .controls-panel .control-group {
+      margin: 0 0 12px;
+      padding: 0;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: var(--surface-2);
+    }
+    .controls-panel details summary {
+      padding: 12px;
+      color: var(--text-primary);
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .controls-panel details .color-fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      padding: 0 12px 12px;
+    }
+    .controls-panel label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+    .controls-panel input[type="color"] {
+      display: block;
+      width: 100%;
+      height: 40px;
+      padding: 2px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      background: var(--surface-1);
+      cursor: pointer;
+    }
+    .control-help {
+      margin: 0 0 14px;
+      font-size: 0.85rem;
+    }
+    #export-colors {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 6px;
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    #export-colors:hover {
+      background: var(--primary-dark);
+    }
+    #export-status {
+      min-height: 1.4em;
+      margin-top: 10px;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+    .window-bg { fill: var(--window-bg-color); }
     .view-bg { fill: var(--view-bg-color); }
+    .view-fg { fill: var(--view-fg-color); }
+    .sidebar-bg { fill: var(--sidebar-bg-color); }
     .side-fg { fill: var(--sidebar-fg-color); }
     .header-bg { fill: var(--headerbar-bg-color); }
     .header-fg { fill: var(--headerbar-fg-color); }
+    .window-fg { fill: var(--window-fg-color); }
     .pop-bg { fill: var(--popover-bg-color); }
-    .pop-fg { fill: var(--popover-fg-color); stroke: var(--popover-fg-color);}
+    .pop-fg { fill: var(--popover-fg-color); stroke: var(--popover-fg-color); }
+    @media (max-width: 800px) {
+      body { padding: 16px; }
+      .gtk-editor { grid-template-columns: 1fr; }
+      .preview-window { min-height: 240px; }
+    }
+    @media (max-width: 480px) {
+      body { padding: 12px; }
+      .preview-panel,
+      .controls-panel { padding: 14px; }
+      .preview-window { min-height: 180px; padding: 10px; }
+      .controls-panel details .color-fields { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
+<header class="editor-header">
+  <h1>GTK Theme Colors</h1>
+  <p>Adjust the GTK color variables and preview the result. Export your choices as a ready-to-use <code>gtk.css</code> file.</p>
+</header>
+<main class="gtk-editor">
+  <section class="preview-panel" aria-labelledby="preview-title">
+    <h2 id="preview-title">Live preview</h2>
+    <div class="preview-window">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 183 119">
 <g transform="translate(-43.2 -81.5)" font-family="'Ubuntu Sans'" font-weight="bold" font-size="4px" stroke="none" stroke-width=".2">
-  <rect class="view-bg" x="43.2" y="81.5" width="183" height="119" ry="6.47" stroke-width="1.74"/>
+  <rect class="window-bg" x="43.2" y="81.5" width="183" height="119" ry="6.47" stroke-width="1.74"/>
+  <rect class="sidebar-bg" x="43.2" y="92" width="60" height="108"/>
+  <rect class="view-bg" x="103" y="92" width="123.2" height="108"/>
   <g class="side-fg">
     <text x="49.0" y="97.2">
      <tspan x="49.0" y="97.2">Home</tspan>
@@ -48,7 +189,7 @@
      <tspan x="49.0" y="172.1">Videos</tspan>
      <tspan x="49.0" y="180.9">Downloads</tspan>
     </text>
-    <text x="84.5" y="89.1" font-size="6.35px" font-weight="normal">
+    <text class="view-fg" x="84.5" y="89.1" font-size="6.35px" font-weight="normal">
      <tspan x="84.5" y="89.1">〈</tspan>
      <tspan x="98.2" y="89.1" opacity="0.5">〉</tspan>
      <tspan x="45" y="89.1" font-size="7">⌕</tspan>
@@ -56,14 +197,14 @@
     </text>
    </g>
   
-  <g class="header-bg">
-    <rect x="105.5" y="83.1" width="103" height="8.98" ry="2.66"/>
-    <text x="115.3" y="88.9"><tspan>Ubuntu</tspan></text>
-  </g>
+   <g>
+     <rect class="header-bg" x="105.5" y="83.1" width="103" height="8.98" ry="2.66"/>
+     <text class="header-fg" x="115.3" y="88.9"><tspan>Ubuntu</tspan></text>
+   </g>
   
   <g class="pop-fg" stroke-width="0">
     <rect class="pop-bg" x="108" y="96.8" width="68.4" height="84.5" ry="6.47"/>
-    <text x="59.3" y="88.4"><tspan>Files</tspan></text>
+    <text class="window-fg" x="59.3" y="88.4"><tspan>Files</tspan></text>
     <text x="113.7" y="104.2"><tspan>Open</tspan></text>
     <text x="113.7" y="118.2" opacity="0.5">
       <tspan x="113.7" y="118.2">Cut</tspan>
@@ -92,4 +233,109 @@
   </g>
  </g>
 </svg>
+    </div>
+    <p>Changes are reflected in the preview as you pick colors.</p>
+  </section>
+
+  <aside class="controls-panel" aria-labelledby="controls-title">
+    <h2 id="controls-title">Theme colors</h2>
+    <form id="color-controls">
+      <details class="control-group" open>
+        <summary>Window</summary>
+        <div class="color-fields">
+          <div class="flex-1">
+            <label for="window-bg-color">Background</label>
+            <input id="window-bg-color" type="color" data-css-var="--window-bg-color">
+          </div>
+          <div class="flex-1">
+            <label for="window-fg-color">Foreground</label>
+            <input id="window-fg-color" type="color" data-css-var="--window-fg-color">
+          </div>
+        </div>
+      </details>
+      <details class="control-group" open>
+        <summary>Popover</summary>
+        <div class="color-fields">
+          <div class="flex-1">
+            <label for="popover-bg-color">Background</label>
+            <input id="popover-bg-color" type="color" data-css-var="--popover-bg-color">
+          </div>
+          <div class="flex-1">
+            <label for="popover-fg-color">Foreground</label>
+            <input id="popover-fg-color" type="color" data-css-var="--popover-fg-color">
+          </div>
+        </div>
+      </details>
+      <details class="control-group" open>
+        <summary>View</summary>
+        <div class="color-fields">
+          <div class="flex-1">
+            <label for="view-bg-color">Background</label>
+            <input id="view-bg-color" type="color" data-css-var="--view-bg-color">
+          </div>
+          <div class="flex-1">
+            <label for="view-fg-color">Foreground</label>
+            <input id="view-fg-color" type="color" data-css-var="--view-fg-color">
+          </div>
+        </div>
+      </details>
+      <details class="control-group" open>
+        <summary>Header bar</summary>
+        <div class="color-fields">
+          <div class="flex-1">
+            <label for="headerbar-bg-color">Background</label>
+            <input id="headerbar-bg-color" type="color" data-css-var="--headerbar-bg-color">
+          </div>
+          <div class="flex-1">
+            <label for="headerbar-fg-color">Foreground</label>
+            <input id="headerbar-fg-color" type="color" data-css-var="--headerbar-fg-color">
+          </div>
+        </div>
+      </details>
+      <details class="control-group" open>
+        <summary>Sidebar</summary>
+        <div class="color-fields">
+          <div class="flex-1">
+            <label for="sidebar-bg-color">Background</label>
+            <input id="sidebar-bg-color" type="color" data-css-var="--sidebar-bg-color">
+          </div>
+          <div class="flex-1">
+            <label for="sidebar-fg-color">Foreground</label>
+            <input id="sidebar-fg-color" type="color" data-css-var="--sidebar-fg-color">
+          </div>
+        </div>
+      </details>
+      <p class="control-help">The exported file includes all ten variables used by the GTK theme.</p>
+      <button id="export-colors" type="button">Export gtk.css</button>
+      <p id="export-status" role="status" aria-live="polite"></p>
+    </form>
+  </aside>
+</main>
+<script>
+  const colorInputs = [...document.querySelectorAll("#color-controls input[data-css-var]")];
+  const exportStatus = document.getElementById("export-status");
+
+  for (const input of colorInputs) {
+    const cssVar = input.dataset.cssVar;
+    input.value = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+    input.addEventListener("input", () => {
+      document.documentElement.style.setProperty(cssVar, input.value);
+      exportStatus.textContent = "Preview updated.";
+    });
+  }
+
+  document.getElementById("export-colors").addEventListener("click", () => {
+    const css = `:root {\n${colorInputs.map(({ dataset, value }) => `  ${dataset.cssVar}: ${value};`).join("\n")}\n}\n\nwindow.nautilus-window {\n  font-family: 'Ubuntu Sans';\n  font-weight: 700;\n  font-size: 10pt;\n}\n\nwindow.nautilus-window popover.menu {\n  font-family: 'Ubuntu Sans';\n  font-weight: 700;\n  font-size: 10pt;\n}\n`;
+    const url = URL.createObjectURL(new Blob([css], { type: "text/css;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "gtk.css";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+    exportStatus.textContent = "gtk.css exported.";
+  });
+</script>
+</body>
 </html>
