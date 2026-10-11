@@ -50,6 +50,15 @@ function grub-theme(){
     echo "Grub theme set to ${theme}."
 }
 
+function gtk-theme(){
+    local t="$1"
+    test ! -f "$t" && t=$(zenity --file-selection --title="Select GTK Theme File" --file-filter="*.css")
+    test ! -f "$t" && echo "GTK theme file not found." && return 1
+    cat $t > ~/.config/gtk-4.0/gtk.css
+    nautilus -q
+    echo "GTK theme applied from ${t}."
+}
+
 function ffmpeg-avif() {
     test -z "$1" && echo "Usage: ffmpeg-avif [-r=remove original file] [<quality>] <file1> [file2 ...]" && return 1
     case "$1" in -r) rem=y; shift ;; esac
