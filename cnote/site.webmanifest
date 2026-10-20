@@ -1,6 +1,10 @@
 {
-  "name": "cnote",
-  "short_name": "cnote",
+  "id": "/cnote/",
+  "name": "CNote — private notes",
+  "short_name": "CNote",
+  "description": "A private, offline-friendly notebook.",
+  "start_url": "/cnote/",
+  "scope": "/cnote/",
   "icons": [
     {
       "src": "icon.svg",
@@ -9,7 +13,7 @@
       "purpose": "any"
   }
   ],
-  "theme_color": "#111111",
-  "background_color": "#111111",
+  "theme_color": "#111318",
+  "background_color": "#111318",
   "display": "standalone"
 }

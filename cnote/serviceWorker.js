@@ -1,24 +1,36 @@
-const staticApp = "static-app"
-const n = "/cnote";
-const assetsApp = [
-  `${n}/`,
-  `${n}/index.html`,
-  `${n}/style.css`,
-  `${n}/main.js`
-]
+const cacheName = "cnote-static-v4";
+const appPath = "/cnote";
+const assets = [
+  `${appPath}/`,
+  `${appPath}/index.html`,
+  `${appPath}/style.css?v=261020b`,
+  `${appPath}/main.js?v=261020b`,
+  `${appPath}/site.webmanifest`,
+  `${appPath}/icon.svg`
+];
 
-self.addEventListener("install", installEvent => {
-  installEvent.waitUntil(
-    caches.open(staticApp).then(cache => {
-      cache.addAll(assetsApp)
-    })
-  )
-})
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(cacheName).then(cache => cache.addAll(assets))
+  );
+});
 
-self.addEventListener("fetch", fetchEvent => {
-  fetchEvent.respondWith(
-    caches.match(fetchEvent.request).then(res => {
-      return res || fetch(fetchEvent.request)
-    })
-  )
-})
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys
+        .filter(key => key.startsWith("cnote-static-") && key !== cacheName)
+        .map(key => caches.delete(key))
+    )).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener("fetch", event => {
+  const request = event.request;
+  if (request.method !== "GET" || new URL(request.url).origin !== self.location.origin) {
+    return;
+  }
+  event.respondWith(
+    caches.match(request).then(cached => cached || fetch(request))
+  );
+});

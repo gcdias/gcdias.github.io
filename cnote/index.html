@@ -2,29 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111318">
+  <meta name="description" content="A private, offline-friendly notebook. Write notes and save them as encrypted files.">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#222222">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="site.webmanifest">
-  <link rel="stylesheet" href="style.css?v=251011b">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
-  <title>cnotes</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=261020b">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous" defer></script>
+  <title>CNote — private notes</title>
 </head>
 <body>
-  <div id="container">
-    <div id="t-content" contenteditable="plaintext-only"></div>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="CNote home">
+        <span class="brand-mark" aria-hidden="true">c</span>
+        <span>CNote</span>
+      </a>
+      <div class="topbar-actions">
+        <span class="privacy-label"><span class="privacy-dot"></span>Private by design</span>
+        <button class="button button-quiet" id="open-note" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.75 7.5h6l2 2h8.5v8.75a1.75 1.75 0 0 1-1.75 1.75h-13a1.75 1.75 0 0 1-1.75-1.75z"/><path d="M3.75 7.5V5.75A1.75 1.75 0 0 1 5.5 4h4l2 2h3"/></svg>
+          Open
+        </button>
+        <button class="button button-primary" id="save-note" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.75v11.5m0 0 4-4m-4 4-4-4"/><path d="M4.75 15.75v3A1.5 1.5 0 0 0 6.25 20.25h11.5a1.5 1.5 0 0 0 1.5-1.5v-3"/></svg>
+          Save encrypted
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="sidebar" aria-label="Notebook information">
+        <div class="sidebar-section">
+          <p class="eyebrow">YOUR WORKSPACE</p>
+          <button class="new-note" id="new-note" type="button">
+            <span class="plus" aria-hidden="true">+</span>
+            <span>New note</span>
+            <span class="shortcut">⌘ N</span>
+          </button>
+        </div>
+        <div class="sidebar-note">
+          <div class="note-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M6.75 3.75h7.5l4 4v12.5H6.75z"/><path d="M14.25 3.75v4h4m-8 4h4m-4 4h4"/></svg>
+          </div>
+          <div>
+            <p class="sidebar-note-title">One note at a time</p>
+            <p class="sidebar-note-copy">Open and save notes as encrypted files on your device.</p>
+          </div>
+        </div>
+        <div class="sidebar-foot">
+          <span class="lock-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3m-4 4v2"/></svg>
+          </span>
+          <div>
+            <p class="sidebar-foot-title">Your words stay yours</p>
+            <p class="sidebar-foot-copy">Notes are encrypted before they leave this page. Nothing is uploaded.</p>
+          </div>
+        </div>
+      </aside>
+
+      <section class="editor" aria-label="Note editor">
+        <div class="editor-heading">
+          <div class="file-state">
+            <span class="file-state-dot" id="state-dot"></span>
+            <span id="save-status" role="status" aria-live="polite">New note</span>
+          </div>
+          <span class="format-label">PLAIN TEXT</span>
+        </div>
+        <label class="visually-hidden" for="note-title">Note title</label>
+        <input id="note-title" class="title-input" type="text" maxlength="120" placeholder="Untitled note" autocomplete="off" spellcheck="false">
+        <textarea id="note-content" class="note-content" placeholder="Start writing…&#10;&#10;Your note is only held in this tab until you save it as an encrypted file." spellcheck="true" aria-label="Note content"></textarea>
+        <footer class="editor-footer">
+          <span id="word-count">0 words</span>
+          <span>Encrypted files stay on your device</span>
+        </footer>
+      </section>
+    </main>
   </div>
-  <div id="input-password">
-    <input type="password" id="password" placeholder="Password">
-    <button id="submit-password">Submit</button>
-  </div>
-  <div class="footer">
-    <button id="load-note" title="Load Note">load</button>
-    <button id="save-note" title="Save Note">save</button>
-    <button id="reset-pw" title="Reset">reset</button>
-  </div>
-  <script type="text/javascript" src="main.js?v=251025a"></script>
+
+  <dialog id="password-dialog" class="password-dialog" aria-labelledby="dialog-title">
+    <form id="password-form" method="dialog">
+      <div class="dialog-lock" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3m-4 4v2"/></svg>
+      </div>
+      <h2 id="dialog-title">Unlock your note</h2>
+      <p id="dialog-description">Enter the password used to encrypt this note.</p>
+      <label class="visually-hidden" for="note-password">Password</label>
+      <input id="note-password" type="password" placeholder="Password" autocomplete="current-password" required>
+      <p class="dialog-error" id="password-error" role="alert"></p>
+      <div class="dialog-actions">
+        <button class="button button-quiet" id="cancel-password" type="button">Cancel</button>
+        <button class="button button-primary" id="confirm-password" type="submit">Continue</button>
+      </div>
+    </form>
+  </dialog>
+  <input id="file-picker" type="file" accept=".cnote,.txt,.json,text/plain,application/json" hidden>
+  <script src="main.js?v=261020b" defer></script>
 </body>
 </html>
