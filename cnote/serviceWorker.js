@@ -1,10 +1,10 @@
-const cacheName = "cnote-static-v4";
+const cacheName = "cnote-static-v5";
 const appPath = "/cnote";
 const assets = [
   `${appPath}/`,
   `${appPath}/index.html`,
-  `${appPath}/style.css?v=261020b`,
-  `${appPath}/main.js?v=261020b`,
+  `${appPath}/style.css?v=261020c`,
+  `${appPath}/main.js?v=261020c`,
   `${appPath}/site.webmanifest`,
   `${appPath}/icon.svg`
 ];

@@ -294,6 +294,18 @@ button {
   justify-content: space-between;
 }
 
+.editor-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wrap-toggle {
+  min-height: 30px;
+  padding: 0 9px;
+  font-size: 11px;
+}
+
 .file-state {
   display: inline-flex;
   align-items: center;
@@ -355,6 +367,11 @@ button {
   font-size: 14px;
   line-height: 1.95;
   tab-size: 2;
+}
+
+.note-content.is-unwrapped {
+  white-space: pre;
+  overflow-x: auto;
 }
 
 .note-content::placeholder {

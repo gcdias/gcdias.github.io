@@ -12,6 +12,7 @@ const elements = {
   saveButton: document.getElementById("save-note"),
   title: document.getElementById("note-title"),
   content: document.getElementById("note-content"),
+  wrapToggle: document.getElementById("wrap-toggle"),
   wordCount: document.getElementById("word-count"),
   saveStatus: document.getElementById("save-status"),
   stateDot: document.getElementById("state-dot"),
@@ -36,8 +37,16 @@ const state = {
   password: null,
   filename: null,
   dirty: false,
-  passwordResolver: null
+  passwordResolver: null,
+  wrapLines: true
 };
+
+function setLineWrapping(enabled) {
+  state.wrapLines = enabled;
+  elements.content.wrap = enabled ? "soft" : "off";
+  elements.content.classList.toggle("is-unwrapped", !enabled);
+  elements.wrapToggle.setAttribute("aria-pressed", String(enabled));
+}
 
 function setStatus(message, isError = false) {
   elements.saveStatus.textContent = message;
@@ -309,6 +318,7 @@ elements.openButton.addEventListener("click", () => {
   }
 });
 elements.saveButton.addEventListener("click", saveNote);
+elements.wrapToggle.addEventListener("click", () => setLineWrapping(!state.wrapLines));
 elements.filePicker.addEventListener("change", () => openSelectedFile(elements.filePicker.files[0]));
 elements.title.addEventListener("input", markDirty);
 elements.content.addEventListener("input", () => {

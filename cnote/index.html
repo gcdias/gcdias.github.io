@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="manifest" href="site.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="style.css?v=261020b">
+  <link rel="stylesheet" href="style.css?v=261020c">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous" defer></script>
   <title>CNote — private notes</title>
 </head>
@@ -69,11 +69,14 @@
             <span class="file-state-dot" id="state-dot"></span>
             <span id="save-status" role="status" aria-live="polite">New note</span>
           </div>
-          <span class="format-label">PLAIN TEXT</span>
+          <div class="editor-tools">
+            <button class="button button-quiet wrap-toggle" id="wrap-toggle" type="button" aria-pressed="true">Wrap lines</button>
+            <span class="format-label">PLAIN TEXT</span>
+          </div>
         </div>
         <label class="visually-hidden" for="note-title">Note title</label>
         <input id="note-title" class="title-input" type="text" maxlength="120" placeholder="Untitled note" autocomplete="off" spellcheck="false">
-        <textarea id="note-content" class="note-content" placeholder="Start writing…&#10;&#10;Your note is only held in this tab until you save it as an encrypted file." spellcheck="true" aria-label="Note content"></textarea>
+        <textarea id="note-content" class="note-content" wrap="soft" placeholder="Start writing…&#10;&#10;Your note is only held in this tab until you save it as an encrypted file." spellcheck="true" aria-label="Note content"></textarea>
         <footer class="editor-footer">
           <span id="word-count">0 words</span>
           <span>Encrypted files stay on your device</span>
@@ -99,6 +102,6 @@
     </form>
   </dialog>
   <input id="file-picker" type="file" accept=".cnote,.txt,.json,text/plain,application/json" hidden>
-  <script src="main.js?v=261020b" defer></script>
+  <script src="main.js?v=261020c" defer></script>
 </body>
 </html>

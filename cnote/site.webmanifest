@@ -1,8 +1,8 @@
 {
   "id": "/cnote/",
-  "name": "CNote — private notes",
+  "name": "CNote",
   "short_name": "CNote",
-  "description": "A private, offline-friendly notebook.",
+  "description": "An encrypted, offline-friendly notebook.",
   "start_url": "/cnote/",
   "scope": "/cnote/",
   "icons": [
