@@ -147,7 +147,7 @@ function ff-tag() {
 }
 
 # example usage: install-gnome-extension blur-my-shell@aunetx caffeine@patapon.info globalmenu@ShiroOSL.github.io tinted-shell@pakovm user-stylesheet@tomaszgasior.pl
-function install-gnome-extension() {
+function install-gnome-extensions() {
     test -z "$1" && echo "Usage: install-gnome-extension <user-ids>..." && return 1
     local id
     local ids=("$@")
