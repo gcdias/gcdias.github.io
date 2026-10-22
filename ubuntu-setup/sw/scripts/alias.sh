@@ -146,6 +146,19 @@ function ff-tag() {
     done
 }
 
+# example usage: install-gnome-extension blur-my-shell@aunetx caffeine@patapon.info globalmenu@ShiroOSL.github.io tinted-shell@pakovm user-stylesheet@tomaszgasior.pl
+function install-gnome-extension() {
+    test -z "$1" && echo "Usage: install-gnome-extension <user-ids>..." && return 1
+    local id
+    local ids=("$@")
+    while [ -n "$id" ]; do
+        id="$1"
+        dbus-send --type=method_call --dest=org.gnome.Shell /org/gnome/Shell org.gnome.Shell.Extensions.InstallRemoteExtension string:'${id}'
+        shift
+    done
+    echo "Extension(s) ${ids[@]} installed. You may need to restart GNOME Shell (Alt+F2, r, Enter) to activate it."
+}
+
 function alias-help(){
 echo -e "Functions and alias added to your shell:
 
