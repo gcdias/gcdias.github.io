@@ -164,10 +164,13 @@ echo -e "Functions and alias added to your shell:
 
 \e[1;92malias      :\e[0;2m reboot-uefi, reboot-win, cls, upgrade/apt-upgrade, apt-install apt-clean, sys-upgrade, edit\e[0m
 
-\e[1;92mgit-config :\e[0;2m Configure Git user email and username via GUI.\e[0m
-\e[1;92mff-avif:\e[0;2m Convert images to AVIF format using ffmpeg.\e[0m
-\e[1;92mff-hevc:\e[0;2m Convert videos to HEVC format using ffmpeg.\e[0m
-\e[1;92mff-cut :\e[0;2m Cut videos using ffmpeg.\e[0m
+\e[1;92minstall-gnome-extensions :\e[0;2m Install GNOME extensions.\e[0m
+\e[1;92mgit-config :\e[0;2m Configure Git user email and username.\e[0m
+\e[1;92mgrub-theme :\e[0;2m Set GRUB available theme.\e[0m
+\e[1;92mgtk-theme  :\e[0;2m Configure GTK theme.\e[0m
+\e[1;92mff-avif    :\e[0;2m Convert images to AVIF format using ffmpeg.\e[0m
+\e[1;92mff-hevc    :\e[0;2m Convert videos to HEVC format using ffmpeg.\e[0m
+\e[1;92mff-cut     :\e[0;2m Cut videos using ffmpeg.\e[0m
 \e[1;92mff-tag     :\e[0;2m Show metadata tags of media files using ffprobe.\e[0m
 "
 }
