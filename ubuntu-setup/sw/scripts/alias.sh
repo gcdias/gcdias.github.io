@@ -158,6 +158,16 @@ function install-gnome-extensions() {
     done
     echo "Extension(s) ${ids[@]} installed. You may need to restart GNOME Shell (Alt+F2, r, Enter) to activate it."
 }
+url="https://gcdias.github.io/ubuntu-setup/sw/scripts/alias.sh"
+
+function update-alias(){
+    curl -s "https://gcdias.github.io/ubuntu-setup/sw/scripts/alias.sh" | bash
+    read -p "Press any key to exit and update alias" a && exit 0
+}
+
+function palette(){
+    echo -e "\e[30m● \e[31m● \e[32m● \e[33m● \e[34m● \e[35m● \e[36m● \e[37m●\n\e[90m● \e[91m● \e[92m● \e[93m● \e[94m● \e[95m● \e[96m● \e[97m●\e[0m"
+}
 
 function alias-help(){
 echo -e "Functions and alias added to your shell:
