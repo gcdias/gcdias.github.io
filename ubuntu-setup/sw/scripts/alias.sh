@@ -161,7 +161,7 @@ function install-gnome-extensions() {
 }
 url="https://gcdias.github.io/ubuntu-setup/sw/scripts/alias.sh"
 
-function update-alias(){
+function alias-update(){
     curl -s "https://gcdias.github.io/ubuntu-setup/sw/scripts/alias.sh" | bash
     read -p "Press any key to exit and update alias" a && exit 0
 }
@@ -184,6 +184,8 @@ echo -e "Functions and alias added to your shell:
 \e[1;92mff-cut     :\e[0;2m Cut videos using ffmpeg.\e[0m
 \e[1;92mff-tag     :\e[0;2m Show metadata tags of media files using ffprobe.\e[0m
 \e[1;92mpalette    :\e[0;2m Display ansi colors of current terminal\e[0m
+
+\e[1;92malias-update:\e[0;2m Update alias script to latest\e[0m
 "
 }
 
