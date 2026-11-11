@@ -7,6 +7,7 @@ alias apt-upgrade='sudo apt update && sudo apt upgrade'
 alias apt-clean='sudo apt clean && sudo apt autoremove'
 alias sys-upgrade='sudo do-release-upgrade'
 alias edit='gnome-text-editor'
+alias palette='echo -e "\e[30m● \e[31m● \e[32m● \e[33m● \e[34m● \e[35m● \e[36m● \e[37m● \e[0m \e[90m● \e[91m● \e[92m● \e[93m● \e[94m● \e[95m● \e[96m● \e[97m● \e[0m\n"'
 
 function reboot-win(){
     local winboot=$(efibootmgr -v | grep \*.*Windows | sed 's/\*//g;s/Boot//g' | awk '{print $1}')
@@ -182,6 +183,7 @@ echo -e "Functions and alias added to your shell:
 \e[1;92mff-hevc    :\e[0;2m Convert videos to HEVC format using ffmpeg.\e[0m
 \e[1;92mff-cut     :\e[0;2m Cut videos using ffmpeg.\e[0m
 \e[1;92mff-tag     :\e[0;2m Show metadata tags of media files using ffprobe.\e[0m
+\e[1;92mpalette    :\e[0;2m Display ansi colors of current terminal\e[0m
 "
 }
 
