@@ -1,5 +1,5 @@
 cat <<'EOF' > ~/.bash_aliases
-#alias reboot-uefi='systemctl reboot --firmware-setup'
+alias reboot-uefi='systemctl reboot --firmware-setup'
 alias cls='clear'
 alias upgrade='sudo apt update && sudo apt upgrade'
 alias apt-install='sudo apt install'
@@ -7,7 +7,6 @@ alias apt-upgrade='sudo apt update && sudo apt upgrade'
 alias apt-clean='sudo apt clean && sudo apt autoremove'
 alias sys-upgrade='sudo do-release-upgrade'
 alias edit='gnome-text-editor'
-alias palette='echo -e "\e[30m● \e[31m● \e[32m● \e[33m● \e[34m● \e[35m● \e[36m● \e[37m● \e[0m \e[90m● \e[91m● \e[92m● \e[93m● \e[94m● \e[95m● \e[96m● \e[97m● \e[0m\n"'
 
 function reboot-win(){
     local winboot=$(efibootmgr -v | grep \*.*Windows | sed 's/\*//g;s/Boot//g' | awk '{print $1}')
@@ -16,11 +15,6 @@ function reboot-win(){
     echo -e "\e[1;93mWarning: Rebooting into Windows \e[0m(boot entry ${winboot}).\nPress \e[1;92mCtrl+C\e[0m to cancel or \e[1;92mpassword\e[0m to continue."
     sudo efibootmgr -n "${winboot}" 1>/dev/null
     systemctl reboot -i
-}
-
-function reboot-uefi(){
-    echo -e "\e[1;93mWarning: Rebooting into UEFI firmware setup.\e[0m\nPress \e[1;92mCtrl+C\e[0m to cancel or \e[1;92mpassword\e[0m to continue."
-    sudo systemctl reboot --firmware-setup
 }
 
 function git-config(){
@@ -68,7 +62,7 @@ function ffmpeg-avif() {
     for i in "$@"; do
         o=$(basename $i);
         o=${o%%\?*}
-        o=${o/.*/.avif}
+        o="${o%.*}.avif"
         ffmpeg -hide_banner -loglevel quiet -stats -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
 }
@@ -82,7 +76,7 @@ function ffmpeg-heic() {
     for i in "$@"; do
         o=$(basename $i);
         o=${o%%\?*}
-        o=${o/.*/.heic}
+        o="${o%.*}.heic"
         echo -ne "$(basename $i) -> ${o}"
         heif-enc -q ${qual:-85} $i -o ${o} && case "${rem,,}" in y) rm "${i}" ;; esac
         echo
@@ -98,7 +92,7 @@ function ffmpeg-hevc() {
     for i in "$@"; do
         o=$(basename $i);
         o=${o%%\?*}
-        o=${o/.*/-HEVC.mp4}
+        o="${o%.*}-HEVC.mp4"
         echo "output ${o}"
         ffmpeg -hide_banner -loglevel quiet -stats -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
@@ -115,7 +109,7 @@ function ffmpeg-cut() {
     for i in "$@"; do
         o=$(basename $i);
         o=${o%%\?*}
-        o=${o/.*/-cut.mp4}
+        o="${o%.*}-cut.mp4"
         ffmpeg -hide_banner -i "${i}" "${args[@]}" "${o}" && case "${rem,,}" in y) rm "${i}" ;; esac
     done
 }
@@ -126,7 +120,7 @@ function ff-join() {
     case "$1" in -r) rem=y; shift ;; esac
     local o=$(basename $1);
     o=${o%%\?*}
-    o=${o/.*/-join.mp4}
+    o="${o%.*}-join.mp4"
     local r=()
     for i in "$@"; do
     	echo "file '${i}'" >> joinlist.txt
@@ -159,7 +153,6 @@ function install-gnome-extensions() {
     done
     echo "Extension(s) ${ids[@]} installed. You may need to restart GNOME Shell (Alt+F2, r, Enter) to activate it."
 }
-url="https://gcdias.github.io/ubuntu-setup/sw/scripts/alias.sh"
 
 function alias-update(){
     curl -s "https://gcdias.github.io/ubuntu-setup/sw/scripts/alias.sh" | bash
