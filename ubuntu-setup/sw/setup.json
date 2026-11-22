@@ -18,7 +18,7 @@
       "Nautilus Admin": { "type": "apt", "args": "nautilus-admin", "sel": true },
       "Wallpaper Config": { "type": "script", "args": "wallpaper", "sel": true },
       "Curl": { "type": "apt", "args": "curl", "sel": true },
-      "Git": { "type": "apt", "args": "git", "sel": true },
+      "Git": { "type": "apt", "args": "git", "sel": true }
     }
   },
   "Snap": {
