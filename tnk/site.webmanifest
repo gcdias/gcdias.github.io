@@ -1,6 +1,9 @@
 {
   "name": "tnk",
   "short_name": "tnk",
+  "start_url": "./",
+  "scope": "./",
+  "id": "./",
   "icons": [
     {
       "src": "icon.svg",

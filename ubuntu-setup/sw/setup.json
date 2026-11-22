@@ -67,7 +67,8 @@
       "yt-dlp": {"type": "apt", "args": "yt-dlp", "sel": true },
       "fdkaac codec": {"type": "apt", "args": "fdkaac", "sel": true },
       "libheif HEIF/AVIF": {"type": "apt", "args": "libheif-examples", "sel": true },
-      "libheif plugins": {"type": "apt", "args": "libheif-plugin-dav1d libheif-plugin-ffmpegdec libheif-plugin-j2kdec libheif-plugin-j2kenc libheif-plugin-jpegdec libheif-plugin-jpegenc libheif-plugin-rav1e libheif-plugin-svtenc libheif-plugin-x265", "sel": true }
+      "libheif plugins": {"type": "apt", "args": "libheif-plugin-dav1d libheif-plugin-ffmpegdec libheif-plugin-j2kdec libheif-plugin-j2kenc libheif-plugin-jpegdec libheif-plugin-jpegenc libheif-plugin-rav1e libheif-plugin-svtenc libheif-plugin-x265", "sel": true },
+      "libavif-bin": {"type": "apt", "args": "libavif-bin", "sel": true }
     }
   },
   "Devel": {

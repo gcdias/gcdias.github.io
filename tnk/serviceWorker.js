@@ -1,25 +1,29 @@
-const staticApp = "static-app";
-const assetsApp = [
-  "/tnk/",
-  "/tnk/index.html",
-  "/tnk/style.css",
-  "/tnk/main.js",
-  "/tnk/fonts/stmvelish.woff",
-  "/tnk/kblh.js"
-]
+const CACHE = "tnk-v1"; // bump on each deploy
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./style.css",
+  "./main.js",
+  "./kblh.js",
+  "./fonts/stmvelish.woff",
+  "./icon.svg"
+];
 
-self.addEventListener("install", installEvent => {
-  installEvent.waitUntil(
-    caches.open(staticApp).then(cache => {
-      cache.addAll(assetsApp)
-    })
-  )
+self.addEventListener("install", e => {
+  e.waitUntil(
+    caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())
+  );
 });
 
-self.addEventListener("fetch", fetchEvent => {
-  fetchEvent.respondWith(
-    caches.match(fetchEvent.request).then(res => {
-      return res || fetch(fetchEvent.request)
-    })
-  )
+self.addEventListener("activate", e => {
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener("fetch", e => {
+  if (e.request.method !== "GET") return;
+  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
 });
