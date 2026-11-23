@@ -35,3 +35,12 @@ function update_surface_grub(){
     sudo update-grub
     echo "GRUB_TOP_LEVEL set to $b"
 }
+
+function enableHDMI(){
+    echo "i915" | sudo tee -a /etc/initramfs-tools/modules
+    sudo update-initramfs -u
+    sudo mkdir -p /var/lib/gdm3/.config
+    sudo cp ~/.config/monitors.xml /var/lib/gdm3/.config/monitors.xml
+    sudo chown -R gdm:gdm /var/lib/gdm3/.config
+    sudo ls -la /var/lib/gdm3/.config
+}
