@@ -19,3 +19,7 @@ gsettings set org.gnome.shell.extensions.ding show-trash true
 gsettings set org.gnome.shell.extensions.ding show-volumes true
 gsettings set org.gnome.shell.extensions.ding start-corner 'top-right'
 gsettings set org.gnome.shell.extensions.ding use-nemo true
+
+gsettings org.gnome.nautilus.preferences show-create-link true
+gsettings org.gnome.nautilus.preferences show-delete-permanently true
+gsettings org.gnome.nautilus.preferences migrated-gtk-settings true
