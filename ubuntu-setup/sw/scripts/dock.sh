@@ -23,3 +23,5 @@ gsettings set org.gnome.shell.extensions.ding use-nemo true
 gsettings org.gnome.nautilus.preferences show-create-link true
 gsettings org.gnome.nautilus.preferences show-delete-permanently true
 gsettings org.gnome.nautilus.preferences migrated-gtk-settings true
+
+gsettings org.gnome.TextEditor show-line-numbers true
