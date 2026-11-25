@@ -14,7 +14,7 @@ install:
 	@echo "Please restart GNOME Shell (logout/login) to apply changes."
 
 zip:
-	zip -r -FS $(EXTNAME).zip $(FILES) schemas
+	zip -r -FS $(EXTNAME)-latest.zip $(FILES) schemas
 
 uninstall:
 	rm -rf $(INSTALL_PATH)
