@@ -1,10 +1,8 @@
 // These manifests mirror the files included by each extension's Makefile zip target.
 const packages = {
   'gnome-menu': {
-    packageName: 'gnome-menu-gcdias',
     uuid: 'gnome-menu@gcdias',
-    summary: 'Configurable top-panel menus for GNOME Shell',
-    description: 'Adds user-configurable menus to the GNOME Shell top panel.',
+    filename: 'gnome-menu.zip',
     files: [
       'builtInActions.js',
       'extension.js',
@@ -17,10 +15,8 @@ const packages = {
     ],
   },
   'gnome-tint': {
-    packageName: 'gnome-tint-gcdias',
     uuid: 'gnome-tint@gcdias',
-    summary: 'Wallpaper rotation and shell tinting for GNOME Shell',
-    description: 'Changes the wallpaper and tints GNOME Shell to match its colors.',
+    filename: 'gnome-tint.zip',
     files: [
       'extension.js',
       'metadata.json',
@@ -44,6 +40,14 @@ const packages = {
 };
 
 const encoder = new TextEncoder();
+const crcTable = new Uint32Array(256);
+
+for (let index = 0; index < crcTable.length; index += 1) {
+  let value = index;
+  for (let bit = 0; bit < 8; bit += 1)
+    value = value & 1 ? 0xedb88320 ^ (value >>> 1) : value >>> 1;
+  crcTable[index] = value >>> 0;
+}
 
 function encodeText(value) {
   return encoder.encode(value);
@@ -62,161 +66,95 @@ function concatBytes(parts) {
   return output;
 }
 
-function writeTextField(target, offset, length, value) {
-  const bytes = encodeText(value);
-  if (bytes.length > length)
-    throw new Error(`Value is too long for archive field: ${value}`);
+function crc32(contents) {
+  let crc = 0xffffffff;
+  for (const byte of contents)
+    crc = crcTable[(crc ^ byte) & 0xff] ^ (crc >>> 8);
 
-  target.set(bytes, offset);
+  return (crc ^ 0xffffffff) >>> 0;
 }
 
-function writeOctalField(target, offset, length, value) {
-  const digits = value.toString(8);
-  if (digits.length > length - 1)
-    throw new Error('Value is too large for tar archive.');
+function zipTimestamp() {
+  const now = new Date();
+  const year = Math.max(1980, now.getFullYear());
 
-  writeTextField(target, offset, length, `${digits.padStart(length - 1, '0')}\0`);
+  return {
+    date: ((year - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate(),
+    time: (now.getHours() << 11) | (now.getMinutes() << 5) | Math.floor(now.getSeconds() / 2),
+  };
 }
 
-function splitTarPath(path) {
-  if (encodeText(path).length <= 100)
-    return { name: path, prefix: '' };
+function createZip(files) {
+  if (files.length > 0xffff)
+    throw new Error('Too many files for a standard ZIP archive.');
 
-  for (let slash = path.lastIndexOf('/'); slash > 0; slash = path.lastIndexOf('/', slash - 1)) {
-    const prefix = path.slice(0, slash);
-    const name = path.slice(slash + 1);
-    if (encodeText(prefix).length <= 155 && encodeText(name).length <= 100)
-      return { name, prefix };
+  const localRecords = [];
+  const centralRecords = [];
+  const { date, time } = zipTimestamp();
+  let localOffset = 0;
+  let centralSize = 0;
+
+  for (const file of files) {
+    const name = encodeText(file.path);
+    const contents = file.contents;
+    if (name.length > 0xffff || contents.length > 0xffffffff)
+      throw new Error(`File is too large for a standard ZIP archive: ${file.path}`);
+
+    const checksum = crc32(contents);
+    const localHeader = new Uint8Array(30 + name.length);
+    const localView = new DataView(localHeader.buffer);
+    localView.setUint32(0, 0x04034b50, true);
+    localView.setUint16(4, 20, true);
+    localView.setUint16(6, 0x0800, true);
+    localView.setUint16(8, 0, true);
+    localView.setUint16(10, time, true);
+    localView.setUint16(12, date, true);
+    localView.setUint32(14, checksum, true);
+    localView.setUint32(18, contents.length, true);
+    localView.setUint32(22, contents.length, true);
+    localView.setUint16(26, name.length, true);
+    localHeader.set(name, 30);
+    localRecords.push(localHeader, contents);
+
+    const centralHeader = new Uint8Array(46 + name.length);
+    const centralView = new DataView(centralHeader.buffer);
+    centralView.setUint32(0, 0x02014b50, true);
+    centralView.setUint16(4, 0x0314, true);
+    centralView.setUint16(6, 20, true);
+    centralView.setUint16(8, 0x0800, true);
+    centralView.setUint16(10, 0, true);
+    centralView.setUint16(12, time, true);
+    centralView.setUint16(14, date, true);
+    centralView.setUint32(16, checksum, true);
+    centralView.setUint32(20, contents.length, true);
+    centralView.setUint32(24, contents.length, true);
+    centralView.setUint16(28, name.length, true);
+    centralView.setUint32(38, 0o100644 * 0x10000, true);
+    centralView.setUint32(42, localOffset, true);
+    centralHeader.set(name, 46);
+    centralRecords.push(centralHeader);
+
+    localOffset += localHeader.length + contents.length;
+    centralSize += centralHeader.length;
   }
 
-  throw new Error(`File path is too long for a Debian package: ${path}`);
+  if (localOffset > 0xffffffff || centralSize > 0xffffffff)
+    throw new Error('The package is too large for a standard ZIP archive.');
+
+  const endRecord = new Uint8Array(22);
+  const endView = new DataView(endRecord.buffer);
+  endView.setUint32(0, 0x06054b50, true);
+  endView.setUint16(8, files.length, true);
+  endView.setUint16(10, files.length, true);
+  endView.setUint32(12, centralSize, true);
+  endView.setUint32(16, localOffset, true);
+
+  return concatBytes([...localRecords, ...centralRecords, endRecord]);
 }
 
-function createTar(entries) {
-  const parts = [];
-
-  for (const entry of entries) {
-    const header = new Uint8Array(512);
-    const { name, prefix } = splitTarPath(entry.path);
-
-    writeTextField(header, 0, 100, name);
-    writeOctalField(header, 100, 8, entry.mode ?? 0o644);
-    writeOctalField(header, 108, 8, 0);
-    writeOctalField(header, 116, 8, 0);
-    writeOctalField(header, 124, 12, entry.contents.length);
-    writeOctalField(header, 136, 12, Math.floor(Date.now() / 1000));
-    header.fill(0x20, 148, 156);
-    header[156] = 0x30;
-    writeTextField(header, 257, 6, 'ustar\0');
-    writeTextField(header, 263, 2, '00');
-    writeTextField(header, 265, 32, 'root');
-    writeTextField(header, 297, 32, 'root');
-    writeTextField(header, 345, 155, prefix);
-
-    const checksum = header.reduce((sum, byte) => sum + byte, 0);
-    writeTextField(header, 148, 6, checksum.toString(8).padStart(6, '0'));
-    header[154] = 0;
-    header[155] = 0x20;
-
-    parts.push(header, entry.contents);
-    const paddingLength = (512 - (entry.contents.length % 512)) % 512;
-    if (paddingLength)
-      parts.push(new Uint8Array(paddingLength));
-  }
-
-  parts.push(new Uint8Array(1024));
-  return concatBytes(parts);
-}
-
-async function gzip(contents) {
-  if (typeof CompressionStream === 'undefined')
-    throw new Error('This browser does not support in-browser Debian package generation.');
-
-  const stream = new Blob([contents])
-    .stream()
-    .pipeThrough(new CompressionStream('gzip'));
-  return new Uint8Array(await new Response(stream).arrayBuffer());
-}
-
-function createArMember(name, contents) {
-  const header = [
-    `${name}/`.padEnd(16),
-    `${Math.floor(Date.now() / 1000)}`.padEnd(12),
-    '0'.padEnd(6),
-    '0'.padEnd(6),
-    '100644'.padEnd(8),
-    `${contents.length}`.padEnd(10),
-    '`\n',
-  ].join('');
-
-  if (encodeText(header).length !== 60)
-    throw new Error(`Invalid Debian archive member header: ${name}`);
-
-  const padding = contents.length % 2 ? new Uint8Array([0x0a]) : new Uint8Array();
-  return [encodeText(header), contents, padding];
-}
-
-function createArArchive(members) {
-  return concatBytes([
-    encodeText('!<arch>\n'),
-    ...members.flatMap(([name, contents]) => createArMember(name, contents)),
-  ]);
-}
-
-function getVersion(metadata) {
-  const version = metadata.version === undefined ? '1.0.0' : String(metadata.version);
-  if (!/^[0-9][A-Za-z0-9.+:~-]*$/.test(version))
-    throw new Error(`Invalid Debian package version in metadata: ${version}`);
-
-  return version;
-}
-
-function createControlFiles(config, metadata, version) {
-  const extensionPath = `/usr/share/gnome-shell/extensions/${metadata.uuid}`;
-  const schemaPath = `${extensionPath}/schemas`;
-  const control = [
-    `Package: ${config.packageName}`,
-    `Version: ${version}`,
-    'Section: gnome',
-    'Priority: optional',
-    'Architecture: all',
-    'Maintainer: GCDias <gcdias@users.noreply.github.com>',
-    'Depends: gnome-shell, libglib2.0-bin',
-    `Description: ${config.summary}`,
-    ` ${config.description}`,
-    '',
-  ].join('\n');
-  const postinst = [
-    '#!/bin/sh',
-    'set -e',
-    `glib-compile-schemas '${schemaPath}'`,
-    '',
-  ].join('\n');
-  const postrm = [
-    '#!/bin/sh',
-    'set -e',
-    'case "$1" in',
-    '  remove|purge)',
-    `    schema_dir='${schemaPath}'`,
-    '    if [ -d "$schema_dir" ]; then',
-    '      rm -f "$schema_dir/gschemas.compiled"',
-    '      rmdir "$schema_dir" 2>/dev/null || true',
-    '    fi',
-    '    ;;',
-    'esac',
-    '',
-  ].join('\n');
-
-  return [
-    { path: 'control', contents: encodeText(control) },
-    { path: 'postinst', contents: encodeText(postinst), mode: 0o755 },
-    { path: 'postrm', contents: encodeText(postrm), mode: 0o755 },
-  ];
-}
-
-async function fetchPackageFiles(config) {
+async function fetchPackageFiles(id, config) {
   const files = await Promise.all(config.files.map(async (path) => {
-    const url = new URL(`${config.id}/${path}`, document.baseURI);
+    const url = new URL(`${id}/${path}`, document.baseURI);
     const response = await fetch(url, { cache: 'no-cache' });
     if (!response.ok)
       throw new Error(`Could not fetch ${path} (HTTP ${response.status}).`);
@@ -231,34 +169,11 @@ async function fetchPackageFiles(config) {
   if (metadata.uuid !== config.uuid)
     throw new Error(`Unexpected extension UUID in metadata: ${metadata.uuid}`);
 
-  return { files, metadata, version: getVersion(metadata) };
+  return files;
 }
 
-async function buildDeb(config) {
-  const { files, metadata, version } = await fetchPackageFiles(config);
-  const extensionPath = `usr/share/gnome-shell/extensions/${metadata.uuid}`;
-  const dataFiles = files.map((file) => ({
-    path: `${extensionPath}/${file.path}`,
-    contents: file.contents,
-  }));
-  const controlArchive = await gzip(createTar(createControlFiles(config, metadata, version)));
-  const dataArchive = await gzip(createTar(dataFiles));
-  const contents = createArArchive([
-    ['debian-binary', encodeText('2.0\n')],
-    ['control.tar.gz', controlArchive],
-    ['data.tar.gz', dataArchive],
-  ]);
-
-  return {
-    contents,
-    filename: `${config.packageName}_${version}_all.deb`,
-  };
-}
-
-function downloadPackage(filename, contents) {
-  const url = URL.createObjectURL(new Blob([contents], {
-    type: 'application/vnd.debian.binary-package',
-  }));
+function downloadZip(filename, contents) {
+  const url = URL.createObjectURL(new Blob([contents], { type: 'application/zip' }));
   const link = document.createElement('a');
   link.href = url;
   link.download = filename;
@@ -274,23 +189,24 @@ document.querySelectorAll('[data-build]').forEach((button) => {
     const packageStatus = card.querySelector('[data-build-status]');
     const installCommand = card.querySelector('[data-install-command]');
     const copyButton = card.querySelector('[data-copy]');
-    const config = packages[button.dataset.build];
+    const id = button.dataset.build;
+    const config = packages[id];
 
     button.disabled = true;
-    packageStatus.textContent = 'Fetching source files and building the Debian package…';
+    packageStatus.textContent = 'Fetching source files and building the ZIP…';
 
     try {
       if (!config)
         throw new Error('Unknown extension package.');
 
-      const { contents, filename } = await buildDeb({ ...config, id: button.dataset.build });
-      downloadPackage(filename, contents);
-      installCommand.textContent = `sudo apt install ~/Downloads/${filename}`;
+      const files = await fetchPackageFiles(id, config);
+      downloadZip(config.filename, createZip(files));
+      installCommand.textContent = `gnome-extensions install ~/Downloads/${config.filename}`;
       copyButton.disabled = false;
-      packageStatus.textContent = `Downloaded ${filename}. Install it with the command shown above.`;
+      packageStatus.textContent = `Downloaded ${config.filename}. Install it with the command shown above.`;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      packageStatus.textContent = `Package generation failed: ${message}`;
+      packageStatus.textContent = `ZIP generation failed: ${message}`;
     } finally {
       button.disabled = false;
     }
@@ -305,7 +221,7 @@ document.querySelectorAll('[data-copy]').forEach((button) => {
 
     try {
       await navigator.clipboard.writeText(command);
-      packageStatus.textContent = 'APT install command copied to clipboard.';
+      packageStatus.textContent = 'Install command copied to clipboard.';
     } catch {
       const selection = window.getSelection();
       if (!selection) {
