@@ -9,7 +9,9 @@
 #'Architectures: amd64' |
 #sudo tee /etc/apt/sources.list.d/microsoft-edge.sources > /dev/null
 
-deb="packages-microsoft-prod.deb"
-rel="$(lsb_release -rs)"
-wget -q "https://packages.microsoft.com/config/ubuntu/${rel}/${deb}" && \
-sudo dpkg -i ${deb} && rm ${deb} && sudo apt update && sudo apt install microsoft-edge-stable
+curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /usr/share/keyrings/microsoft-edge.gpg
+
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft-edge.gpg] https://packages.microsoft.com/repos/edge stable main" | sudo tee /etc/apt/sources.list.d/microsoft-edge.list
+
+sudo apt update
+sudo apt install microsoft-edge-stable

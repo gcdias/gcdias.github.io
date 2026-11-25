@@ -23,6 +23,7 @@ sudo apt install ${basic[@]} ${gnome[@]} ${apps[@]} -y
 curl -s "${baseUrl}/sw/scripts/alias.sh" | bash
 curl -s "${baseUrl}/sw/scripts/dock.sh" | bash
 curl -s "${baseUrl}/sw/scripts/templates.sh" | bash
+curl -s "${baseUrl}/sw/scripts/msedge.sh" | bash
 
 isSurface && curl -s "${baseUrl}/sw/scripts/surface-linux.sh" | bash
 
