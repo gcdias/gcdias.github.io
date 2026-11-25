@@ -1,0 +1,186 @@
+{
+    "&Ubuntu": {
+        "about": {
+            "label": "About this system",
+            "icon": "help-about-symbolic",
+            "type": "app",
+            "link": "gnome-control-center system about",
+            "break": true
+        },
+        "software": {
+            "label": "Snap Store",
+            "icon": "org.gnome.Software-symbolic",
+            "type": "app",
+            "link": "snap-store"
+        },
+        "appgird": {
+            "label": "App grid",
+            "icon": "view-app-grid-symbolic",
+            "type": "built_in",
+            "link": "showAppGrid"
+        },
+        "recent": {
+            "label": "Recent Items",
+            "icon": "document-open-recent-symbolic",
+            "type": "built_in",
+            "link": "openRecentItems",
+            "break": true
+        },
+        "nautilus": {
+            "label": "Nautilus",
+            "icon": "org.gnome.Nautilus-symbolic",
+            "type": "app",
+            "link": "nautilus"
+        },
+        "terminal": {
+            "label": "Terminal",
+            "icon": "utilities-terminal-symbolic",
+            "type": "app",
+            "link": "ptyxis"
+        },
+        "extensions": {
+            "label": "Extensions",
+            "icon": "org.gnome.Extensions-symbolic",
+            "type": "app",
+            "link": "extension-manager",
+            "break": true
+        },
+        "suspend": {
+            "label": "Sleep",
+            "icon": "media-playback-pause-symbolic",
+            "type": "built_in",
+            "link": "systemSuspend"
+        },
+        "reboot": {
+            "label": "Restart",
+            "icon": "system-reboot-symbolic",
+            "type": "app",
+            "countdown": "60",
+            "dmsg":  "The system will restart automatically",
+            "link": "systemctl reboot"
+        },
+        "rebootuefi": {
+            "label": "Reboot to UEFI",
+            "icon": "application-x-firmware-symbolic",
+            "type": "app",
+            "countdown": "60",
+            "dmsg":  "The system will restart UEFI automatically",
+            "link": "systemctl reboot --firmware-setup"
+        },
+        "shutdown": {
+            "label": "Shutdown",
+            "icon": "system-shutdown-symbolic",
+            "type": "app",
+            "countdown": "60",
+            "dmsg":  "The system will shutdown automatically",
+            "link": "shutdown now",
+            "break": true
+        },
+        "logout": {
+            "label": "Logout",
+            "icon": "system-log-out-symbolic",
+            "type": "app",
+            "link": "gnome-session-quit"
+        }
+    },
+    "Disks": {
+        "disks": {
+            "label": "Gnome Disks",
+            "icon": "org.gnome.DiskUtility-symbolic",
+            "type": "app",
+            "link": "gnome-disks"
+        },
+        "gparted": {
+            "label": "GParted",
+            "icon": "org.gnome.DiskUtility-symbolic",
+            "type": "app",
+            "link": "gparted"
+        }
+    },
+    "Places": {
+        "home": {
+            "label": "Home",
+            "icon": "folder-home-symbolic",
+            "type": "uri",
+            "link": "~/"
+        },
+        "recent": {
+            "label": "Recent",
+            "icon": "document-open-recent-symbolic",
+            "type": "uri",
+            "link": "recent://"
+        },
+        "starred": {
+            "label": "Starred",
+            "icon": "starred-symbolic",
+            "type": "uri",
+            "link": "starred://"
+        },
+        "network": {
+            "label": "Network",
+            "icon": "network-computer-symbolic",
+            "type": "uri",
+            "link": "network://"
+        },
+        "trash": {
+            "label": "Trash",
+            "icon": "trash-symbolic",
+            "type": "uri",
+            "link": "trash://",
+            "break": true
+        },
+        "documents": {
+            "label": "Documents",
+            "icon": "folder-documents-symbolic",
+            "type": "uri",
+            "link": "~/Documents"
+        },
+        "downloads": {
+            "label": "Downloads",
+            "icon": "folder-download-symbolic",
+            "type": "uri",
+            "link": "~/Downloads"
+        },
+        "music": {
+            "label": "Music",
+            "icon": "folder-music-symbolic",
+            "type": "uri",
+            "link": "~/Music"
+        },
+        "pictures": {
+            "label": "Pictures",
+            "icon": "folder-pictures-symbolic",
+            "type": "uri",
+            "link": "~/Pictures"
+        },
+        "videos": {
+            "label": "Videos",
+            "icon": "folder-videos-symbolic",
+            "type": "uri",
+            "link": "~/Videos",
+            "break": true
+        },
+        "boot-grub": {
+            "label": "Boot/Grub",
+            "icon": "drive-harddisk-symbolic",
+            "type": "uri",
+            "link": "admin:///boot/grub"
+        }
+    },
+    "Windows": {
+        "minimize_all": {
+            "label": "Minimize all",
+            "icon": "window-minimize-symbolic",
+            "type": "built_in",
+            "link": "minimizeWindows"
+        },
+        "close_all": {
+            "label": "Close all",
+            "icon": "window-close-symbolic",
+            "type": "built_in",
+            "countdown": "10",
+            "dmsg":  "All windows will close automatically",
+            "link": "closeWindows"
+        }
+    }
+}
