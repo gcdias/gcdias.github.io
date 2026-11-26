@@ -1,27 +1,46 @@
-gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
-gsettings set org.gnome.shell.extensions.dash-to-dock apply-glossy-effect false
-gsettings set org.gnome.shell.extensions.dash-to-dock autohide-in-fullscreen true
-gsettings set org.gnome.shell.extensions.dash-to-dock background-color '#202030'
-gsettings set org.gnome.shell.extensions.dash-to-dock background-opacity 0
-gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 32
-gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
-gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
-gsettings set org.gnome.shell.extensions.dash-to-dock isolate-workspaces true
-gsettings set org.gnome.shell.extensions.dash-to-dock show-mounts false
-gsettings set org.gnome.shell.extensions.dash-to-dock show-trash false
+schemas=$(gsettings list-schemas)
 
-gsettings set org.gnome.shell.extensions.ding icon-size 'tiny'
-gsettings set org.gnome.shell.extensions.ding keep-arranged true
-gsettings set org.gnome.shell.extensions.ding keep-stacked true
-gsettings set org.gnome.shell.extensions.ding show-network-volumes true
-gsettings set org.gnome.shell.extensions.ding show-trash true
-gsettings set org.gnome.shell.extensions.ding show-volumes true
-gsettings set org.gnome.shell.extensions.ding start-corner 'top-right'
-gsettings set org.gnome.shell.extensions.ding use-nemo true
+function setConf(){
+  local schema=$1; shift
+  local key;
+  local val;
+  if [ -n "$(grep "${schema}" <<<"${schemas}")" ]; then
+    echo "Found extension ${schema}"
+    while [ -n "$1" ]; do
+      key="${1}"; shift
+      val="${1}"; shift
+      gsettings set "${schema}" "${key}" "${val}"
+    done
+  fi
+}
 
-gsettings org.gnome.nautilus.preferences show-create-link true
-gsettings org.gnome.nautilus.preferences show-delete-permanently true
-gsettings org.gnome.nautilus.preferences migrated-gtk-settings true
+setConf org.gnome.shell.extensions.dash-to-dock \
+    transparency-mode 'FIXED' \
+    apply-glossy-effect false \
+    autohide-in-fullscreen true \
+    background-color '#202030' \
+    background-opacity 0 \
+    dash-max-icon-size 32 \
+    dock-fixed false \
+    dock-position 'BOTTOM' \
+    extend-height false \
+    isolate-workspaces true \
+    show-mounts false \
+    show-trash false
 
-gsettings org.gnome.TextEditor show-line-numbers true
+setConf org.gnome.shell.extensions.ding \
+  icon-size 'tiny' \
+  keep-arranged true \
+  keep-stacked true \
+  show-network-volumes true \
+  show-trash true \
+  show-volumes true \
+  start-corner 'top-right' \
+  use-nemo true
+
+setConf org.gnome.nautilus.preferences \
+  show-create-link true \
+  show-delete-permanently true \
+  migrated-gtk-settings true
+
+setConf org.gnome.TextEditor show-line-numbers true
