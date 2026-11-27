@@ -183,8 +183,10 @@ const IGnome = {
 const wallpaper = {
 
     settings: new Gio.Settings({schema_id: 'org.gnome.desktop.background'}),
+    loginScr: new Gio.Settings({schema_id: 'com.ubuntu.login-screen'}),
     prefersDark: true,
     wpUriKey: 'picture-uri-dark',
+    loginKey: 'background-picture-uri',
     width: 1920,
     height: 1080,
     
@@ -218,6 +220,7 @@ const wallpaper = {
     setBackground: function(filePath){
         const uri = Gio.File.new_for_path(filePath).get_uri();
         wallpaper.settings.set_string(wallpaper.wpUriKey, uri);
+        wallpaper.loginScr.set_string(wallpaper.loginKey, uri);
     },
 
     getPath: function() {

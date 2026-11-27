@@ -26,7 +26,8 @@ setConf org.gnome.shell.extensions.dash-to-dock \
     extend-height false \
     isolate-workspaces true \
     show-mounts false \
-    show-trash false
+    show-trash false \
+    multi-monitor true
 
 setConf org.gnome.shell.extensions.ding \
   icon-size 'tiny' \
