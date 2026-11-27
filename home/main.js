@@ -6,27 +6,42 @@ if ("serviceWorker" in navigator) {
   });
 }
 
-const SHADER_ID = 'shader4';
+const SHADER_ID = 'shader2';
 let installPrompt = null;
 
 window.addEventListener("beforeinstallprompt", event => {
   event.preventDefault();
   installPrompt = event;
-  const installButton = document.getElementById("installApp");
-  if (installButton) installButton.hidden = false;
 })
 
 window.addEventListener("appinstalled", () => {
   installPrompt = null;
-  const installButton = document.getElementById("installApp");
-  if (installButton) installButton.hidden = true;
+  document.getElementById("installApp").hidden = true;
 })
 
 async function installApp(){
-  if (!installPrompt) return;
-  installPrompt.prompt();
-  await installPrompt.userChoice;
-  installPrompt = null;
+  const installButton = document.getElementById("installApp");
+  if (installPrompt) {
+    const prompt = installPrompt;
+    installPrompt = null;
+    await prompt.prompt();
+    const choice = await prompt.userChoice;
+    if (choice.outcome === "accepted") installButton.hidden = true;
+    return;
+  }
+
+  const isAppleMobile = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (isAppleMobile) {
+    window.alert("To add Home to your Home Screen, tap Share, then choose Add to Home Screen. iPhone and iPad browsers do not show an automatic install prompt.");
+  } else if (/Android/i.test(navigator.userAgent)) {
+    window.alert("Open your browser's three-dot menu and choose Install app or Add to Home screen. The browser may not show an automatic install prompt.");
+  } else {
+    window.alert("Open your browser menu and choose Install app or Create shortcut.");
+  }
+}
+
+if (window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true) {
   document.getElementById("installApp").hidden = true;
 }
 
