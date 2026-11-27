@@ -2,12 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <title>Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Home">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#222222">
   <link rel="manifest" href="site.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css?build=250111">
 </head>
 <script id="shader1" type="x-shader/x-fragment">
@@ -114,6 +117,17 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ){
 	fragColor = vec4(col, 1.0);
 }
 </script>
+<script id="shader4" type="x-shader/x-fragment">
+  uniform vec2  iResolution;
+  uniform vec3  iGyroscope;
+  uniform float iTime;
+
+  void mainImage( out vec4 fragColor, in vec2 fragCoord ){
+      vec2 uv = fragCoord/iResolution.xy;
+      vec3 col = 0.5 + 0.5 * cos(iTime + uv.xyx + iGyroscope * 2.0);
+      fragColor = vec4(col,1.0);
+  }
+</script>
 <body>
   <canvas id="gl-canvas"></canvas>
   <video id="f-video" autoplay playsinline muted></video>
@@ -126,6 +140,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ){
       <div class="s-item" onclick="backGlsl()">Background glsl</div>
       <div class="s-item" onclick="reload()">Reload</div>
       <div class="s-item" onclick="ui.toggleTheme()">Toggle Theme</div>
+      <div class="s-item" id="installApp" onclick="installApp()" hidden>Install app</div>
     </div>
   </div>
   <div id="setupBtn" onclick="toggleView()"></div>

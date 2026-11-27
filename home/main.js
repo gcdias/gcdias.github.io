@@ -2,11 +2,33 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", function() {
     navigator.serviceWorker
       .register("/home/serviceWorker.js")
-      .then(res => console.log("service worker registered"))
-      .catch(err => console.log("service worker not registered", err))
-  })
+      .catch(err => console.error("Service worker registration failed:", err))
+  });
 }
 
+const SHADER_ID = 'shader4';
+let installPrompt = null;
+
+window.addEventListener("beforeinstallprompt", event => {
+  event.preventDefault();
+  installPrompt = event;
+  const installButton = document.getElementById("installApp");
+  if (installButton) installButton.hidden = false;
+})
+
+window.addEventListener("appinstalled", () => {
+  installPrompt = null;
+  const installButton = document.getElementById("installApp");
+  if (installButton) installButton.hidden = true;
+})
+
+async function installApp(){
+  if (!installPrompt) return;
+  installPrompt.prompt();
+  await installPrompt.userChoice;
+  installPrompt = null;
+  document.getElementById("installApp").hidden = true;
+}
 
 const useIcons = true;
 
@@ -110,7 +132,7 @@ function backGlsl(){
   ui.show(ui.blur,'none');
   ui.show(ui.canvas, 'block');
   let w = new GlCanvas('gl-canvas');
-  w.load({fragmentId: 'shader2'}, gl => {
+  w.load({fragmentId: SHADER_ID}, gl => {
     webGl = gl;
     webGl.start(true);
   });

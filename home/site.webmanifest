@@ -1,15 +1,20 @@
 {
   "name": "Home",
   "short_name": "Home",
+  "description": "A personal home screen for links and shortcuts",
+  "id": "/home/",
+  "start_url": "/home/",
+  "scope": "/home/",
   "icons": [
     {
       "src": "icon.svg",
       "sizes": "48x48 72x72 96x96 128x128 192x192 256x256 512x512",
       "type": "image/svg+xml",
-      "purpose": "any"
-  }
+      "purpose": "any maskable"
+    }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
-  "display": "standalone"
+  "theme_color": "#222222",
+  "background_color": "#222222",
+  "display": "standalone",
+  "orientation": "any"
 }
