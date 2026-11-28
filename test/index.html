@@ -5,41 +5,276 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teste de Gravação Estéreo HAF</title>
     <style>
-        body { font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 20px; text-align: center; background: #f5f5f5; }
-        button { font-size: 16px; padding: 12px 24px; margin: 10px; cursor: pointer; border: none; border-radius: 4px; background: #007bff; color: white; }
-        button:disabled { background: #ccc; cursor: not-allowed; }
-        #stop { background: #dc3545; }
-        .meters { display: flex; justify-content: space-around; margin: 20px 0; }
-        .meter-container { width: 40%; background: #ddd; height: 30px; border-radius: 4px; overflow: hidden; position: relative; }
-        .meter-bar { height: 100%; width: 0%; background: #28a745; transition: width 0.1s ease; }
-        .meter-label { position: absolute; width: 100%; text-align: center; line-height: 30px; font-weight: bold; color: #333; }
-        audio { margin-top: 20px; width: 100%; }
-        #status { font-weight: bold; color: #666; margin: 15px 0; }
+        :root {
+            color-scheme: dark;
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #eee;
+            font-synthesis: none;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            min-width: 280px;
+            min-height: 100vh;
+            min-height: 100svh;
+            margin: 0;
+        }
+
+        button { font: inherit; }
+
+        .recorder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: min(100%, 560px);
+            min-height: 100vh;
+            min-height: 100svh;
+            margin: 0 auto;
+            padding: 28px 24px 20px;
+        }
+
+        .mic-state {
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .eyebrow, .panel-title, .setting-label, .meter-name, .version {
+            color: #888;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: .04em;
+        }
+
+        .state-options {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 7px;
+            color: #777;
+        }
+
+        .state-options span {
+            padding: 0 2px 4px;
+            border-bottom: 2px solid transparent;
+        }
+
+        #microphoneOff.is-active {
+            color: #f45b5b;
+            border-color: #f45b5b;
+        }
+
+        #microphoneOn.is-active {
+            color: #51c878;
+            border-color: #51c878;
+        }
+
+        .timer {
+            margin: 48px 0 8px;
+            font-size: clamp(42px, 12vw, 64px);
+            font-weight: 200;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: .03em;
+        }
+
+        #status {
+            min-height: 18px;
+            margin: 0 0 30px;
+            color: #999;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .panels {
+            width: 100%;
+            border-top: 1px solid #292929;
+        }
+
+        .panel {
+            padding: 15px 2px 18px;
+        }
+
+        .panel + .panel {
+            border-top: 1px solid #292929;
+        }
+
+        .panel-title {
+            margin: 0 0 14px;
+            color: #51a66b;
+            text-align: center;
+        }
+
+        .settings {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 14px 22px;
+            margin-bottom: 18px;
+        }
+
+        .setting {
+            display: flex;
+            gap: 7px;
+            align-items: baseline;
+        }
+
+        .setting-value {
+            color: #55b873;
+            font-size: 12px;
+        }
+
+        .meters {
+            display: grid;
+            gap: 9px;
+        }
+
+        .meter-row {
+            display: grid;
+            grid-template-columns: 16px 1fr;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .meter-name {
+            text-align: center;
+        }
+
+        .meter-container {
+            height: 7px;
+            overflow: hidden;
+            background: #292929;
+            border-radius: 5px;
+        }
+
+        .meter-bar {
+            width: 0%;
+            height: 100%;
+            background: #51c878;
+            transition: width .1s ease;
+        }
+
+        audio {
+            display: block;
+            width: 100%;
+            height: 40px;
+            margin-top: 10px;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 28px;
+            margin-top: auto;
+            padding: 36px 0 22px;
+        }
+
+        .action-button {
+            display: grid;
+            width: 60px;
+            height: 60px;
+            place-items: center;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: #eee;
+            cursor: pointer;
+        }
+
+        .record-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #e54848;
+        }
+
+        .stop-button {
+            width: 48px;
+            height: 48px;
+            border: 1px solid #666;
+            background: transparent;
+        }
+
+        .stop-icon {
+            width: 14px;
+            height: 14px;
+            border-radius: 2px;
+            background: #e54848;
+        }
+
+        .action-button:disabled {
+            opacity: .35;
+            cursor: default;
+        }
+
+        .action-button:focus-visible {
+            outline: 2px solid #51c878;
+            outline-offset: 4px;
+        }
+
+        .version { margin-top: 0; }
+
+        @media (max-height: 620px) {
+            .timer { margin-top: 25px; }
+            #status { margin-bottom: 18px; }
+            .actions { padding-top: 20px; }
+        }
     </style>
 </head>
 <body>
+    <main class="recorder">
+        <header class="mic-state" aria-label="Estado do microfone">
+            <div class="eyebrow">microphone</div>
+            <div class="state-options">
+                <span id="microphoneOff" class="is-active">off</span>
+                <span id="microphoneOn">on</span>
+            </div>
+        </header>
 
-    <h2>Gravador Estéreo Web</h2>
-    <p>Certifique-se de que tem um microfone ou interface estéreo ligados.</p>
+        <div id="timer" class="timer" role="timer" aria-label="Duração da gravação">00:00:00</div>
+        <div id="status" role="status" aria-live="polite">Pronto para iniciar</div>
 
-    <div class="meters">
-        <div class="meter-container">
-            <div class="meter-label">Esq (L)</div>
-            <div id="meter-l" class="meter-bar"></div>
+        <section class="panels" aria-label="Áudio">
+            <div class="panel">
+                <h2 class="panel-title">input</h2>
+                <div class="settings">
+                    <div class="setting"><span class="setting-label">channels</span><span class="setting-value">stereo</span></div>
+                    <div class="setting"><span class="setting-label">agc</span><span class="setting-value">off</span></div>
+                    <div class="setting"><span class="setting-label">echo</span><span class="setting-value">off</span></div>
+                    <div class="setting"><span class="setting-label">noise</span><span class="setting-value">off</span></div>
+                </div>
+                <div class="meters" aria-label="Níveis dos canais">
+                    <div class="meter-row">
+                        <span class="meter-name">L</span>
+                        <div class="meter-container"><div id="meter-l" class="meter-bar"></div></div>
+                    </div>
+                    <div class="meter-row">
+                        <span class="meter-name">R</span>
+                        <div class="meter-container"><div id="meter-r" class="meter-bar"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <h2 class="panel-title">output</h2>
+                <div class="settings">
+                    <div class="setting"><span class="setting-label">format</span><span class="setting-value">audio</span></div>
+                    <div class="setting"><span class="setting-label">channels</span><span class="setting-value">stereo</span></div>
+                </div>
+                <audio id="audioPlayback" controls aria-label="Reprodução da gravação"></audio>
+            </div>
+        </section>
+
+        <div class="actions">
+            <button id="start" class="action-button" aria-label="Gravar" title="Gravar">
+                <span class="record-icon" aria-hidden="true"></span>
+            </button>
+            <button id="stop" class="action-button stop-button" aria-label="Parar" title="Parar" disabled>
+                <span class="stop-icon" aria-hidden="true"></span>
+            </button>
         </div>
-        <div class="meter-container">
-            <div class="meter-label">Dir (R)</div>
-            <div id="meter-r" class="meter-bar"></div>
-        </div>
-    </div>
-
-    <div id="status">Pronto para iniciar</div>
-
-    <button id="start">Gravar</button>
-    <button id="stop" disabled>Parar</button>
-
-    <br>
-    <audio id="audioPlayback" controls></audio>
+        <footer class="version">Gravador estéreo</footer>
+    </main>
 
     <script>
         let mediaRecorder;
@@ -48,13 +283,31 @@
         let analyserL, analyserR;
         let scriptProcessor;
         let streamRef;
+        let timerInterval;
+        let recordingStartedAt;
 
         const startBtn = document.getElementById('start');
         const stopBtn = document.getElementById('stop');
         const statusDiv = document.getElementById('status');
+        const timerDiv = document.getElementById('timer');
         const audioPlayback = document.getElementById('audioPlayback');
         const meterL = document.getElementById('meter-l');
         const meterR = document.getElementById('meter-r');
+        const microphoneOff = document.getElementById('microphoneOff');
+        const microphoneOn = document.getElementById('microphoneOn');
+
+        function setMicrophoneState(active) {
+            microphoneOff.classList.toggle('is-active', !active);
+            microphoneOn.classList.toggle('is-active', active);
+        }
+
+        function updateTimer() {
+            const seconds = Math.floor((Date.now() - recordingStartedAt) / 1000);
+            const hours = String(Math.floor(seconds / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+            const remainingSeconds = String(seconds % 60).padStart(2, '0');
+            timerDiv.textContent = `${hours}:${minutes}:${remainingSeconds}`;
+        }
 
         startBtn.onclick = async () => {
             audioChunks = [];
@@ -73,6 +326,7 @@
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 streamRef = stream;
                 statusDiv.innerText = "A gravar em estéreo...";
+                setMicrophoneState(true);
                 startBtn.disabled = true;
                 stopBtn.disabled = false;
 
@@ -88,6 +342,9 @@
                     statusDiv.innerText = "Gravação concluída! Ouve o resultado.";
                 };
                 mediaRecorder.start();
+                recordingStartedAt = Date.now();
+                updateTimer();
+                timerInterval = setInterval(updateTimer, 1000);
 
                 // 2. Configurar Visualizador em Tempo Real (Medidor L/R)
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -107,7 +364,8 @@
                 updateMeters();
 
             } catch (err) {
-                statusDiv.innerText = "Erro: O navegador barrou o acesso ou não suporta estéreo."+err;
+                setMicrophoneState(false);
+                statusDiv.innerText = "Erro: O navegador barrou o acesso ou não suporta estéreo.";
                 console.error(err);
             }
         };
@@ -116,6 +374,8 @@
             mediaRecorder.stop();
             streamRef.getTracks().forEach(track => track.stop());
             if (audioContext) audioContext.close();
+            clearInterval(timerInterval);
+            setMicrophoneState(false);
             startBtn.disabled = false;
             stopBtn.disabled = true;
             meterL.style.width = '0%';
