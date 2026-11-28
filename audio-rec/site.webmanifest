@@ -1,0 +1,20 @@
+{
+    "name": "Audio Recorder",
+    "short_name": "Audio Rec",
+    "description": "A simple stereo audio recorder",
+    "id": "/audio-rec/",
+    "start_url": "/audio-rec/",
+    "scope": "/audio-rec/",
+    "icons": [
+        {
+            "src": "icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "theme_color": "#111111",
+    "background_color": "#111111",
+    "display": "standalone",
+    "orientation": "any"
+}

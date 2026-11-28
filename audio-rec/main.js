@@ -1,3 +1,11 @@
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/audio-rec/serviceWorker.js').catch(error => {
+            console.error('Service worker registration failed:', error);
+        });
+    });
+}
+
 let mediaRecorder;
 let audioChunks = [];
 let audioContext;
