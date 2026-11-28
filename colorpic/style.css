@@ -36,7 +36,7 @@ button:focus-visible, input:focus-visible, a:focus-visible, [role="slider"]:focu
 .app-shell { width: min(100% - 48px, 1120px); margin: 0 auto; }
 .topbar { height: 82px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
 .brand { display: inline-flex; align-items: center; gap: 11px; color: #f5f4f1; font: 800 1.05rem ui-sans-serif, system-ui, sans-serif; letter-spacing: -.045em; text-decoration: none; }
-.brand-mark { width: 27px; height: 27px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; padding: 2px; overflow: hidden; border-radius: 9px; transform: rotate(-8deg); }
+.brand-mark { width: 27px; height: 27px; display: grid; flex: 0 0 27px; grid-template-columns: repeat(2, 1fr); gap: 2px; padding: 2px; overflow: hidden; border-radius: 9px; transform: rotate(-8deg); }
 .brand-mark span { border-radius: 4px; background: #e4a5ff; }
 .brand-mark span:nth-child(2) { background: #a7b3ff; }
 .brand-mark span:nth-child(3) { background: #83e3c2; }
