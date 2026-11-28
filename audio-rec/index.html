@@ -28,12 +28,36 @@
         <section class="panels" aria-label="Áudio">
             <div class="panel">
                 <h2 class="panel-title">input</h2>
-                <div class="settings">
-                    <div class="setting"><span class="setting-label">channels</span><span class="setting-value">stereo</span></div>
-                    <div class="setting"><span class="setting-label">agc</span><span class="setting-value">off</span></div>
-                    <div class="setting"><span class="setting-label">echo</span><span class="setting-value">off</span></div>
-                    <div class="setting"><span class="setting-label">noise</span><span class="setting-value">off</span></div>
-                </div>
+                <fieldset id="inputOptions" class="input-options">
+                    <fieldset class="option-group">
+                        <legend>channels</legend>
+                        <div class="option-list">
+                            <button class="option-button" type="button" data-input-setting="channelCount" data-value="1" aria-pressed="false">mono</button>
+                            <button class="option-button" type="button" data-input-setting="channelCount" data-value="2" aria-pressed="true">stereo</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="option-group">
+                        <legend>agc</legend>
+                        <div class="option-list">
+                            <button class="option-button" type="button" data-input-setting="autoGainControl" data-value="true" aria-pressed="false">on</button>
+                            <button class="option-button" type="button" data-input-setting="autoGainControl" data-value="false" aria-pressed="true">off</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="option-group">
+                        <legend>echo</legend>
+                        <div class="option-list">
+                            <button class="option-button" type="button" data-input-setting="echoCancellation" data-value="true" aria-pressed="false">on</button>
+                            <button class="option-button" type="button" data-input-setting="echoCancellation" data-value="false" aria-pressed="true">off</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="option-group">
+                        <legend>noise</legend>
+                        <div class="option-list">
+                            <button class="option-button" type="button" data-input-setting="noiseSuppression" data-value="true" aria-pressed="false">on</button>
+                            <button class="option-button" type="button" data-input-setting="noiseSuppression" data-value="false" aria-pressed="true">off</button>
+                        </div>
+                    </fieldset>
+                </fieldset>
                 <div class="meters" aria-label="Níveis dos canais">
                     <div class="meter-row">
                         <span class="meter-name">L</span>

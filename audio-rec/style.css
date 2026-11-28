@@ -33,7 +33,7 @@ button { font: inherit; }
     font-size: 12px;
 }
 
-.eyebrow, .panel-title, .setting-label, .meter-name, .version {
+.eyebrow, .panel-title, .meter-name, .version {
     color: #888;
     font-size: 11px;
     font-weight: 400;
@@ -98,14 +98,7 @@ button { font: inherit; }
     text-align: center;
 }
 
-.settings {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 14px 22px;
-    margin-bottom: 18px;
-}
-
+.input-options,
 .recording-options {
     display: flex;
     justify-content: center;
@@ -115,6 +108,10 @@ button { font: inherit; }
     margin: 0 0 12px;
     padding: 0;
     border: 0;
+}
+
+.input-options {
+    margin-bottom: 18px;
 }
 
 .option-group {
@@ -161,6 +158,7 @@ button { font: inherit; }
     cursor: not-allowed;
 }
 
+.input-options:disabled .option-group,
 .recording-options:disabled .option-group {
     opacity: .45;
 }
@@ -170,17 +168,6 @@ button { font: inherit; }
     color: #f45b5b;
     font-size: 12px;
     text-align: center;
-}
-
-.setting {
-    display: flex;
-    gap: 7px;
-    align-items: baseline;
-}
-
-.setting-value {
-    color: #55b873;
-    font-size: 12px;
 }
 
 .meters {
@@ -275,7 +262,7 @@ audio {
 
 @media (max-width: 520px) {
     .recorder { padding-right: 12px; padding-left: 12px; }
-    .recording-options { gap: 6px; }
+    .input-options, .recording-options { gap: 6px; }
     .option-group { padding-right: 5px; padding-left: 5px; }
     .option-button { padding-right: 4px; padding-left: 4px; }
 }

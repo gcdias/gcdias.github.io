@@ -21,6 +21,12 @@ let selectedDuration = 300;
 let selectedFormat = null;
 let selectedMimeType = null;
 let stopReason = 'manual';
+const selectedAudioConstraints = {
+    channelCount: 2,
+    autoGainControl: false,
+    echoCancellation: false,
+    noiseSuppression: false
+};
 
 const recordButton = document.getElementById('recordToggle');
 const statusDiv = document.getElementById('status');
@@ -30,6 +36,7 @@ const meterL = document.getElementById('meter-l');
 const meterR = document.getElementById('meter-r');
 const microphoneOff = document.getElementById('microphoneOff');
 const microphoneOn = document.getElementById('microphoneOn');
+const inputOptions = document.getElementById('inputOptions');
 const recordingOptions = document.getElementById('recordingOptions');
 const formatSupport = document.getElementById('formatSupport');
 
@@ -52,7 +59,8 @@ function setMicrophoneState(active) {
     recordButton.setAttribute('aria-pressed', String(active));
     recordButton.setAttribute('aria-label', active ? 'Parar gravação' : 'Gravar');
     recordButton.title = active ? 'Parar gravação' : 'Gravar';
-    recordingOptions.disabled = active || isFinalizing;
+    inputOptions.disabled = active || isStarting || isFinalizing;
+    recordingOptions.disabled = active || isStarting || isFinalizing;
 }
 
 function setSelectedOption(buttons, selectedButton) {
@@ -60,6 +68,17 @@ function setSelectedOption(buttons, selectedButton) {
         button.setAttribute('aria-pressed', String(button === selectedButton));
     });
 }
+
+const inputOptionButtons = Array.from(document.querySelectorAll('[data-input-setting]'));
+inputOptionButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const setting = button.dataset.inputSetting;
+        const value = button.dataset.value;
+        selectedAudioConstraints[setting] = setting === 'channelCount' ? Number(value) : value === 'true';
+        const groupButtons = inputOptionButtons.filter(item => item.dataset.inputSetting === setting);
+        setSelectedOption(groupButtons, button);
+    });
+});
 
 const bitrateButtons = Array.from(document.querySelectorAll('[data-bitrate]'));
 bitrateButtons.forEach(button => {
@@ -130,18 +149,15 @@ async function startRecording() {
 
     isStarting = true;
     recordButton.disabled = true;
+    inputOptions.disabled = true;
+    recordingOptions.disabled = true;
     statusDiv.textContent = 'A aguardar autorização do microfone...';
     audioChunks = [];
     stopReason = 'manual';
 
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
-            audio: {
-                channelCount: 2,
-                echoCancellation: false,
-                noiseSuppression: false,
-                autoGainControl: false
-            }
+            audio: { ...selectedAudioConstraints }
         });
         streamRef = stream;
 
@@ -178,6 +194,7 @@ async function startRecording() {
                     : 'Gravação concluída sem dados de áudio.';
             }
             isFinalizing = false;
+            inputOptions.disabled = false;
             recordingOptions.disabled = false;
             recordButton.disabled = false;
         };
@@ -204,6 +221,10 @@ async function startRecording() {
         console.error('Erro ao iniciar a gravação:', error);
     } finally {
         isStarting = false;
+        if (mediaRecorder?.state !== 'recording' && !isFinalizing) {
+            inputOptions.disabled = false;
+            recordingOptions.disabled = false;
+        }
     }
 }
 
