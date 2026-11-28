@@ -92,3 +92,11 @@ const utils = {
 }
 
 ui.init();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/ubuntu-setup/serviceWorker.js').catch((error) => {
+      console.error('Service worker registration failed:', error);
+    });
+  });
+}

@@ -1,0 +1,19 @@
+{
+  "id": "/gnome-extensions/",
+  "name": "GNOME Extensions",
+  "short_name": "GNOME Ext.",
+  "description": "Build installable ZIP packages for GNOME Menu and Gnome-Tint.",
+  "start_url": "/gnome-extensions/",
+  "scope": "/gnome-extensions/",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "48x48 72x72 96x96 128x128 192x192 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#11131a",
+  "background_color": "#11131a",
+  "display": "standalone"
+}

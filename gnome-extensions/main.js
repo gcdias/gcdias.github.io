@@ -237,3 +237,11 @@ document.querySelectorAll('[data-copy]').forEach((button) => {
     }
   });
 });
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/gnome-extensions/serviceWorker.js').catch((error) => {
+      console.error('Service worker registration failed:', error);
+    });
+  });
+}

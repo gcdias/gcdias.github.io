@@ -1,0 +1,25 @@
+{
+  "id": "/ubuntu-setup/",
+  "name": "Ubuntu Setup",
+  "short_name": "Ubuntu Setup",
+  "description": "Configure Ubuntu setup options and create setup scripts.",
+  "start_url": "/ubuntu-setup/",
+  "scope": "/ubuntu-setup/",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "48x48 72x72 96x96 128x128 192x192 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "48x48 72x72 96x96 128x128 192x192 256x256 512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "theme_color": "#111318",
+  "background_color": "#111318",
+  "display": "standalone"
+}
