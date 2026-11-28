@@ -136,6 +136,10 @@ function updateTimer() {
     }
 }
 
+function formatChannelCount(channelCount) {
+    return `${channelCount} ${channelCount === 1 ? 'canal' : 'canais'}`;
+}
+
 async function startRecording() {
     if (isStarting || isFinalizing || mediaRecorder?.state === 'recording') return;
     if (!navigator.mediaDevices?.getUserMedia) {
@@ -154,12 +158,14 @@ async function startRecording() {
     statusDiv.textContent = 'A aguardar autorização do microfone...';
     audioChunks = [];
     stopReason = 'manual';
+    const selectedChannelCount = selectedAudioConstraints.channelCount;
 
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
             audio: { ...selectedAudioConstraints }
         });
         streamRef = stream;
+        const actualChannelCount = stream.getAudioTracks()[0]?.getSettings().channelCount;
 
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const source = audioContext.createMediaStreamSource(stream);
@@ -209,7 +215,9 @@ async function startRecording() {
         audioPlayback.hidden = true;
         audioPlayback.load();
         recordingStartedAt = Date.now();
-        statusDiv.textContent = 'A gravar em estéreo...';
+        statusDiv.textContent = actualChannelCount !== undefined && actualChannelCount !== selectedChannelCount
+            ? `Aviso: selecionou ${formatChannelCount(selectedChannelCount)}, mas o microfone fornece ${formatChannelCount(actualChannelCount)}.`
+            : `A gravar em ${selectedChannelCount === 1 ? 'mono' : 'estéreo'}...`;
         setMicrophoneState(true);
         recordButton.disabled = false;
         updateTimer();
