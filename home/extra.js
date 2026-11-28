@@ -16,6 +16,7 @@ const extra_data = {
     "gcdias": [
       { "url": "https://gcdias.github.io/tnk/", "icon": "https://gcdias.github.io/tnk/icon.svg", "name": "TN\"K"},
       { "url": "https://gcdias.github.io/audio-rec/", "icon": "https://gcdias.github.io/audio-rec/icon.svg", "name": "AudioRec"},
+      { "url": "https://gcdias.github.io/colorpic/", "icon": "https://gcdias.github.io/colorpic/icon.svg", "name": "ColorPic"},
       { "url": "https://gcdias.github.io/cnote/", "icon": "https://gcdias.github.io/cnote/icon.svg", "name": "CNote"},
       { "url": "https://gcdias.github.io/gnome-extensions/", "icon": "https://gcdias.github.io/gnome-extensions/icon.svg", "name": "GnomeExt"},
       { "url": "https://gcdias.github.io/ubuntu-setup/", "icon": "https://gcdias.github.io/ubuntu-setup/icon.svg", "name": "UbuntuSetup"},

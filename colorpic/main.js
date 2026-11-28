@@ -1,15 +1,30 @@
 const state = {
   color: { r: 74, g: 217, b: 167 },
   format: "hex",
+  pickerMode: "field",
   saved: [],
-  installPrompt: null
+  installPrompt: null,
+  photoUrl: null,
+  cameraStream: null,
+  cameraRequestId: 0
 };
 
 const elements = {
+  pickerModes: [...document.querySelectorAll("[data-picker-mode]")],
+  fieldView: document.getElementById("field-view"),
+  photoView: document.getElementById("photo-view"),
+  cameraView: document.getElementById("camera-view"),
+  cameraMode: document.getElementById("camera-mode"),
   colorField: document.getElementById("color-field"),
   crosshair: document.getElementById("color-field-crosshair"),
   hueSlider: document.getElementById("hue-slider"),
   hueValue: document.getElementById("hue-value"),
+  photoInput: document.getElementById("photo-input"),
+  photoCanvas: document.getElementById("photo-canvas"),
+  photoHint: document.getElementById("photo-hint"),
+  fieldHint: document.getElementById("field-hint"),
+  cameraPreview: document.getElementById("camera-preview"),
+  cameraHint: document.getElementById("camera-hint"),
   nativeColor: document.getElementById("native-color"),
   previewHex: document.getElementById("preview-hex"),
   formatControls: document.getElementById("format-controls"),
@@ -143,11 +158,19 @@ function hsvToRgb(h, s, v) {
   else if (section < 5) rgb = [secondary, 0, chroma];
   else rgb = [chroma, 0, secondary];
   const offset = v - chroma;
-  return { r: (rgb[0] + offset) * 255, g: (rgb[1] + offset) * 255, b: (rgb[2] + offset) * 255 };
+  return { 
+    r: (rgb[0] + offset) * 255,
+    g: (rgb[1] + offset) * 255,
+    b: (rgb[2] + offset) * 255
+  };
 }
 
 function roundedColor(color) {
-  return { r: Math.round(clamp(color.r, 0, 255)), g: Math.round(clamp(color.g, 0, 255)), b: Math.round(clamp(color.b, 0, 255)) };
+  return {
+    r: Math.round(clamp(color.r, 0, 255)),
+    g: Math.round(clamp(color.g, 0, 255)),
+    b: Math.round(clamp(color.b, 0, 255))
+  };
 }
 
 function updateHueUI() {
@@ -433,6 +456,183 @@ function setFromField(event) {
   syncUI();
 }
 
+function stopCamera() {
+  state.cameraRequestId += 1;
+  if (state.cameraStream) {
+    state.cameraStream.getTracks().forEach(track => track.stop());
+    state.cameraStream = null;
+  }
+  elements.cameraPreview.srcObject = null;
+}
+
+async function startCamera() {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    elements.cameraHint.textContent = "Camera access is not available in this browser.";
+    return;
+  }
+
+  const requestId = ++state.cameraRequestId;
+  elements.cameraHint.textContent = "Starting camera…";
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: "environment" } },
+      audio: false
+    });
+    if (requestId !== state.cameraRequestId || state.pickerMode !== "camera") {
+      stream.getTracks().forEach(track => track.stop());
+      return;
+    }
+    state.cameraStream = stream;
+    elements.cameraPreview.srcObject = stream;
+    await elements.cameraPreview.play();
+    elements.cameraHint.textContent = "Select any point in the live preview to pick its color.";
+  } catch (error) {
+    if (requestId !== state.cameraRequestId) return;
+    console.error("Could not start camera:", error);
+    stopCamera();
+    elements.cameraHint.textContent = error.name === "NotAllowedError"
+      ? "Camera access was denied. Allow access in your browser settings and try again."
+      : "Could not start the camera. Check that a camera is connected and try again.";
+  }
+}
+
+function setPickerMode(mode) {
+  if (mode === "camera" && elements.cameraMode.hidden) return;
+  stopCamera();
+  state.pickerMode = mode;
+  elements.pickerModes.forEach(button => {
+    button.setAttribute("aria-pressed", String(button.dataset.pickerMode === mode));
+  });
+  elements.fieldView.hidden = mode !== "field";
+  elements.photoView.hidden = mode !== "photo";
+  elements.cameraView.hidden = mode !== "camera";
+  elements.fieldHint.hidden = mode !== "field";
+  if (mode === "camera") startCamera();
+}
+
+async function updateCameraAvailability() {
+  const mediaDevices = navigator.mediaDevices;
+  if (!mediaDevices?.getUserMedia || !mediaDevices.enumerateDevices) return;
+  try {
+    const devices = await mediaDevices.enumerateDevices();
+    elements.cameraMode.hidden = !devices.some(device => device.kind === "videoinput");
+  } catch (error) {
+    console.error("Could not check camera availability:", error);
+  }
+}
+
+function loadPhoto(file) {
+  if (!file || !file.type.startsWith("image/")) {
+    elements.photoCanvas.hidden = true;
+    elements.photoHint.textContent = "Choose a valid image file to pick a color.";
+    return;
+  }
+  if (state.photoUrl) URL.revokeObjectURL(state.photoUrl);
+  elements.photoCanvas.hidden = true;
+  elements.photoHint.textContent = "Loading photo…";
+  const photoUrl = URL.createObjectURL(file);
+  state.photoUrl = photoUrl;
+  const image = new Image();
+  image.onload = () => {
+    if (photoUrl !== state.photoUrl) return;
+    const scale = Math.min(1, 2000 / Math.max(image.naturalWidth, image.naturalHeight));
+    const width = Math.max(1, Math.round(image.naturalWidth * scale));
+    const height = Math.max(1, Math.round(image.naturalHeight * scale));
+    const context = elements.photoCanvas.getContext("2d", { willReadFrequently: true });
+    if (!context) {
+      elements.photoHint.textContent = "This browser could not open the photo for color picking.";
+      return;
+    }
+    elements.photoCanvas.width = width;
+    elements.photoCanvas.height = height;
+    context.fillStyle = "#111319";
+    context.fillRect(0, 0, width, height);
+    context.drawImage(image, 0, 0, width, height);
+    elements.photoCanvas.hidden = false;
+    elements.photoHint.textContent = "Select any point in the photo to pick its color.";
+  };
+  image.onerror = () => {
+    if (photoUrl !== state.photoUrl) return;
+    elements.photoCanvas.hidden = true;
+    elements.photoHint.textContent = "Could not load that photo. Try another image.";
+  };
+  image.src = photoUrl;
+}
+
+function pickCanvasColor(canvas, clientX, clientY) {
+  if (!canvas.width || !canvas.height) return;
+  const bounds = canvas.getBoundingClientRect();
+  const x = clamp(Math.floor((clientX - bounds.left) / bounds.width * canvas.width), 0, canvas.width - 1);
+  const y = clamp(Math.floor((clientY - bounds.top) / bounds.height * canvas.height), 0, canvas.height - 1);
+  const context = canvas.getContext("2d", { willReadFrequently: true });
+  if (!context) return;
+  try {
+    const [r, g, b] = context.getImageData(x, y, 1, 1).data;
+    state.color = { r, g, b };
+    syncUI();
+  } catch (error) {
+    console.error("Could not sample image color:", error);
+    announce("Could not pick a color from that image.");
+  }
+}
+
+function pickCameraColor(clientX, clientY) {
+  const video = elements.cameraPreview;
+  if (!video.videoWidth || !video.videoHeight) return;
+  const bounds = video.getBoundingClientRect();
+  const contentWidth = video.clientWidth;
+  const contentHeight = video.clientHeight;
+  if (!contentWidth || !contentHeight) return;
+  const scale = Math.min(contentWidth / video.videoWidth, contentHeight / video.videoHeight);
+  const displayedWidth = video.videoWidth * scale;
+  const displayedHeight = video.videoHeight * scale;
+  const offsetX = (contentWidth - displayedWidth) / 2;
+  const offsetY = (contentHeight - displayedHeight) / 2;
+  const pointX = clientX - bounds.left - video.clientLeft - offsetX;
+  const pointY = clientY - bounds.top - video.clientTop - offsetY;
+  if (pointX < 0 || pointX >= displayedWidth || pointY < 0 || pointY >= displayedHeight) return;
+  const x = Math.floor(pointX / displayedWidth * video.videoWidth);
+  const y = Math.floor(pointY / displayedHeight * video.videoHeight);
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const context = canvas.getContext("2d", { willReadFrequently: true });
+  if (!context) return;
+  try {
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const [r, g, b] = context.getImageData(x, y, 1, 1).data;
+    state.color = { r, g, b };
+    syncUI();
+  } catch (error) {
+    console.error("Could not sample camera color:", error);
+    announce("Could not pick a color from the camera.");
+  }
+}
+
+elements.pickerModes.forEach(button => {
+  button.addEventListener("click", () => setPickerMode(button.dataset.pickerMode));
+});
+elements.photoInput.addEventListener("change", () => loadPhoto(elements.photoInput.files[0]));
+elements.photoCanvas.addEventListener("click", event => pickCanvasColor(elements.photoCanvas, event.clientX, event.clientY));
+elements.photoCanvas.addEventListener("keydown", event => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  event.preventDefault();
+  const bounds = elements.photoCanvas.getBoundingClientRect();
+  pickCanvasColor(elements.photoCanvas, bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
+});
+elements.cameraPreview.addEventListener("click", event => pickCameraColor(event.clientX, event.clientY));
+elements.cameraPreview.addEventListener("keydown", event => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  event.preventDefault();
+  const bounds = elements.cameraPreview.getBoundingClientRect();
+  pickCameraColor(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
+});
+window.addEventListener("pagehide", () => {
+  stopCamera();
+  if (state.photoUrl) URL.revokeObjectURL(state.photoUrl);
+});
+updateCameraAvailability();
+
 elements.formatTabs.forEach(tab => {
   tab.addEventListener("click", () => {
     state.format = tab.dataset.format;
@@ -499,26 +699,6 @@ document.getElementById("copy-css").addEventListener("click", () => {
         return `hwb(${Math.round(h)} ${Math.round(w)}% ${Math.round(b)}%)`;
       })();
   copyText(value, state.format === "hsv" ? "Equivalent RGB CSS value copied." : `${state.format.toUpperCase()} value copied.`);
-});
-
-document.getElementById("eyedropper").addEventListener("click", async () => {
-  if (!window.EyeDropper) {
-    announce("Screen color picking isn’t supported in this browser. Try the system picker instead.");
-    return;
-  }
-  try {
-    const result = await new EyeDropper().open();
-    const pickedColor = parseColor(result.sRGBHex);
-    if (!pickedColor) throw new Error("Screen picker returned an invalid color.");
-    state.color = pickedColor;
-    syncUI();
-    announce(`${result.sRGBHex.toUpperCase()} picked from screen.`);
-  } catch (error) {
-    if (error.name !== "AbortError") {
-      console.error("Could not open screen color picker:", error);
-      announce("Could not open the screen color picker.");
-    }
-  }
 });
 
 document.getElementById("save-color").addEventListener("click", () => {

@@ -1,4 +1,4 @@
-const cacheName = "colorpic-static-v5";
+const cacheName = "colorpic-static-v6";
 const appPath = "/colorpic";
 const assets = [
   `${appPath}/`,

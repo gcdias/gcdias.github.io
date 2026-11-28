@@ -45,17 +45,34 @@
               <p class="section-kicker">01 / PICK</p>
               <h2>Make it yours</h2>
             </div>
-            <button class="icon-button" id="eyedropper" type="button" title="Pick a color from your screen" aria-label="Pick a color from your screen">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5.5 4 4m-2-6 4 4-3 3-4-4zM5 19l9.5-9.5m-11 13 3-3m-1 0 3 3m-5-1 3-3"/></svg>
-            </button>
           </div>
 
-          <div class="color-field" id="color-field" role="group" tabindex="0" aria-label="Choose saturation and brightness with arrow keys">
-            <div class="color-field-crosshair" id="color-field-crosshair" aria-hidden="true"></div>
+          <div class="picker-modes" role="group" aria-label="Choose a color picking method">
+            <button class="picker-mode" type="button" data-picker-mode="field" aria-pressed="true">Color field</button>
+            <button class="picker-mode" type="button" data-picker-mode="photo" aria-pressed="false">Photo</button>
+            <button class="picker-mode" id="camera-mode" type="button" data-picker-mode="camera" aria-pressed="false" hidden>Camera</button>
           </div>
-          <label class="sr-only" for="hue-slider">Hue</label>
-          <input class="hue-slider" id="hue-slider" type="range" min="0" max="359" value="159">
-          <div class="range-labels"><span>Hue</span><output id="hue-value">159°</output></div>
+
+          <div class="picker-view" id="field-view">
+            <div class="color-field" id="color-field" role="group" tabindex="0" aria-label="Choose saturation and brightness with arrow keys">
+              <div class="color-field-crosshair" id="color-field-crosshair" aria-hidden="true"></div>
+            </div>
+            <label class="sr-only" for="hue-slider">Hue</label>
+            <input class="hue-slider" id="hue-slider" type="range" min="0" max="359" value="159">
+            <div class="range-labels"><span>Hue</span><output id="hue-value">159°</output></div>
+          </div>
+
+          <div class="picker-view photo-view" id="photo-view" hidden>
+            <label class="button button-quiet photo-upload" for="photo-input">Choose a photo</label>
+            <input class="sr-only" id="photo-input" type="file" accept="image/*">
+            <p class="picker-hint" id="photo-hint">Upload a photo, then select any point to pick its color.</p>
+            <canvas class="source-canvas" id="photo-canvas" role="button" tabindex="0" aria-label="Pick a color from the uploaded photo" hidden></canvas>
+          </div>
+
+          <div class="picker-view camera-view" id="camera-view" hidden>
+            <p class="picker-hint" id="camera-hint" role="status">Allow camera access to preview and pick a color.</p>
+            <video class="camera-preview" id="camera-preview" playsinline muted role="button" tabindex="0" aria-label="Pick the center color from the live camera preview"></video>
+          </div>
 
           <div class="preview-strip">
             <label class="native-picker-wrap" title="Open system color picker">
@@ -73,7 +90,7 @@
               <span>Copy HEX</span>
             </button>
           </div>
-          <p class="field-hint">Drag the field to adjust saturation and brightness.</p>
+          <p class="field-hint" id="field-hint">Drag the field to adjust saturation and brightness.</p>
         </div>
 
         <div class="details-column">
