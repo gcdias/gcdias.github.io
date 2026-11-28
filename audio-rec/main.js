@@ -185,6 +185,7 @@ async function startRecording() {
                 if (playbackUrl) URL.revokeObjectURL(playbackUrl);
                 playbackUrl = URL.createObjectURL(audioBlob);
                 audioPlayback.src = playbackUrl;
+                audioPlayback.hidden = false;
                 statusDiv.textContent = stopReason === 'timer'
                     ? 'Tempo limite atingido. Gravação concluída.'
                     : 'Gravação concluída! Ouve o resultado.';
@@ -201,6 +202,12 @@ async function startRecording() {
 
         recorder.start();
         mediaRecorder = recorder;
+        audioPlayback.pause();
+        if (playbackUrl) URL.revokeObjectURL(playbackUrl);
+        playbackUrl = null;
+        audioPlayback.removeAttribute('src');
+        audioPlayback.hidden = true;
+        audioPlayback.load();
         recordingStartedAt = Date.now();
         statusDiv.textContent = 'A gravar em estéreo...';
         setMicrophoneState(true);

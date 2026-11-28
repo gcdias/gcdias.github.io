@@ -172,14 +172,11 @@ button { font: inherit; }
 
 .meters {
     display: grid;
-    gap: 9px;
-}
-
-.meter-row {
-    display: grid;
-    grid-template-columns: 16px 1fr;
+    grid-template-columns: 20px minmax(0, 1fr) 1px minmax(0, 1fr) 20px;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    width: 100%;
+    min-height: 24px;
 }
 
 .meter-name {
@@ -187,17 +184,33 @@ button { font: inherit; }
 }
 
 .meter-container {
-    height: 7px;
+    position: relative;
+    height: 8px;
     overflow: hidden;
     background: #292929;
     border-radius: 5px;
 }
 
+.meter-center {
+    align-self: stretch;
+    background: #666;
+}
+
 .meter-bar {
-    width: 0%;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0;
     background: #51c878;
     transition: width .1s ease;
+}
+
+.meter-container-left .meter-bar {
+    right: 0;
+}
+
+.meter-container-right .meter-bar {
+    left: 0;
 }
 
 audio {
@@ -205,6 +218,10 @@ audio {
     width: 100%;
     height: 40px;
     margin-top: 10px;
+}
+
+audio[hidden] {
+    display: none;
 }
 
 .actions {

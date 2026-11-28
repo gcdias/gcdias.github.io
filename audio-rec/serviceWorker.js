@@ -1,4 +1,4 @@
-const cacheName = "audio-rec-static-v2";
+const cacheName = "audio-rec-static-v5";
 const appPath = "/audio-rec";
 const assets = [
     `${appPath}/`,

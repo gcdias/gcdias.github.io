@@ -59,14 +59,11 @@
                     </fieldset>
                 </fieldset>
                 <div class="meters" aria-label="Níveis dos canais">
-                    <div class="meter-row">
-                        <span class="meter-name">L</span>
-                        <div class="meter-container"><div id="meter-l" class="meter-bar"></div></div>
-                    </div>
-                    <div class="meter-row">
-                        <span class="meter-name">R</span>
-                        <div class="meter-container"><div id="meter-r" class="meter-bar"></div></div>
-                    </div>
+                    <span class="meter-name">L</span>
+                    <div class="meter-container meter-container-left"><div id="meter-l" class="meter-bar"></div></div>
+                    <div class="meter-center" aria-hidden="true"></div>
+                    <div class="meter-container meter-container-right"><div id="meter-r" class="meter-bar"></div></div>
+                    <span class="meter-name">R</span>
                 </div>
             </div>
             <div class="panel">
@@ -104,7 +101,7 @@
                     </fieldset>
                 </fieldset>
                 <p id="formatSupport" hidden></p>
-                <audio id="audioPlayback" controls aria-label="Reprodução da gravação"></audio>
+                <audio id="audioPlayback" controls aria-label="Reprodução da gravação" hidden></audio>
             </div>
         </section>
 
