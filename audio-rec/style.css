@@ -1,0 +1,281 @@
+:root {
+    color-scheme: dark;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #eee;
+    font-synthesis: none;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    min-width: 280px;
+    min-height: 100vh;
+    min-height: 100svh;
+    margin: 0;
+}
+
+button { font: inherit; }
+
+.recorder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min(100%, 900px);
+    min-height: 100vh;
+    min-height: 100svh;
+    margin: 0 auto;
+    padding: 28px 24px 20px;
+}
+
+.mic-state {
+    text-align: center;
+    font-size: 12px;
+}
+
+.eyebrow, .panel-title, .setting-label, .meter-name, .version {
+    color: #888;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: .04em;
+}
+
+.state-options {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 7px;
+    color: #777;
+}
+
+.state-options span {
+    padding: 0 2px 4px;
+    border-bottom: 2px solid transparent;
+}
+
+#microphoneOff.is-active {
+    color: #f45b5b;
+    border-color: #f45b5b;
+}
+
+#microphoneOn.is-active {
+    color: #51c878;
+    border-color: #51c878;
+}
+
+.timer {
+    margin: 48px 0 8px;
+    font-size: clamp(42px, 12vw, 64px);
+    font-weight: 200;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: .03em;
+}
+
+#status {
+    min-height: 18px;
+    margin: 0 0 30px;
+    color: #999;
+    font-size: 12px;
+    text-align: center;
+}
+
+.panels {
+    width: 100%;
+    border-top: 1px solid #292929;
+}
+
+.panel {
+    padding: 15px 2px 18px;
+}
+
+.panel + .panel {
+    border-top: 1px solid #292929;
+}
+
+.panel-title {
+    margin: 0 0 14px;
+    color: #51a66b;
+    text-align: center;
+}
+
+.settings {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px 22px;
+    margin-bottom: 18px;
+}
+
+.recording-options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 0;
+    border: 0;
+}
+
+.option-group {
+    min-width: 0;
+    margin: 0;
+    padding: 4px 8px 6px;
+    border: 1px solid #333;
+    border-radius: 12px;
+}
+
+.option-group legend {
+    padding: 0 5px;
+    color: #aaa;
+    font-size: 11px;
+    text-align: center;
+}
+
+.option-list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.option-button {
+    min-height: 28px;
+    padding: 4px 5px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: #777;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.option-button[aria-pressed="true"] {
+    border-color: #51c878;
+    color: #51c878;
+    font-weight: 700;
+}
+
+.option-button:disabled {
+    color: #494949;
+    cursor: not-allowed;
+}
+
+.recording-options:disabled .option-group {
+    opacity: .45;
+}
+
+#formatSupport {
+    margin: 0;
+    color: #f45b5b;
+    font-size: 12px;
+    text-align: center;
+}
+
+.setting {
+    display: flex;
+    gap: 7px;
+    align-items: baseline;
+}
+
+.setting-value {
+    color: #55b873;
+    font-size: 12px;
+}
+
+.meters {
+    display: grid;
+    gap: 9px;
+}
+
+.meter-row {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    align-items: center;
+    gap: 10px;
+}
+
+.meter-name {
+    text-align: center;
+}
+
+.meter-container {
+    height: 7px;
+    overflow: hidden;
+    background: #292929;
+    border-radius: 5px;
+}
+
+.meter-bar {
+    width: 0%;
+    height: 100%;
+    background: #51c878;
+    transition: width .1s ease;
+}
+
+audio {
+    display: block;
+    width: 100%;
+    height: 40px;
+    margin-top: 10px;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    margin-top: auto;
+    padding: 36px 0 22px;
+}
+
+.action-button {
+    display: grid;
+    width: 60px;
+    height: 60px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: #eee;
+    cursor: pointer;
+}
+
+.record-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #e54848;
+}
+
+.action-button.is-recording .record-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    background: #e54848;
+}
+
+.action-button:disabled {
+    opacity: .35;
+    cursor: default;
+}
+
+.action-button:focus-visible {
+    outline: 2px solid #51c878;
+    outline-offset: 4px;
+}
+
+.version { margin-top: 0; }
+
+@media (max-height: 620px) {
+    .timer { margin-top: 25px; }
+    #status { margin-bottom: 18px; }
+    .actions { padding-top: 20px; }
+}
+
+@media (max-width: 520px) {
+    .recorder { padding-right: 12px; padding-left: 12px; }
+    .recording-options { gap: 6px; }
+    .option-group { padding-right: 5px; padding-left: 5px; }
+    .option-button { padding-right: 4px; padding-left: 4px; }
+}

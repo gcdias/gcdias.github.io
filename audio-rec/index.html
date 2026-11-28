@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Gravação Estéreo HAF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="recorder">
+        <header class="mic-state" aria-label="Estado do microfone">
+            <div class="eyebrow">microphone</div>
+            <div class="state-options">
+                <span id="microphoneOff" class="is-active">off</span>
+                <span id="microphoneOn">on</span>
+            </div>
+        </header>
+
+        <div id="timer" class="timer" role="timer" aria-label="Duração da gravação">00:00:00</div>
+        <div id="status" role="status" aria-live="polite">Pronto para iniciar</div>
+
+        <section class="panels" aria-label="Áudio">
+            <div class="panel">
+                <h2 class="panel-title">input</h2>
+                <div class="settings">
+                    <div class="setting"><span class="setting-label">channels</span><span class="setting-value">stereo</span></div>
+                    <div class="setting"><span class="setting-label">agc</span><span class="setting-value">off</span></div>
+                    <div class="setting"><span class="setting-label">echo</span><span class="setting-value">off</span></div>
+                    <div class="setting"><span class="setting-label">noise</span><span class="setting-value">off</span></div>
+                </div>
+                <div class="meters" aria-label="Níveis dos canais">
+                    <div class="meter-row">
+                        <span class="meter-name">L</span>
+                        <div class="meter-container"><div id="meter-l" class="meter-bar"></div></div>
+                    </div>
+                    <div class="meter-row">
+                        <span class="meter-name">R</span>
+                        <div class="meter-container"><div id="meter-r" class="meter-bar"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel">
+                <h2 class="panel-title">output</h2>
+                <fieldset id="recordingOptions" class="recording-options">
+                    <fieldset class="option-group">
+                        <legend>bitrate</legend>
+                        <div class="option-list">
+                            <button class="option-button" type="button" data-bitrate="32000" aria-pressed="false">32k</button>
+                            <button class="option-button" type="button" data-bitrate="56000" aria-pressed="false">56k</button>
+                            <button class="option-button" type="button" data-bitrate="128000" aria-pressed="false">128k</button>
+                            <button class="option-button" type="button" data-bitrate="192000" aria-pressed="false">192k</button>
+                            <button class="option-button" type="button" data-bitrate="256000" aria-pressed="true">256k</button>
+                            <button class="option-button" type="button" data-bitrate="320000" aria-pressed="false">320k</button>
+                            <button class="option-button" type="button" data-bitrate="512000" aria-pressed="false">512k</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="option-group">
+                        <legend>format</legend>
+                        <div class="option-list">
+                            <button class="option-button" type="button" data-format="webm" aria-pressed="false">webm</button>
+                            <button class="option-button" type="button" data-format="mp4" aria-pressed="false">mp4</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="option-group">
+                        <legend>timer</legend>
+                        <div class="option-list">
+                            <button class="option-button" type="button" data-duration="0" aria-pressed="false">off</button>
+                            <button class="option-button" type="button" data-duration="60" aria-pressed="false">1m</button>
+                            <button class="option-button" type="button" data-duration="180" aria-pressed="false">3m</button>
+                            <button class="option-button" type="button" data-duration="300" aria-pressed="true">5m</button>
+                            <button class="option-button" type="button" data-duration="600" aria-pressed="false">10m</button>
+                            <button class="option-button" type="button" data-duration="1200" aria-pressed="false">20m</button>
+                        </div>
+                    </fieldset>
+                </fieldset>
+                <p id="formatSupport" hidden></p>
+                <audio id="audioPlayback" controls aria-label="Reprodução da gravação"></audio>
+            </div>
+        </section>
+
+        <div class="actions">
+            <button id="recordToggle" class="action-button" type="button" aria-label="Gravar" aria-pressed="false" title="Gravar">
+                <span class="record-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+        <footer class="version">Gravador estéreo</footer>
+    </main>
+
+    <script src="main.js"></script>
+</body>
+</html>
