@@ -41,6 +41,7 @@ const elements = {
   swatches: document.getElementById("swatches"),
   paletteNote: document.getElementById("palette-note"),
   status: document.getElementById("status"),
+  refreshButton: document.getElementById("refresh-app"),
   installButton: document.getElementById("install-app")
 };
 
@@ -756,6 +757,35 @@ elements.installButton.addEventListener("click", async () => {
     elements.installButton.hidden = true;
   } else {
     announce("Use your browser’s menu and choose Install app or Add to Home Screen.");
+  }
+});
+
+elements.refreshButton.addEventListener("click", async () => {
+  elements.refreshButton.disabled = true;
+  announce("Refreshing colorpic from source…");
+
+  try {
+    if ("serviceWorker" in navigator) {
+      const registration = await navigator.serviceWorker.getRegistration("/colorpic/");
+      if (registration) await registration.update();
+    }
+
+    if ("caches" in window) {
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames
+          .filter(name => name.startsWith("colorpic-static-"))
+          .map(name => caches.delete(name))
+      );
+    }
+
+    const response = await fetch(window.location.href, { cache: "reload" });
+    if (!response.ok) throw new Error(`Refresh request failed with status ${response.status}`);
+    window.location.reload();
+  } catch (error) {
+    console.error("Could not refresh colorpic from source:", error);
+    elements.refreshButton.disabled = false;
+    announce("Could not refresh from source. Check your connection and try again.");
   }
 });
 

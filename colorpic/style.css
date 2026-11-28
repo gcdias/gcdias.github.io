@@ -181,6 +181,8 @@ h2 { margin: 0; font: 700 1.1rem ui-sans-serif, system-ui, sans-serif; letter-sp
 
 @media (max-width: 430px) {
   .offline-label { display: none; }
+  .topbar-actions { gap: 6px; }
+  .topbar-actions .button { gap: 6px; padding: 8px; font-size: .72rem; }
   .picker-panel, .formats-panel, .contrast-panel { padding: 19px; }
   .palette-section { padding: 19px; }
   .preview-strip { gap: 9px; padding: 10px; }
