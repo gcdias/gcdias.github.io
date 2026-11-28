@@ -66,21 +66,22 @@
             <label class="button button-quiet photo-upload" for="photo-input">Choose a photo</label>
             <input class="sr-only" id="photo-input" type="file" accept="image/*">
             <p class="picker-hint" id="photo-hint">Upload a photo, then select any point to pick its color.</p>
-            <canvas class="source-canvas" id="photo-canvas" role="button" tabindex="0" aria-label="Pick a color from the uploaded photo" hidden></canvas>
+            <div class="picker-media">
+              <canvas class="source-canvas" id="photo-canvas" role="button" tabindex="0" aria-label="Pick a color from the uploaded photo" hidden></canvas>
+              <span class="pick-marker" id="photo-marker" aria-hidden="true" hidden></span>
+            </div>
           </div>
 
           <div class="picker-view camera-view" id="camera-view" hidden>
             <p class="picker-hint" id="camera-hint" role="status">Allow camera access to preview and pick a color.</p>
-            <video class="camera-preview" id="camera-preview" playsinline muted role="button" tabindex="0" aria-label="Pick the center color from the live camera preview"></video>
+            <div class="picker-media">
+              <video class="camera-preview" id="camera-preview" playsinline muted role="button" tabindex="0" aria-label="Pick the center color from the live camera preview"></video>
+              <span class="pick-marker" id="camera-marker" aria-hidden="true" hidden></span>
+            </div>
           </div>
 
           <div class="preview-strip">
-            <label class="native-picker-wrap" title="Open system color picker">
-              <input id="native-color" type="color" value="#4ad9a7" aria-label="Choose a color with the system picker">
-              <span class="native-picker-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24"><path d="M12 3.5a8.5 8.5 0 1 0 0 17h1.1a2.1 2.1 0 0 0 1.2-3.8 1.6 1.6 0 0 1 1-2.9H17a3.5 3.5 0 0 0 3.5-3.5c0-3.8-3.8-6.8-8.5-6.8Z"/><circle cx="7.5" cy="11" r="1" fill="currentColor"/><circle cx="10.5" cy="7.5" r="1" fill="currentColor"/><circle cx="15" cy="8" r="1" fill="currentColor"/></svg>
-              </span>
-            </label>
+            <span class="current-color-swatch" aria-hidden="true"></span>
             <div class="preview-copy">
               <span class="preview-label">CURRENT COLOR</span>
               <strong id="preview-hex">#4AD9A7</strong>

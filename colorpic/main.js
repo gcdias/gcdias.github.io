@@ -2,6 +2,8 @@ const state = {
   color: { r: 74, g: 217, b: 167 },
   format: "hex",
   pickerMode: "field",
+  photoPoint: null,
+  cameraPoint: null,
   saved: [],
   installPrompt: null,
   photoUrl: null,
@@ -21,11 +23,12 @@ const elements = {
   hueValue: document.getElementById("hue-value"),
   photoInput: document.getElementById("photo-input"),
   photoCanvas: document.getElementById("photo-canvas"),
+  photoMarker: document.getElementById("photo-marker"),
   photoHint: document.getElementById("photo-hint"),
   fieldHint: document.getElementById("field-hint"),
   cameraPreview: document.getElementById("camera-preview"),
+  cameraMarker: document.getElementById("camera-marker"),
   cameraHint: document.getElementById("camera-hint"),
-  nativeColor: document.getElementById("native-color"),
   previewHex: document.getElementById("preview-hex"),
   formatControls: document.getElementById("format-controls"),
   formatCaption: document.getElementById("format-caption"),
@@ -214,12 +217,21 @@ function updateContrast() {
   elements.contrastBest.textContent = `Best text: ${best}`;
 }
 
+function updatePickMarker(marker, point, hex) {
+  marker.hidden = !point;
+  if (!point) return;
+  marker.style.left = `${point.x * 100}%`;
+  marker.style.top = `${point.y * 100}%`;
+  marker.style.backgroundColor = hex;
+}
+
 function syncUI(renderControls = true) {
   state.color = roundedColor(state.color);
   const hex = hexColor(state.color);
   document.documentElement.style.setProperty("--current-color", hex);
   elements.previewHex.textContent = hex;
-  elements.nativeColor.value = hex.toLowerCase();
+  updatePickMarker(elements.photoMarker, state.photoPoint, hex);
+  updatePickMarker(elements.cameraMarker, state.cameraPoint, hex);
   updateHueUI();
   updateContrast();
   if (renderControls) renderFormat();
@@ -523,11 +535,15 @@ async function updateCameraAvailability() {
 
 function loadPhoto(file) {
   if (!file || !file.type.startsWith("image/")) {
+    state.photoPoint = null;
+    updatePickMarker(elements.photoMarker, null, hexColor(state.color));
     elements.photoCanvas.hidden = true;
     elements.photoHint.textContent = "Choose a valid image file to pick a color.";
     return;
   }
   if (state.photoUrl) URL.revokeObjectURL(state.photoUrl);
+  state.photoPoint = null;
+  updatePickMarker(elements.photoMarker, null, hexColor(state.color));
   elements.photoCanvas.hidden = true;
   elements.photoHint.textContent = "Loading photo…";
   const photoUrl = URL.createObjectURL(file);
@@ -568,6 +584,7 @@ function pickCanvasColor(canvas, clientX, clientY) {
   if (!context) return;
   try {
     const [r, g, b] = context.getImageData(x, y, 1, 1).data;
+    state.photoPoint = { x: (x + 0.5) / canvas.width, y: (y + 0.5) / canvas.height };
     state.color = { r, g, b };
     syncUI();
   } catch (error) {
@@ -601,6 +618,7 @@ function pickCameraColor(clientX, clientY) {
   try {
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     const [r, g, b] = context.getImageData(x, y, 1, 1).data;
+    state.cameraPoint = { x: (x + 0.5) / video.videoWidth, y: (y + 0.5) / video.videoHeight };
     state.color = { r, g, b };
     syncUI();
   } catch (error) {
@@ -678,10 +696,6 @@ elements.colorField.addEventListener("keydown", event => {
 elements.hueSlider.addEventListener("input", () => {
   const hsv = rgbToHsv(state.color);
   state.color = hsvToRgb(Number(elements.hueSlider.value), hsv.s, hsv.v);
-  syncUI();
-});
-elements.nativeColor.addEventListener("input", () => {
-  state.color = parseColor(elements.nativeColor.value);
   syncUI();
 });
 document.getElementById("copy-hex").addEventListener("click", () => copyText(hexColor(state.color), "HEX copied."));

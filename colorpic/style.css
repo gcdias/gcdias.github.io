@@ -79,11 +79,14 @@ h2 { margin: 0; font: 700 1.1rem ui-sans-serif, system-ui, sans-serif; letter-sp
 .photo-view, .camera-view { margin-top: 20px; }
 .photo-upload { cursor: pointer; }
 .picker-hint { margin: 11px 0; color: var(--muted); font-size: .73rem; line-height: 1.5; }
+.picker-media { position: relative; width: 100%; }
 .source-canvas, .camera-preview { display: block; width: 100%; max-height: clamp(210px, 27vw, 340px); border: 1px solid var(--line); border-radius: 12px; background: #111319; object-fit: contain; }
 .source-canvas[hidden] { display: none; }
 .source-canvas { height: auto; cursor: crosshair; touch-action: manipulation; }
 .camera-preview { height: auto; cursor: crosshair; }
 .source-canvas:focus-visible, .camera-preview:focus-visible { outline: 2px solid var(--mint); outline-offset: 3px; }
+.pick-marker { position: absolute; z-index: 1; top: 0; left: 0; width: 22px; height: 22px; border: 2px solid #fff; border-radius: 50%; background: var(--current-color, #4ad9a7); box-shadow: 0 0 0 1px rgba(0,0,0,.75), 0 2px 7px rgba(0,0,0,.55); transform: translate(-50%, -50%); pointer-events: none; }
+.pick-marker[hidden] { display: none; }
 
 .color-field { position: relative; height: clamp(210px, 27vw, 278px); margin: 23px 0 18px; overflow: hidden; border-radius: 13px; background-image: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, hsl(var(--hue, 159) 100% 50%)); cursor: crosshair; touch-action: none; }
 .color-field-crosshair { position: absolute; top: 50%; left: 50%; width: 19px; height: 19px; border: 2px solid white; border-radius: 50%; box-shadow: 0 1px 5px #000, inset 0 0 0 1px rgba(0,0,0,.2); transform: translate(-50%, -50%); pointer-events: none; }
@@ -93,10 +96,7 @@ h2 { margin: 0; font: 700 1.1rem ui-sans-serif, system-ui, sans-serif; letter-sp
 .range-labels { display: flex; justify-content: space-between; margin-top: 8px; color: var(--muted); font-size: .7rem; }
 .range-labels output { color: #e1dfea; font-family: var(--mono); }
 .preview-strip { display: flex; align-items: center; gap: 12px; margin-top: 20px; padding: 13px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.025); }
-.native-picker-wrap { position: relative; display: grid; width: 42px; height: 42px; flex: 0 0 42px; place-items: center; overflow: hidden; border: 1px solid rgba(255,255,255,.3); border-radius: 11px; background: #4ad9a7; cursor: pointer; }
-.native-picker-wrap input { position: absolute; inset: -10px; width: 62px; height: 62px; opacity: 0; cursor: pointer; }
-.native-picker-icon { display: grid; place-items: center; pointer-events: none; }
-.native-picker-icon svg { width: 21px; height: 21px; fill: none; stroke: white; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 3px rgba(0,0,0,.55)); }
+.current-color-swatch { display: block; width: 42px; height: 42px; flex: 0 0 42px; border: 2px solid rgba(255,255,255,.55); border-radius: 50%; background: var(--current-color, #4ad9a7); box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
 .preview-copy { display: grid; min-width: 0; gap: 3px; }
 .preview-label { color: var(--muted); font: 500 .58rem var(--mono); letter-spacing: .1em; }
 .preview-copy strong { font: 500 1rem var(--mono); letter-spacing: .025em; }
@@ -184,7 +184,7 @@ h2 { margin: 0; font: 700 1.1rem ui-sans-serif, system-ui, sans-serif; letter-sp
   .picker-panel, .formats-panel, .contrast-panel { padding: 19px; }
   .palette-section { padding: 19px; }
   .preview-strip { gap: 9px; padding: 10px; }
-  .native-picker-wrap { width: 38px; height: 38px; flex-basis: 38px; }
+  .current-color-swatch { width: 38px; height: 38px; flex-basis: 38px; }
   .preview-copy strong { font-size: .86rem; }
   .button-copy { gap: 6px; padding: 9px 10px; font-size: .73rem; }
   .palette-heading { flex-direction: column; }
